@@ -68,7 +68,7 @@ if __name__ == '__main__':
     if len(sys.argv) != 2:
         print('Wrong arguments')
     else:
-        workers_count = sys.argv[1]
+        workers_count = int(sys.argv[1])
         while True:
             extract(workers_count)
 
