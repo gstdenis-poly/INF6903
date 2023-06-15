@@ -76,7 +76,7 @@ def record_screen(screen_recorder):
     screen_recorder.execute()
 
 # Save recording on server
-def save_recording(ssh_user, ssh_pwd):
+def save_recording(ssh_address, ssh_pwd):
     now = datetime.now()
     rec_stamp = datetime.timestamp(now)
 
@@ -86,7 +86,7 @@ def save_recording(ssh_user, ssh_pwd):
             '-p', ssh_pwd, 
             'scp', '-o', 'StrictHostKeyChecking=no', 
             './tmp/' + rec_path, 
-            ssh_user + '@cedar.calculcanada.ca:~/scratch/' + str(rec_stamp) + '_' + rec_path
+            ssh_address + ':~/scratch/uploads/' + str(rec_stamp) + '_' + rec_path
             ]
 
         sp = subprocess.Popen(scp_args)
@@ -95,7 +95,7 @@ def save_recording(ssh_user, ssh_pwd):
     print('Recording saved')
 
 # Program main function
-def record(ssh_user, ssh_pwd):
+def record(ssh_address, ssh_pwd):
     tmp_dir_path = './tmp'
     if os.path.exists(tmp_dir_path):
         shutil.rmtree(tmp_dir_path)
@@ -107,7 +107,7 @@ def record(ssh_user, ssh_pwd):
     record_keyboard(mouse_listener, screen_recorder)
     record_screen(screen_recorder)
     
-    save_recording(ssh_user, ssh_pwd)
+    save_recording(ssh_address, ssh_pwd)
 
     shutil.rmtree(tmp_dir_path)
 
@@ -116,8 +116,8 @@ if __name__ == '__main__':
     if len(sys.argv) != 3:
         print('Wrong arguments')
     else:
-        ssh_user = sys.argv[1]
+        ssh_address = sys.argv[1]
         ssh_pwd = sys.argv[2]
 
         time.sleep(1) # Sleep for 1 second before starting to record
-        record(ssh_user, ssh_pwd)
+        record(ssh_address, ssh_pwd)
