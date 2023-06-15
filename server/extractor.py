@@ -57,7 +57,7 @@ def extract(workers_count):
 
         # Extract frames of video 
         file_ext = os.path.splitext(file_name)[1]
-        if file_ext == '.mp4':
+        if file_ext == 'mp4':
             extract_frames(file_name, workers_count)
 
         # Delete file after save into database and extraction
