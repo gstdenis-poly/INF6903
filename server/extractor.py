@@ -49,7 +49,7 @@ def extract(workers_count):
 
         # Create frames worker folder for each detector server
         for i in range(workers_count):
-            frames_worker_folder = frames_folder + 'worker' + (i + 1)
+            frames_worker_folder = frames_folder + 'worker' + str(i + 1)
             if os.path.exists(frames_worker_folder):
                 continue
                 
