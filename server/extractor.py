@@ -61,7 +61,7 @@ def extract(workers_count):
             extract_frames(file_name, workers_count)
 
         # Delete file after save into database and extraction
-        #os.remove(file_path)
+        os.remove(file_path)
 
         # Print completion of file extraction
         print('Extraction of file ' + file_name + ' completed')
