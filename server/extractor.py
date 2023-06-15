@@ -8,7 +8,7 @@ import sys
 
 uploads_folder = '/home/gstdenis/scratch/uploads/'
 frames_folder = '/home/gstdenis/scratch/frames/'
-database_folder = '/home/gstdenis/projects/def-gabilode/gstdenis/INF6903/database/'
+database_folder = '/home/gstdenis/projects/def-gabilode/gstdenis/database/'
 
 # Extract frames from video
 def extract_frames(video_name, workers_count):
