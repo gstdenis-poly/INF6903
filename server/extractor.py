@@ -43,8 +43,8 @@ def extract(workers_count):
         # Save file into database
         recording_id = file_name.split('_')[0]
         rec_db_folder = database_folder + recording_id + '/'
-        if not os.path.exists(database_folder):
-            os.mkdir(database_folder)
+        if not os.path.exists(rec_db_folder):
+            os.mkdir(rec_db_folder)
         shutil.copyfile(file_path, rec_db_folder + file_name)
 
         # Create frames worker folder for each detector server
