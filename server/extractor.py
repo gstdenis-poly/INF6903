@@ -24,7 +24,7 @@ def extract_frames(video_name, workers_count):
             break
 
         # Put frame image in a worker folder
-        worker_folder = frames_folder + str(worker_idx) + '/'
+        worker_folder = frames_folder + 'worker' + str(worker_idx) + '/'
         cv2.imwrite(worker_folder + video_name + '_' + str(frame_idx) + '.png', frame)
 
         frame_idx += 1
