@@ -82,22 +82,27 @@ def save_recording(ssh_address, ssh_pwd):
     now = datetime.now()
     rec_stamp = datetime.timestamp(now)
 
+    scp_base_args = [
+        'sshpass', '-p', ssh_pwd, 
+        'scp', '-o', 'StrictHostKeyChecking=no'
+        ]
+
     for rec_name in os.listdir('./tmp'):
-        scp_args = [
-            'sshpass', 
-            '-p', ssh_pwd, 
-            'scp', '-o', 'StrictHostKeyChecking=no', 
+        scp_command = scp_base_args + [ 
             './tmp/' + rec_name,
             ssh_address + ':' + uploads_folder + str(rec_stamp) + '_' + rec_name
             ]
-
-        subprocess.Popen(scp_args).wait()
+        subprocess.Popen(scp_command).wait()
 
     # Save .final file to inform server that upload is completed
     final_file_name = str(rec_stamp) + '.final'
-    open('./tmp/' + final_file_name, 'x')
-    scp_args[-1] = ssh_address + ':' + uploads_folder + final_file_name
-    subprocess.Popen(scp_args).wait()
+    final_file_path = './tmp/' + final_file_name
+    open(final_file_path, 'x')
+    scp_command = scp_base_args + [
+        final_file_path, 
+        ssh_address + ':' + uploads_folder + final_file_name
+    ]
+    subprocess.Popen(scp_command).wait()
 
     print('Recording saved')
 
