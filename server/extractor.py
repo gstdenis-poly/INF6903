@@ -6,9 +6,9 @@ import os
 import shutil
 import sys
 
-uploads_folder = '~/scratch/uploads/'
-frames_folder = '~/scratch/frames/'
-database_folder = '~/projects/def-gabilode/gstdenis/INF6903/database/'
+uploads_folder = '/home/gstdenis/scratch/uploads/'
+frames_folder = '/home/gstdenis/scratch/frames/'
+database_folder = '/home/gstdenis/projects/def-gabilode/gstdenis/INF6903/database/'
 
 # Extract frames from video
 def extract_frames(video_path, workers_count):
