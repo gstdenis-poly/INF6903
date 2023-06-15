@@ -2,15 +2,19 @@
 #              record all mouse and keyboard events in text files.
 
 # Include required librairies
+from datetime import datetime
 from ffmpeg import FFmpeg # Require ffmpeg, x11grab
 import os
 from pynput import mouse, keyboard
 from screeninfo import get_monitors
+import shutil
+import subprocess
+import sys
 import time
 
 # Keyboard events recording
 def record_keyboard(mouse_listener, screen_recorder):
-    keyboard_rec_file_path = './keyboard_recording.txt'
+    keyboard_rec_file_path = './tmp/keyboard_recording.txt'
     if os.path.isfile(keyboard_rec_file_path):
         os.remove(keyboard_rec_file_path)
 
@@ -35,7 +39,7 @@ def record_keyboard(mouse_listener, screen_recorder):
 
 # Mouse events recording
 def record_mouse():
-    mouse_rec_file_path = './mouse_recording.txt'
+    mouse_rec_file_path = './tmp/mouse_recording.txt'
     if os.path.isfile(mouse_rec_file_path):
         os.remove(mouse_rec_file_path)
 
@@ -62,20 +66,58 @@ def init_screen_recorder():
         FFmpeg()
         .option('y')
         .input(':0', s = str(res_x) + 'x' + str(res_y), r = 15, f = 'x11grab')
-        .output('./screen_recording.mp4', vcodec = 'libx264', preset = 'ultrafast')
+        .output('./tmp/screen_recording.mp4', vcodec = 'libx264', preset = 'ultrafast')
     )
 def record_screen(screen_recorder):
     @screen_recorder.on('terminated')
     def on_terminated():
-        print('Recording succeed')
-        exit()
+        print('Recording completed')
 
     screen_recorder.execute()
 
-# Start recording
-time.sleep(1) # Sleep for 1 second before starting to record
+# Save recording on server
+def save_recording(ssh_user, ssh_pwd):
+    now = datetime.now()
+    rec_stamp = datetime.timestamp(now)
 
-mouse_listener = record_mouse()
-screen_recorder = init_screen_recorder()
-record_keyboard(mouse_listener, screen_recorder)
-record_screen(screen_recorder)
+    for rec_path in os.listdir('./tmp'):
+        scp_args = [
+            'sshpass', 
+            '-p', ssh_pwd, 
+            'scp', '-o', 'StrictHostKeyChecking=no', 
+            './tmp/' + rec_path, 
+            ssh_user + '@cedar.calculcanada.ca:~/scratch/' + str(rec_stamp) + '_' + rec_path
+            ]
+
+        sp = subprocess.Popen(scp_args)
+        sp.wait()
+
+    print('Recording saved')
+
+# Program main function
+def record(ssh_user, ssh_pwd):
+    tmp_dir_path = './tmp'
+    if os.path.exists(tmp_dir_path):
+        shutil.rmtree(tmp_dir_path)
+    
+    os.mkdir(tmp_dir_path)
+
+    mouse_listener = record_mouse()
+    screen_recorder = init_screen_recorder()
+    record_keyboard(mouse_listener, screen_recorder)
+    record_screen(screen_recorder)
+    
+    save_recording(ssh_user, ssh_pwd)
+
+    shutil.rmtree(tmp_dir_path)
+
+# Program's main
+if __name__ == '__main__':
+    if len(sys.argv) != 3:
+        print('Wrong arguments')
+    else:
+        ssh_user = sys.argv[1]
+        ssh_pwd = sys.argv[2]
+
+        time.sleep(1) # Sleep for 1 second before starting to record
+        record(ssh_user, ssh_pwd)
