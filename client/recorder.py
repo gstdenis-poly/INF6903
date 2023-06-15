@@ -12,6 +12,8 @@ import subprocess
 import sys
 import time
 
+uploads_folder = '~/scratch/uploads/'
+
 # Keyboard events recording
 def record_keyboard(mouse_listener, screen_recorder):
     keyboard_rec_file_path = './tmp/keyboard_recording.txt'
@@ -85,12 +87,17 @@ def save_recording(ssh_address, ssh_pwd):
             'sshpass', 
             '-p', ssh_pwd, 
             'scp', '-o', 'StrictHostKeyChecking=no', 
-            './tmp/' + rec_name, 
-            ssh_address + ':~/scratch/uploads/' + str(rec_stamp) + '_' + rec_name
+            './tmp/' + rec_name,
+            ssh_address + ':' + uploads_folder + str(rec_stamp) + '_' + rec_name
             ]
 
-        sp = subprocess.Popen(scp_args)
-        sp.wait()
+        subprocess.Popen(scp_args).wait()
+
+    # Save .final file to inform server that upload is completed
+    final_file_name = str(rec_stamp) + '.final'
+    open('./tmp/' + final_file_name, 'x')
+    scp_args[-1] = ssh_address + ':' + uploads_folder + final_file_name
+    subprocess.Popen(scp_args).wait()
 
     print('Recording saved')
 
