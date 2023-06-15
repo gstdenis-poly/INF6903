@@ -80,13 +80,13 @@ def save_recording(ssh_address, ssh_pwd):
     now = datetime.now()
     rec_stamp = datetime.timestamp(now)
 
-    for rec_path in os.listdir('./tmp'):
+    for rec_name in os.listdir('./tmp'):
         scp_args = [
             'sshpass', 
             '-p', ssh_pwd, 
             'scp', '-o', 'StrictHostKeyChecking=no', 
-            './tmp/' + rec_path, 
-            ssh_address + ':~/scratch/uploads/' + str(rec_stamp) + '_' + rec_path
+            './tmp/' + rec_name, 
+            ssh_address + ':~/scratch/uploads/' + str(rec_stamp) + '_' + rec_name
             ]
 
         sp = subprocess.Popen(scp_args)
