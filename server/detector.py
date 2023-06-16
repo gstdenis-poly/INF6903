@@ -37,13 +37,13 @@ def detect():
         shutil.copytree(detector_worker_ocr_folder, clusterizer_worker_folder + 'ocr/', dirs_exist_ok = True)
 
         # Save detections to database
-        recording_id = frame_name.split('_')[0]
+        """recording_id = frame_name.split('_')[0]
         rec_detections_db_folder = database_folder + recording_id + '/detections/'
         if not os.path.exists(rec_detections_db_folder):
             os.mkdir(rec_detections_db_folder)
 
         shutil.copytree(detector_worker_ip_folder, rec_detections_db_folder + 'ip/', dirs_exist_ok = True)
-        shutil.copytree(detector_worker_ocr_folder, rec_detections_db_folder + 'ocr/', dirs_exist_ok = True)
+        shutil.copytree(detector_worker_ocr_folder, rec_detections_db_folder + 'ocr/', dirs_exist_ok = True)"""
         
         # Delete frame and its detection folders after copying for next worker and to database
         shutil.rmtree(detector_worker_ip_folder) # Remove ip folder

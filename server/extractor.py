@@ -37,7 +37,7 @@ def extract_frames(video_name):
         cv2.imwrite(frame_path, frame)
 
         # Save frame to database
-        shutil.copy(frame_path, rec_frames_db_folder)
+        """shutil.copy(frame_path, rec_frames_db_folder)"""
 
         frame_idx += 1
         detector_worker_idx = detector_worker_idx % detector_workers_count + 1
