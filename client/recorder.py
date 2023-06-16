@@ -85,7 +85,7 @@ def save_recording(ssh_address, ssh_pwd):
     scp_base_args = [
         'sshpass', '-p', ssh_pwd,
         'scp', '-o', 'StrictHostKeyChecking=no',
-        '-l', '8192' # Limiting bandwidth to 1MB/s to avoid file transfer stalling
+        '-l', '16384' # Limiting bandwidth to 2MB/s to avoid file transfer stalling
         ]
 
     for rec_name in os.listdir('./tmp'):
