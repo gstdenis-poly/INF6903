@@ -11,7 +11,7 @@ database_folder = '/home/gstdenis/projects/def-gabilode/gstdenis/database/'
 recording_files = [
     'mouse_recording.txt', 'keyboard_recording.txt', 'screen_recording.mp4'
     ]
-detector_workers_count = 5
+detector_workers_count = 100
 
 # Extract frames from video
 def extract_frames(video_name):
@@ -25,22 +25,22 @@ def extract_frames(video_name):
         os.mkdir(rec_frames_db_folder)
 
     frame_idx = 1
-    worker_idx = 1
+    detector_worker_idx = 1
     while cap.isOpened():
         ret, frame = cap.read()
         if not ret:
             break
 
         # Put frame image in a worker folder for next step of pipeline
-        worker_folder = frames_folder + 'worker' + str(worker_idx) + '/'
-        frame_path = worker_folder + video_name + '_' + str(frame_idx) + '.png'
+        detector_worker_folder = frames_folder + 'worker' + str(detector_worker_idx) + '/'
+        frame_path = detector_worker_folder + video_name + '_' + str(frame_idx) + '.png'
         cv2.imwrite(frame_path, frame)
 
         # Save frame to database
         shutil.copy(frame_path, rec_frames_db_folder)
 
         frame_idx += 1
-        worker_idx = worker_idx % detector_workers_count + 1
+        detector_worker_idx = detector_worker_idx % detector_workers_count + 1
 
     cap.release()
     cv2.destroyAllWindows()
