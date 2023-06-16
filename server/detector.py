@@ -33,8 +33,8 @@ def detect():
         # Put detections result files in a worker folder for next step of pipeline
         clusterizer_worker_idx = randint(1, clusterizer_workers_count)
         clusterizer_worker_folder = detections_folder + 'worker' + str(clusterizer_worker_idx) + '/'
-        shutil.copytree(detector_worker_ip_folder, clusterizer_worker_folder + 'ip/')
-        shutil.copytree(detector_worker_ocr_folder, clusterizer_worker_folder + 'ocr/')
+        shutil.copytree(detector_worker_ip_folder, clusterizer_worker_folder + 'ip/', dirs_exist_ok = True)
+        shutil.copytree(detector_worker_ocr_folder, clusterizer_worker_folder + 'ocr/', dirs_exist_ok = True)
 
         # Save detections to database
         recording_id = frame_name.split('_')[0]
@@ -42,9 +42,12 @@ def detect():
         if not os.path.exists(rec_detections_db_folder):
             os.mkdir(rec_detections_db_folder)
 
-        shutil.move(detector_worker_ip_folder, rec_detections_db_folder)
-        shutil.move(detector_worker_ocr_folder, rec_detections_db_folder)
+        shutil.copytree(detector_worker_ip_folder, rec_detections_db_folder, dirs_exist_ok = True)
+        shutil.copytree(detector_worker_ocr_folder, rec_detections_db_folder, dirs_exist_ok = True)
         
+        # Delete frame and its detection folders after copying for next worker and to database
+        shutil.rmtree(detector_worker_ip_folder) # Remove ip folder
+        shutil.rmtree(detector_worker_ocr_folder) # Remove ocr folder
         os.remove(frame_path) # Remove .png file
 
 # Program's main
