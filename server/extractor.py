@@ -78,8 +78,6 @@ def extract():
 
 # Program's main
 if __name__ == '__main__':
-    workers_count = int(sys.argv[1])
-
     # Create frames worker folder for each detector server
     for i in range(workers_count):
         frames_worker_folder = frames_folder + 'worker' + str(i + 1)
