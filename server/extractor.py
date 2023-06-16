@@ -59,11 +59,12 @@ def extract():
             continue
 
         # Skip iteration if not .final file
-        if os.path.splitext(file_name)[1] != '.final':
+        file_name_parts = os.path.splitext(file_name)
+        if file_name_parts[1] != '.final':
             continue
 
         # Save file into database
-        recording_id = file_name.split('_')[0]
+        recording_id = file_name_parts[0]
         rec_db_folder = database_folder + recording_id + '/'
         if not os.path.exists(rec_db_folder):
             os.mkdir(rec_db_folder)
