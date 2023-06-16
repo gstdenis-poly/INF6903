@@ -17,7 +17,6 @@ def detect():
     detector_worker_ocr_folder = detector_worker_folder + 'ocr/'
 
     if not os.path.exists(detector_worker_folder):
-        print('No existing folder for worker ' + detector_worker_id)
         return
 
     for frame_name in os.listdir(detector_worker_folder):
