@@ -40,7 +40,7 @@ def extract_frames(video_name):
         shutil.copy(frame_path, rec_frames_db_folder)
 
         frame_idx += 1
-        worker_idx = (worker_idx + 1) % detector_workers_count
+        worker_idx = worker_idx % detector_workers_count + 1
 
     cap.release()
     cv2.destroyAllWindows()
