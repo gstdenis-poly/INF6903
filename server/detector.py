@@ -59,8 +59,8 @@ if __name__ == '__main__':
                 continue
                 
             os.mkdir(clusterizer_worker_folder)
-            os.mkdir(clusterizer_worker_folder + 'ip')
-            os.mkdir(clusterizer_worker_folder + 'ocr')
+            os.mkdir(clusterizer_worker_folder + '/ip')
+            os.mkdir(clusterizer_worker_folder + '/ocr')
 
         detector_worker_id = sys.argv[1]
         while True:
