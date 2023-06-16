@@ -21,4 +21,4 @@ pip install tensorflow-metadata==1.12.0
 pip install visualdl==2.4.2
 
 # Depending repositories
-git clone https://github.com/gstdenis-poly/UIED_custom
+git clone https://github.com/gstdenis-poly/UIED_custom ../../UIED_custom
