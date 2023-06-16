@@ -4,7 +4,6 @@
 import cv2
 import os
 import shutil
-import sys
 
 uploads_folder = '/home/gstdenis/scratch/uploads/'
 frames_folder = '/home/gstdenis/scratch/frames/'
@@ -12,13 +11,18 @@ database_folder = '/home/gstdenis/projects/def-gabilode/gstdenis/database/'
 recording_files = [
     'mouse_recording.txt', 'keyboard_recording.txt', 'screen_recording.mp4'
     ]
-workers_count = 5
+detector_workers_count = 5
 
 # Extract frames from video
 def extract_frames(video_name):
     cap = cv2.VideoCapture(uploads_folder + video_name)
 
     video_name = os.path.splitext(video_name)[0]
+    recording_id = video_name.split('_')[0]
+
+    rec_frames_db_folder = database_folder + recording_id + '/frames/'
+    if not os.path.exists(rec_frames_db_folder):
+        os.mkdir(rec_frames_db_folder)
 
     frame_idx = 1
     worker_idx = 1
@@ -27,12 +31,16 @@ def extract_frames(video_name):
         if not ret:
             break
 
-        # Put frame image in a worker folder
+        # Put frame image in a worker folder for next step of pipeline
         worker_folder = frames_folder + 'worker' + str(worker_idx) + '/'
-        cv2.imwrite(worker_folder + video_name + '_' + str(frame_idx) + '.png', frame)
+        frame_path = worker_folder + video_name + '_' + str(frame_idx) + '.png'
+        cv2.imwrite(frame_path, frame)
+
+        # Save frame to database
+        shutil.copy(frame_path, rec_frames_db_folder)
 
         frame_idx += 1
-        worker_idx = (worker_idx + 1) % workers_count
+        worker_idx = (worker_idx + 1) % detector_workers_count
 
     cap.release()
     cv2.destroyAllWindows()
@@ -47,7 +55,7 @@ def extract_file(file_name, src_folder, dest_folder):
     if os.path.splitext(file_name)[1] == '.mp4':
         extract_frames(file_name)
     
-    shutil.move(file_path, dest_folder + file_name)
+    shutil.move(file_path, dest_folder)
 
     print('Extraction of file ' + file_name + ' completed')
 
@@ -79,13 +87,13 @@ def extract():
 
 # Program's main
 if __name__ == '__main__':
-    # Create frames worker folder for each detector server
-    for i in range(workers_count):
-        frames_worker_folder = frames_folder + 'worker' + str(i + 1)
-        if os.path.exists(frames_worker_folder):
+    # Create detector worker folder for each detector server
+    for i in range(detector_workers_count):
+        detector_worker_folder = frames_folder + 'worker' + str(i + 1)
+        if os.path.exists(detector_worker_folder):
             continue
             
-        os.mkdir(frames_worker_folder)
+        os.mkdir(detector_worker_folder)
 
     while True:
         extract()
