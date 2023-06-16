@@ -43,11 +43,11 @@ def extract_file(file_name, src_folder, dest_folder):
     if not os.path.isfile(file_path):
         return
     
-    shutil.move(file_path, dest_folder + file_name)
-
     # Extract frames of video 
     if os.path.splitext(file_name)[1] == '.mp4':
         extract_frames(file_name)
+    
+    shutil.move(file_path, dest_folder + file_name)
 
     print('Extraction of file ' + file_name + ' completed')
 
