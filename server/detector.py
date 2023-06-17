@@ -1,14 +1,12 @@
+# Description: detect GUI components and texts from videos' frames.
+
+# Include required libraries
+from config import *
 import os
 from random import randint
 import shutil
 import sys
 from UIED_custom import run_single
-
-frames_folder = '/home/gstdenis/scratch/frames/'
-detections_folder = '/home/gstdenis/scratch/detections/'
-database_folder = '/home/gstdenis/projects/def-gabilode/gstdenis/database/'
-detector_worker_id = None
-clusterizer_workers_count = 5
 
 # Program main function
 def detect():
@@ -54,16 +52,6 @@ if __name__ == '__main__':
     if len(sys.argv) != 2:
         print('Wrong arguments')
     else:
-        # Create clusterizer worker folder for each clusterizer server
-        for i in range(clusterizer_workers_count):
-            clusterizer_worker_folder = detections_folder + 'worker' + str(i + 1)
-            if os.path.exists(clusterizer_worker_folder):
-                continue
-                
-            os.mkdir(clusterizer_worker_folder)
-            os.mkdir(clusterizer_worker_folder + '/ip')
-            os.mkdir(clusterizer_worker_folder + '/ocr')
-
         detector_worker_id = sys.argv[1]
         while True:
             detect()

@@ -1,17 +1,10 @@
 # Description: extract frames from previously recorded video.
 
 # Include required libraries
+from config import *
 import cv2
 import os
 import shutil
-
-uploads_folder = '/home/gstdenis/scratch/uploads/'
-frames_folder = '/home/gstdenis/scratch/frames/'
-database_folder = '/home/gstdenis/projects/def-gabilode/gstdenis/database/'
-recording_files = [
-    'mouse_recording.txt', 'keyboard_recording.txt', 'screen_recording.mp4'
-    ]
-detector_workers_count = 100
 
 # Extract frames from video
 def extract_frames(video_name):
@@ -20,9 +13,9 @@ def extract_frames(video_name):
     video_name = os.path.splitext(video_name)[0]
     recording_id = video_name.split('_')[0]
 
-    rec_frames_db_folder = database_folder + recording_id + '/frames/'
+    """rec_frames_db_folder = database_folder + recording_id + '/frames/'
     if not os.path.exists(rec_frames_db_folder):
-        os.mkdir(rec_frames_db_folder)
+        os.mkdir(rec_frames_db_folder)"""
 
     frame_idx = 1
     detector_worker_idx = 1
@@ -87,14 +80,5 @@ def extract():
 
 # Program's main
 if __name__ == '__main__':
-    # Create detector worker folder for each detector server
-    for i in range(detector_workers_count):
-        detector_worker_folder = frames_folder + 'worker' + str(i + 1)
-        if os.path.exists(detector_worker_folder):
-            continue
-            
-        os.mkdir(detector_worker_folder)
-
     while True:
         extract()
-
