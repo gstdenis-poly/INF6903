@@ -28,6 +28,8 @@ def extract_frames(video_name):
         detector_worker_folder = frames_folder + 'worker' + str(detector_worker_idx) + '/'
         frame_path = detector_worker_folder + video_name + '_' + str(frame_idx) + '.png'
         cv2.imwrite(frame_path, frame)
+        # Save .final file to inform worker that image file is fully created
+        open(os.path.splitext(frame_path)[0] + '.final', 'x')
 
         # Save frame to database
         """shutil.copy(frame_path, rec_frames_db_folder)"""

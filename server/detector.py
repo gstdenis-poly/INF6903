@@ -19,7 +19,7 @@ def detect():
 
     for frame_name in os.listdir(detector_worker_folder):
         frame_name_parts = os.path.splitext(frame_name)
-        if frame_name_parts[1] != '.png':
+        if frame_name_parts[1] != '.png' or not os.path.isfile(frame_name_parts[0] + '.final'):
             continue
 
         frame_path = detector_worker_folder + '/' + frame_name
