@@ -1,8 +1,24 @@
-# Description: server initialization (must be run before any other task).
+# Description: provide global variables for server configurations and
+#              initialize server.
 
 # Include required libraries
-from config import *
+from server.configurator import *
 import os
+
+# Folders
+uploads_folder = '/home/gstdenis/scratch/uploads/'
+frames_folder = '/home/gstdenis/scratch/frames/'
+database_folder = '/home/gstdenis/projects/def-gabilode/gstdenis/database/'
+detections_folder = '/home/gstdenis/scratch/detections/'
+# Recording files' name
+recording_files = [
+    'mouse_recording.txt', 'keyboard_recording.txt', 'screen_recording.mp4'
+    ]
+# Number of workers
+detector_workers_count = 100
+clusterizer_workers_count = 50
+# Index variables of workers
+detector_worker_id = None
 
 # Program's main
 if __name__ == '__main__':
@@ -13,7 +29,7 @@ if __name__ == '__main__':
             continue
             
         os.mkdir(detector_worker_folder)
-        
+
     # Create clusterizer worker folder for each clusterizer server
     for i in range(clusterizer_workers_count):
         clusterizer_worker_folder = detections_folder + 'worker' + str(i + 1)

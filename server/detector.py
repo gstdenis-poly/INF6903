@@ -1,7 +1,7 @@
 # Description: detect GUI components and texts from videos' frames.
 
 # Include required libraries
-from config import *
+from configurator import *
 import os
 from random import randint
 import shutil

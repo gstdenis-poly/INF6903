@@ -1,7 +1,7 @@
 # Description: extract frames from previously recorded video.
 
 # Include required libraries
-from config import *
+from configurator import *
 import cv2
 import os
 import shutil
