@@ -29,7 +29,7 @@ def detect():
 
         # Pad image to be squared
         frame_img = cv2.imread(frame_path)
-        padded_frame_img = cv2.copyMakeBorder(frame_img, 0, 2640, 0, 0, cv2.BORDER_CONSTANT)
+        padded_frame_img = cv2.copyMakeBorder(frame_img, 0, 1320, 0, 0, cv2.BORDER_CONSTANT)
         cv2.imwrite(frame_path, padded_frame_img)
         
         # UIED Detection
