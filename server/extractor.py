@@ -9,13 +9,7 @@ import shutil
 # Extract frames from video
 def extract_frames(video_name):
     cap = cv2.VideoCapture(uploads_folder + video_name)
-
     video_name = os.path.splitext(video_name)[0]
-    recording_id = video_name.split('_')[0]
-
-    """rec_frames_db_folder = database_folder + recording_id + '/frames/'
-    if not os.path.exists(rec_frames_db_folder):
-        os.mkdir(rec_frames_db_folder)"""
 
     frame_idx = 1
     detector_worker_idx = 1
@@ -30,9 +24,6 @@ def extract_frames(video_name):
         cv2.imwrite(frame_path, frame)
         # Save .final file to inform worker that image file is fully created
         open(os.path.splitext(frame_path)[0] + '.final', 'x')
-
-        # Save frame to database
-        """shutil.copy(frame_path, rec_frames_db_folder)"""
 
         frame_idx += 1
         detector_worker_idx = detector_worker_idx % detector_workers_count + 1
