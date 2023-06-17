@@ -2,7 +2,6 @@
 #              initialize server.
 
 # Include required libraries
-from server.configurator import *
 import os
 
 # Folders
