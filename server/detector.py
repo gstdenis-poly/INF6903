@@ -22,7 +22,7 @@ def detect():
         if frame_name_parts[1] != '.png' or not os.path.isfile(frame_name_parts[0] + '.final'):
             continue
 
-        frame_path = detector_worker_folder + '/' + frame_name
+        frame_path = detector_worker_folder + frame_name
         
         # UIED Detection
         run_single.run(frame_path, detector_worker_folder)
@@ -46,6 +46,7 @@ def detect():
         shutil.rmtree(detector_worker_ip_folder) # Remove ip folder
         shutil.rmtree(detector_worker_ocr_folder) # Remove ocr folder
         os.remove(frame_path) # Remove .png file
+        os.remove(detector_worker_folder + frame_name_parts[0] + '.final') # Remove .final file
 
 # Program's main
 if __name__ == '__main__':
