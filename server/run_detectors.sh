@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --time=12:00:00
-#SBATCH --mem=16000MB
+#SBATCH --mem=8000MB
 #SBATCH --account=def-gabilode
 #SBATCH --array=1-100
 

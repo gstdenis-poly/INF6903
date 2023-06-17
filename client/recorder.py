@@ -68,7 +68,8 @@ def init_screen_recorder():
         FFmpeg()
         .option('y')
         .input(':0', s = str(res_x) + 'x' + str(res_y), r = 15, f = 'x11grab')
-        .output('./tmp/screen_recording.mp4', vcodec = 'libx264', preset = 'ultrafast')
+        .output('./tmp/screen_recording.mp4', vcodec = 'libx264', 
+                preset = 'ultrafast', vf = 'scale=iw/2:ih/2')
     )
 def record_screen(screen_recorder):
     @screen_recorder.on('terminated')
