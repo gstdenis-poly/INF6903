@@ -87,7 +87,7 @@ def clusterize():
 
         # Keep .json file but remove .png file
         shutil.move(ocr_file_path, clusters_folder + ocr_file_name)
-        os.remove(clusterizer_worker_folder + ocr_file_name_parts[0] + '.png')
+        os.remove(ocrs_folder + ocr_file_name_parts[0] + '.png')
 
 # Program's main
 if __name__ == '__main__':
