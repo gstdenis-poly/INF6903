@@ -37,7 +37,7 @@ def clusterize():
     ocrs_folder = clusterizer_worker_folder + 'ocr/'
     for ocr_file_name in os.listdir(ocrs_folder):
         ocr_file_name_parts = os.path.splitext(ocr_file_name)
-        if not os.path.isfile(clusterizer_worker_folder + ocr_file_name_parts[0]) or \
+        if not os.path.isfile(clusterizer_worker_folder + ocr_file_name_parts[0] + '.final') or \
            ocr_file_name_parts[-1] != '.json':
             continue
 
