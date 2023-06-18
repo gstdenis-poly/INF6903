@@ -13,8 +13,8 @@ detections_folder = '/home/gstdenis/scratch/detections/'
 recording_files = [
     'mouse_recording.txt', 'keyboard_recording.txt', 'screen_recording.mp4'
     ]
-# Recording's metadata file's name
-rec_infos_file_name = 'recording_infos.txt'
+# Recording's metadata file
+recording_infos_file = 'recording_infos.txt'
 # Number of workers
 detector_workers_count = 100
 clusterizer_workers_count = 50

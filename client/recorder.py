@@ -89,7 +89,7 @@ def record_screen(screen_recorder):
 
 # Upload recording on server
 def upload_recording(ssh_address, ssh_pwd):
-    rec_stamp = datetime.timestamp(rec_stamp)
+    rec_stamp = datetime.timestamp(datetime.now())
     scp_base_args = [
         'sshpass', '-p', ssh_pwd,
         'scp', '-o', 'StrictHostKeyChecking=no',

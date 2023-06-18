@@ -7,8 +7,9 @@ import os
 import shutil
 
 # Extract monitor's image from frame
-def extract_frame_monitors(frame_folder, frame_idx, frame):
-    rec_infos_file = open(uploads_folder + rec_infos_file_name, 'r')
+def extract_frame_monitors(recording_id, frame_folder, frame_idx, frame):
+    rec_infos_file_name = uploads_folder + recording_id + '_' + recording_infos_file
+    rec_infos_file = open(rec_infos_file_name, 'r')
     
     for i, line in enumerate(rec_infos_file.read().splitlines()):
         line_infos = line.split('|')
@@ -39,7 +40,9 @@ def extract_frames(video_name):
 
         # Put frame image in a worker folder for next step of pipeline
         detector_worker_folder = frames_folder + 'worker' + str(detector_worker_idx) + '/'
-        extract_frame_monitors(detector_worker_folder + video_name, frame_idx, frame_img)
+        recording_id = video_name.split('_')[0]
+        frame_folder = detector_worker_folder + video_name
+        extract_frame_monitors(recording_id, frame_folder, frame_idx, frame_img)
 
         frame_idx += 1
         detector_worker_idx = detector_worker_idx % detector_workers_count + 1
