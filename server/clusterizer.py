@@ -82,11 +82,12 @@ def clusterize():
         output_file = open(cluster_file_path, 'w')
         for centroid in km.cluster_centers_:
             for term, vector in zip(terms, centroid):
-                output_file.write(term + ' | ' + str(vector) + '\n')
+                output_file.write(term + '|' + str(vector) + '\n')
             output_file.close()
 
-        shutil.move(ocr_file_path, clusters_folder + ocr_file_name) # Keep detection .json file
-        os.remove(ocr_file_name_parts[0] + '.png') # Remove detection .png file
+        # Keep .json file but remove .png file
+        shutil.move(ocr_file_path, clusters_folder + ocr_file_name)
+        os.remove(clusterizer_worker_folder + ocr_file_name_parts[0] + '.png')
 
 # Program's main
 if __name__ == '__main__':
