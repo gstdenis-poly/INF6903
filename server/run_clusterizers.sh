@@ -2,7 +2,7 @@
 #SBATCH --time=12:00:00
 #SBATCH --mem=8000MB
 #SBATCH --account=def-gabilode
-#SBATCH --array=1-100
+#SBATCH --array=1-50
 
 module load flexiblas
 
