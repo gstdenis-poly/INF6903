@@ -30,7 +30,7 @@ def has_alpha_num(string):
     return False
 
 def clusterize():
-    clusterizer_worker_folder = frames_folder + 'worker' + clusterizer_worker_id + '/'
+    clusterizer_worker_folder = detections_folder + 'worker' + clusterizer_worker_id + '/'
     if not os.path.exists(clusterizer_worker_folder):
         return
 
