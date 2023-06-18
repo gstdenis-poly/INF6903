@@ -6,6 +6,25 @@ import cv2
 import os
 import shutil
 
+# Extract monitor's image from frame
+def extract_frame_monitors(frame_folder, frame_idx, frame):
+    rec_infos_file = open(uploads_folder + rec_infos_file_name, 'r')
+    
+    for i, line in enumerate(rec_infos_file.read().splitlines()):
+        line_infos = line.split('|')
+        if line_infos[0] != 'monitor':
+            continue
+
+        x = int(line_infos[1]) # Monitor's horizontal position
+        y = int(line_infos[2]) # Monitor's vertical position
+        w = int(line_infos[3]) # Monitor's width
+        h = int(line_infos[4]) # Monitor's height
+
+        frame_path = frame_folder + '_' + str(i + 1) + '_' + str(frame_idx) + '.png'
+        cv2.imwrite(frame_path, frame[y:(y + h), x:(x + w)])
+        # Save .final file to inform worker that image file is fully created
+        open(os.path.splitext(frame_path)[0] + '.final', 'x')
+
 # Extract frames from video
 def extract_frames(video_name):
     cap = cv2.VideoCapture(uploads_folder + video_name)
@@ -14,16 +33,13 @@ def extract_frames(video_name):
     frame_idx = 1
     detector_worker_idx = 1
     while cap.isOpened():
-        ret, frame = cap.read()
+        ret, frame_img = cap.read()
         if not ret:
             break
 
         # Put frame image in a worker folder for next step of pipeline
         detector_worker_folder = frames_folder + 'worker' + str(detector_worker_idx) + '/'
-        frame_path = detector_worker_folder + video_name + '_' + str(frame_idx) + '.png'
-        cv2.imwrite(frame_path, frame)
-        # Save .final file to inform worker that image file is fully created
-        open(os.path.splitext(frame_path)[0] + '.final', 'x')
+        extract_frame_monitors(detector_worker_folder + video_name, frame_idx, frame_img)
 
         frame_idx += 1
         detector_worker_idx = detector_worker_idx % detector_workers_count + 1

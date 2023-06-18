@@ -21,8 +21,10 @@ def record_keyboard(mouse_listener, screen_recorder):
         os.remove(keyboard_rec_file_path)
 
     def on_event(key, event):
+        evt_stamp = datetime.timestamp(datetime.now())
+
         keyboard_rec_file = open(keyboard_rec_file_path, 'a')
-        keyboard_rec_file.write(str(key) + ';' + event + '\n')
+        keyboard_rec_file.write(str(evt_stamp) + '|' + str(key) + '|' + event + '\n')
         keyboard_rec_file.close()
 
     def on_press(key):
@@ -31,7 +33,7 @@ def record_keyboard(mouse_listener, screen_recorder):
     def on_release(key):
         on_event(key, 'Release')
 
-        if str(key) == '\'q\'':
+        if key == keyboard.Key.esc:
             mouse_listener.stop()
             screen_recorder.terminate()
             return False
@@ -47,8 +49,10 @@ def record_mouse():
 
     def on_click(x, y, button, pressed): # On click handler
         if pressed:
+            evt_stamp = datetime.timestamp(datetime.now())
+
             mouse_rec_file = open(mouse_rec_file_path, 'a')
-            mouse_rec_file.write(str(button) + ';' + str(x) + ';' + str(y) + '\n')
+            mouse_rec_file.write(str(evt_stamp) + '|' + str(button) + '|' + str(x) + '|' + str(y) + '\n')
             mouse_rec_file.close()
 
     listener = mouse.Listener(on_click = on_click)
@@ -68,21 +72,24 @@ def init_screen_recorder():
         FFmpeg()
         .option('y')
         .input(':0', s = str(res_x) + 'x' + str(res_y), r = 15, f = 'x11grab')
-        .output('./tmp/screen_recording.mp4', vcodec = 'libx264', 
-                preset = 'ultrafast', vf = 'scale=iw/2:ih/2')
+        .output('./tmp/screen_recording.mp4', vcodec = 'libx264', preset = 'ultrafast')
     )
 def record_screen(screen_recorder):
+    @screen_recorder.on('start')
+    def on_start(arguments):
+        recording_infos_file = open('./tmp/recording_infos.txt', 'a')
+        recording_infos_file.write('rec_start|' + str(datetime.timestamp(datetime.now())))
+        recording_infos_file.close()
+
     @screen_recorder.on('terminated')
     def on_terminated():
         print('Recording completed')
 
     screen_recorder.execute()
 
-# Save recording on server
-def save_recording(ssh_address, ssh_pwd):
-    now = datetime.now()
-    rec_stamp = datetime.timestamp(now)
-
+# Upload recording on server
+def upload_recording(ssh_address, ssh_pwd):
+    rec_stamp = datetime.timestamp(rec_stamp)
     scp_base_args = [
         'sshpass', '-p', ssh_pwd,
         'scp', '-o', 'StrictHostKeyChecking=no',
@@ -108,6 +115,15 @@ def save_recording(ssh_address, ssh_pwd):
 
     print('Recording saved')
 
+# Initialize recording's metadata
+def init_recording_infos():
+    recording_infos_file = open('./tmp/recording_infos.txt', 'w')
+    for monitor in get_monitors():
+        recording_infos_file.write('monitor|')
+        recording_infos_file.write(str(monitor.x) + '|' + str(monitor.y) + '|' +
+                                   str(monitor.width) + '|' + str(monitor.height) + '\n')
+    recording_infos_file.close()
+
 # Program main function
 def record(ssh_address, ssh_pwd):
     tmp_dir_path = './tmp'
@@ -116,12 +132,12 @@ def record(ssh_address, ssh_pwd):
     
     os.mkdir(tmp_dir_path)
 
+    init_recording_infos()
     mouse_listener = record_mouse()
     screen_recorder = init_screen_recorder()
     record_keyboard(mouse_listener, screen_recorder)
     record_screen(screen_recorder)
-    
-    save_recording(ssh_address, ssh_pwd)
+    upload_recording(ssh_address, ssh_pwd)
 
     shutil.rmtree(tmp_dir_path)
 
