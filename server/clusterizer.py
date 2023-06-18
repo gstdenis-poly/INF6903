@@ -3,17 +3,20 @@
 #              detected in uploaded images.
 
 # Include required libraries
-import os
+from configurator import *
 import json
 import nltk
 import numpy as np
 nltk.download('punkt')
 nltk.download('stopwords')
 from nltk.corpus import stopwords
-from nltk.tokenize import word_tokenize
 from nltk.stem.porter import PorterStemmer
+from nltk.tokenize import word_tokenize
+import os
+import shutil
 from sklearn.cluster import KMeans
 from sklearn.feature_extraction.text import TfidfVectorizer
+import sys
 
 stemmer = PorterStemmer()
 stop_words = stopwords.words('french') + stopwords.words('english')
@@ -26,82 +29,70 @@ def has_alpha_num(string):
             return True
     return False
 
-tmp_root = app_root + '/tmp'
+def clusterize():
+    clusterizer_worker_folder = frames_folder + 'worker' + clusterizer_worker_id + '/'
+    if not os.path.exists(clusterizer_worker_folder):
+        return
 
-while True:
-    for folder in os.listdir(tmp_root):
-        client_tmp = tmp_root + '/' + folder # tmp of specific client
-        ocrs_path = client_tmp + '/detections'
-    
-    if not os.path.exists(ocrs_path):
-        continue
-
-    ocrs = os.listdir(ocrs_path)
-
-    for ocr in ocrs:
-        ocr_name = os.path.splitext(ocr)[0]
-        ocr_ext = os.path.splitext(ocr)[-1]
-        # tmp files' prefix identify one uploaded video
-        # tmp files' suffix should be '-X' where X identifies the video's frame
-        ocr_prefix = ocr_name.split('-')[0]
-
-        ocr_path = ocrs_path + '/' + ocr
-        # One lock file per uploaded video
-        lock_file_path = ocrs_path + '/' + ocr_prefix + '.lock'
-
-        if os.path.exists(lock_file_path):
+    ocrs_folder = clusterizer_worker_folder + 'ocr/'
+    for ocr_file_name in os.listdir(ocrs_folder):
+        ocr_file_name_parts = os.path.splitext(ocr_file_name)
+        if not os.path.isfile(clusterizer_worker_folder + ocr_file_name_parts[0]) or \
+           ocr_file_name_parts[-1] != '.json':
             continue
-        elif ocr_ext == '.json':
-            lock_file = open(lock_file_path, 'w') # Create .lock file
-            lock_file.close()
 
-            ocr_text = open(ocrs_path + '/' + ocr, 'r').read()
-            ocr_json = json.loads(ocr_text)
+        ocr_file_path = ocrs_folder + ocr_file_name
+        ocr_text = open(ocr_file_path, 'r').read()
+        ocr_json = json.loads(ocr_text)
 
-            ocr_tokens = []
-            for ocr_content in ocr_json['texts']:
-                content = ocr_content['content'].lower() # Lowercased content
-                tokens = word_tokenize(content) # Tokens of lowercased content
-                tokens = [stemmer.stem(t) for t in tokens] # Porter stemmed tokens
-                # Tokens with at least one alphanumeric character
-                tokens = [t for t in tokens if has_alpha_num(t)]
+        ocr_tokens = []
+        for ocr_content in ocr_json['texts']:
+            content = ocr_content['content'].lower() # Lowercased content
+            tokens = word_tokenize(content) # Tokens of lowercased content
+            tokens = [stemmer.stem(t) for t in tokens] # Porter stemmed tokens
+            # Tokens with at least one alphanumeric character
+            tokens = [t for t in tokens if has_alpha_num(t)]
 
-                ocr_tokens += tokens
+            ocr_tokens += tokens
 
-            output_root = app_root + '/database/' + folder + '/clusters'
-            if not os.path.exists(output_root):
-                os.mkdir(output_root)
+        cluster_file_name = ocr_file_name_parts[0] + '.txt'
+        cluster_file_path = clusters_folder + '/' + cluster_file_name
 
-            output_file_name = ocr_prefix + '.txt'
-            output_file_path = output_root + '/' + output_file_name
+        km_init = 'k-means++' # Default init parameter for KMeans
+        if os.path.exists(cluster_file_path):
+            # A cluster already exists so we init KMeans with its centroid
+            cluster_vectors = open(cluster_file_path, 'r').read().splitlines()
+            km_init = np.array([[float(v.split(' | ')[-1]) for v in cluster_vectors]])
 
-            km_init = 'k-means++' # Default init parameter for KMeans
-            if os.path.exists(output_file_path):
-                # A cluster already exists so we init KMeans with its centroid
-                cluster_vectors = open(output_file_path, 'r').read().splitlines()
-                km_init = np.array([[float(v.split(' | ')[-1]) for v in cluster_vectors]])
+        # tf-idf vectors with terms
+        vectors = vectorizer.fit_transform([' '.join(ocr_tokens)])
+        terms = vectorizer.get_feature_names_out()
+        # Match shape of vectors and km_init if necessary
+        if km_init != 'k-means++':
+            padding = vectors.shape[1] - km_init.shape[1]
+            if padding > 0:
+                km_init = np.pad(km_init, ((0, 0), (0, padding)))
+            elif padding < 0:
+                vectors = np.pad(vectors.toarray(), ((0, 0), (0, abs(padding))))
+        # Flat clustering using KMeans
+        km = KMeans(n_clusters = K, init = km_init)
+        km.fit(vectors)
+    
+        # Save centroid into file (term:tf-idf pairs)
+        output_file = open(cluster_file_path, 'w')
+        for centroid in km.cluster_centers_:
+            for term, vector in zip(terms, centroid):
+                output_file.write(term + ' | ' + str(vector) + '\n')
+            output_file.close()
 
-            # tf-idf vectors with terms
-            vectors = vectorizer.fit_transform([' '.join(ocr_tokens)])
-            terms = vectorizer.get_feature_names_out()
-            # Match shape of vectors and km_init if necessary
-            if km_init != 'k-means++':
-                padding = vectors.shape[1] - km_init.shape[1]
-                if padding > 0:
-                    km_init = np.pad(km_init, ((0, 0), (0, padding)))
-                elif padding < 0:
-                    vectors = np.pad(vectors.toarray(), ((0, 0), (0, abs(padding))))
-            # Flat clustering using KMeans
-            km = KMeans(n_clusters = K, init = km_init)
-            km.fit(vectors)
-        
-            # Save centroid into file (term:tf-idf pairs)
-            output_file = open(output_file_path, 'w')
-            for centroid in km.cluster_centers_:
-                for term, vector in zip(terms, centroid):
-                    output_file.write(term + ' | ' + str(vector) + '\n')
-                output_file.close()
+        shutil.move(ocr_file_path, clusters_folder + ocr_file_name) # Keep detection .json file
+        os.remove(ocr_file_name_parts[0] + '.png') # Remove detection .png file
 
-            os.remove(ocr_path) # Remove .json file
-            os.remove(lock_file_path) # Remove .lock file
-            break # Process one frame per client at each time
+# Program's main
+if __name__ == '__main__':
+    if len(sys.argv) != 2:
+        print('Wrong arguments')
+    else:
+        clusterizer_worker_id = sys.argv[1]
+        while True:
+            clusterize()

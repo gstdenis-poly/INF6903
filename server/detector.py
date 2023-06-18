@@ -2,7 +2,6 @@
 
 # Include required libraries
 from configurator import *
-import cv2
 import os
 from random import randint
 import shutil
