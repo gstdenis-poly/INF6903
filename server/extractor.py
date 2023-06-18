@@ -81,7 +81,8 @@ def extract():
         rec_db_folder = database_folder + recording_id + '/'
         if not os.path.exists(rec_db_folder):
             os.mkdir(rec_db_folder)
-        for rec_file in recording_files:
+        rec_files = recording_files + [recording_infos_file]
+        for rec_file in rec_files:
             extract_file(recording_id + '_' + rec_file, uploads_folder, rec_db_folder)
 
         # Delete .final file after storage into database and extraction
