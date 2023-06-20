@@ -20,23 +20,18 @@ def record_keyboard(mouse_listener, screen_recorder):
     if os.path.isfile(keyboard_rec_file_path):
         os.remove(keyboard_rec_file_path)
 
-    def on_event(key, event):
-        evt_stamp = datetime.timestamp(datetime.now())
-
-        keyboard_rec_file = open(keyboard_rec_file_path, 'a')
-        keyboard_rec_file.write(str(evt_stamp) + '|' + str(key) + '|' + event + '\n')
-        keyboard_rec_file.close()
-
     def on_press(key):
-        on_event(key, 'Press')
-
-    def on_release(key):
-        on_event(key, 'Release')
-
         if key == keyboard.Key.esc:
             mouse_listener.stop()
             screen_recorder.terminate()
             return False
+
+    def on_release(key):
+        evt_stamp = datetime.timestamp(datetime.now())
+
+        keyboard_rec_file = open(keyboard_rec_file_path, 'a')
+        keyboard_rec_file.write(str(evt_stamp) + '|' + str(key) + '|Release\n')
+        keyboard_rec_file.close()
 
     listener = keyboard.Listener(on_press = on_press, on_release = on_release)
     listener.start()
@@ -48,14 +43,21 @@ def record_mouse():
         os.remove(mouse_rec_file_path)
 
     def on_click(x, y, button, pressed): # On click handler
-        if pressed:
-            evt_stamp = datetime.timestamp(datetime.now())
+        evt_stamp = datetime.timestamp(datetime.now())
+        evt_str = 'Press' if pressed else 'Release'
 
-            mouse_rec_file = open(mouse_rec_file_path, 'a')
-            mouse_rec_file.write(str(evt_stamp) + '|' + str(button) + '|' + str(x) + '|' + str(y) + '\n')
-            mouse_rec_file.close()
+        mouse_rec_file = open(mouse_rec_file_path, 'a')
+        mouse_rec_file.write(str(evt_stamp) + '|' + str(button) + '|' + evt_str + '|' + str(x) + '|' + str(y) + '\n')
+        mouse_rec_file.close()
 
-    listener = mouse.Listener(on_click = on_click)
+    def on_scroll(x, y, dx, dy): # On scroll handler
+        evt_stamp = datetime.timestamp(datetime.now())
+
+        mouse_rec_file = open(mouse_rec_file_path, 'a')
+        mouse_rec_file.write(str(evt_stamp) + '|Scroll|' + str(x) + '|' + str(y) + '|' + str(dx) + '|' + str(dy) + '\n')
+        mouse_rec_file.close()
+
+    listener = mouse.Listener(on_click = on_click, on_scroll = on_scroll)
     listener.start()
 
     return listener
