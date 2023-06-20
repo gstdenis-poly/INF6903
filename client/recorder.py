@@ -6,6 +6,7 @@ from datetime import datetime
 from ffmpeg import FFmpeg # Require ffmpeg, x11grab
 import os
 from pynput import mouse, keyboard
+from pynput.keyboard import Key
 from screeninfo import get_monitors
 import shutil
 import subprocess
@@ -20,20 +21,21 @@ def record_keyboard(mouse_listener, screen_recorder):
     if os.path.isfile(keyboard_rec_file_path):
         os.remove(keyboard_rec_file_path)
 
-    def on_press(key):
-        if key == keyboard.Key.esc:
+    def on_release(key):
+        if key == Key.esc:
             mouse_listener.stop()
             screen_recorder.terminate()
             return False
+        elif key not in [Key.enter, Key.tab, Key.left, Key.right, Key.up, Key.down]:
+            return True
 
-    def on_release(key):
         evt_stamp = datetime.timestamp(datetime.now())
 
         keyboard_rec_file = open(keyboard_rec_file_path, 'a')
         keyboard_rec_file.write(str(evt_stamp) + '|' + str(key) + '|Release\n')
         keyboard_rec_file.close()
 
-    listener = keyboard.Listener(on_press = on_press, on_release = on_release)
+    listener = keyboard.Listener(on_release = on_release)
     listener.start()
 
 # Mouse events recording
@@ -43,18 +45,20 @@ def record_mouse():
         os.remove(mouse_rec_file_path)
 
     def on_click(x, y, button, pressed): # On click handler
+        if pressed:
+            return
+
         evt_stamp = datetime.timestamp(datetime.now())
-        evt_str = 'Press' if pressed else 'Release'
 
         mouse_rec_file = open(mouse_rec_file_path, 'a')
-        mouse_rec_file.write(str(evt_stamp) + '|' + str(button) + '|' + evt_str + '|' + str(x) + '|' + str(y) + '\n')
+        mouse_rec_file.write(str(evt_stamp) + '|' + str(button) + '|' + str(x) + '|' + str(y) + '\n')
         mouse_rec_file.close()
 
     def on_scroll(x, y, dx, dy): # On scroll handler
         evt_stamp = datetime.timestamp(datetime.now())
 
         mouse_rec_file = open(mouse_rec_file_path, 'a')
-        mouse_rec_file.write(str(evt_stamp) + '|Scroll|' + str(x) + '|' + str(y) + '|' + str(dx) + '|' + str(dy) + '\n')
+        mouse_rec_file.write(str(evt_stamp) + '|Scroll|' + str(x) + '|' + str(y) + '\n')
         mouse_rec_file.close()
 
     listener = mouse.Listener(on_click = on_click, on_scroll = on_scroll)
