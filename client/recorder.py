@@ -78,7 +78,8 @@ def record_screen(screen_recorder):
     @screen_recorder.on('start')
     def on_start(arguments):
         recording_infos_file = open('./tmp/recording_infos.txt', 'a')
-        recording_infos_file.write('rec_start|' + str(datetime.timestamp(datetime.now())))
+        recording_infos_file.write('rec_start|' + str(datetime.timestamp(datetime.now())) + '\n')
+        recording_infos_file.write('frame_rate|15\n')
         recording_infos_file.close()
 
     @screen_recorder.on('terminated')
