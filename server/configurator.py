@@ -16,8 +16,8 @@ clusters_folder = '/home/gstdenis/scratch/clusters/'
 mouse_recording_file = 'mouse_recording.txt'
 keyboard_recording_file = 'keyboard_recording.txt'
 screen_recording_file = 'screen_recording.mp4'
-recording_files = [
-    mouse_recording_file, keyboard_recording_file, screen_recording_file
+recording_files = [ # Video file must be first in list
+    screen_recording_file, mouse_recording_file, keyboard_recording_file
     ]
 # Recording's metadata file
 recording_infos_file = 'recording_infos.txt'

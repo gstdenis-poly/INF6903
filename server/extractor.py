@@ -59,8 +59,6 @@ def frame_is_relevant(recording_id, frame_idx):
     mouse_rec_file_path = uploads_folder + recording_id + '_' + mouse_recording_file
     mouse_evt_is_occuring = os.path.isfile(mouse_rec_file_path) and \
                             event_is_occuring(mouse_rec_file_path, frame_start, frame_end)
-    print(os.path.isfile(keyboard_rec_file_path))
-    print(os.path.isfile(mouse_rec_file_path))
 
     return keyboard_evt_is_occuring or mouse_evt_is_occuring
 
