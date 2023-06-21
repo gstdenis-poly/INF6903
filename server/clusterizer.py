@@ -9,6 +9,7 @@ import nltk
 import numpy as np
 nltk.download('punkt')
 nltk.download('stopwords')
+nltk.download('words')
 from nltk.corpus import stopwords, words
 from nltk.stem.porter import PorterStemmer
 from nltk.tokenize import word_tokenize
