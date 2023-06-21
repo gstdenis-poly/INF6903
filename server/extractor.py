@@ -54,9 +54,11 @@ def frame_is_relevant(recording_id, frame_idx):
     frame_end = rec_start + frame_idx * frame_duration
 
     keyboard_rec_file_name = uploads_folder + recording_id + '_' + keyboard_recording_file
-    keyboard_evt_is_occuring = event_is_occuring(keyboard_rec_file_name, frame_start, frame_end)
+    keyboard_evt_is_occuring = os.path.isfile(keyboard_rec_file_name) and \
+                               event_is_occuring(keyboard_rec_file_name, frame_start, frame_end)
     mouse_rec_file_name = uploads_folder + recording_id + '_' + mouse_recording_file
-    mouse_evt_is_occuring = event_is_occuring(mouse_rec_file_name, frame_start, frame_end)
+    mouse_evt_is_occuring = os.path.isfile(mouse_rec_file_name) and \
+                            event_is_occuring(mouse_rec_file_name, frame_start, frame_end)
 
     return keyboard_evt_is_occuring or mouse_evt_is_occuring
 
