@@ -20,7 +20,7 @@ import sys
 
 stemmer = PorterStemmer()
 stop_words = stopwords.words('french') + stopwords.words('english')
-vectorizer = TfidfVectorizer(stop_words=stop_words)
+vectorizer = TfidfVectorizer(stop_words = stop_words)
 K = 1 # Number of clusters (more than 1 is currently not supported)
 
 def has_alpha_num(string):
@@ -29,6 +29,7 @@ def has_alpha_num(string):
             return True
     return False
 
+# Program main function
 def clusterize():
     clusterizer_worker_folder = detections_folder + 'worker' + clusterizer_worker_id + '/'
     if not os.path.exists(clusterizer_worker_folder):

@@ -26,6 +26,41 @@ def extract_frame_monitors(recording_id, frame_folder, frame_idx, frame):
         # Save .final file to inform worker that image file is fully created
         open(os.path.splitext(frame_path)[0] + '.final', 'x')
 
+# Check if an event recorded in given events file occurs during given period
+def event_is_occuring(events_file_name, start_time, end_time):
+    event_file = open(events_file_name, 'r')
+    for line in event_file.read().splitlines():
+        evt_stamp = float(line.split('|')[0])
+        if start_time < evt_stamp and evt_stamp < end_time:
+            return True
+    return False
+
+# Check if frame is relevant for next step of pipeline:
+#   - A user event occured during the frame
+def frame_is_relevant(recording_id, frame_idx):
+    rec_infos_file_name = uploads_folder + recording_id + '_' + recording_infos_file
+    rec_infos_file = open(rec_infos_file_name, 'r')
+
+    rec_start, frame_rate = None, None
+    for line in rec_infos_file.read().splitlines():
+        line_infos = line.split('|')
+        if line_infos[0] == 'rec_start':
+            rec_start = float(line_infos[1])
+        elif line_infos[0] == 'frame_rate':
+            frame_rate = int(line_infos[1])
+
+    frame_duration = 1000000 / frame_rate # Duration of a frame in microseconds
+    frame_start = rec_start + (frame_idx - 1) * frame_duration
+    frame_end = rec_start + frame_idx * frame_duration
+
+    keyboard_rec_file_name = uploads_folder + recording_id + '_' + keyboard_recording_file
+    keyboard_evt_is_occuring = event_is_occuring(keyboard_rec_file_name, frame_start, frame_end)
+    mouse_rec_file_name = uploads_folder + recording_id + '_' + mouse_recording_file
+    mouse_evt_is_occuring = event_is_occuring(mouse_rec_file_name, frame_start, frame_end)
+
+    return keyboard_evt_is_occuring or mouse_evt_is_occuring
+
+
 # Extract frames from video
 def extract_frames(video_name):
     cap = cv2.VideoCapture(uploads_folder + video_name)
@@ -38,14 +73,17 @@ def extract_frames(video_name):
         if not ret:
             break
 
-        # Put frame image in a worker folder for next step of pipeline
-        detector_worker_folder = frames_folder + 'worker' + str(detector_worker_idx) + '/'
         recording_id = video_name.split('_')[0]
-        frame_folder = detector_worker_folder + video_name
-        extract_frame_monitors(recording_id, frame_folder, frame_idx, frame_img)
+        # Extract frame only if relevant
+        if frame_is_relevant(recording_id, frame_idx):
+            # Put frame image in a worker folder for next step of pipeline
+            detector_worker_folder = frames_folder + 'worker' + str(detector_worker_idx) + '/'
+            frame_folder = detector_worker_folder + video_name
+            extract_frame_monitors(recording_id, frame_folder, frame_idx, frame_img)
+
+            detector_worker_idx = detector_worker_idx % detector_workers_count + 1
 
         frame_idx += 1
-        detector_worker_idx = detector_worker_idx % detector_workers_count + 1
 
     cap.release()
     cv2.destroyAllWindows()

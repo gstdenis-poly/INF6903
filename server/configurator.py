@@ -11,8 +11,11 @@ database_folder = '/home/gstdenis/projects/def-gabilode/gstdenis/database/'
 detections_folder = '/home/gstdenis/scratch/detections/'
 clusters_folder = '/home/gstdenis/scratch/clusters/'
 # Recording files' name
+mouse_recording_file = 'mouse_recording.txt'
+keyboard_recording_file = 'keyboard_recording.txt'
+screen_recording_file = 'screen_recording.mp4'
 recording_files = [
-    'mouse_recording.txt', 'keyboard_recording.txt', 'screen_recording.mp4'
+    mouse_recording_file, keyboard_recording_file, screen_recording_file
     ]
 # Recording's metadata file
 recording_infos_file = 'recording_infos.txt'
