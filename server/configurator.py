@@ -8,6 +8,8 @@ import os
 uploads_folder = '/home/gstdenis/scratch/uploads/'
 frames_folder = '/home/gstdenis/scratch/frames/'
 database_folder = '/home/gstdenis/projects/def-gabilode/gstdenis/database/'
+recordings_folder = database_folder + 'recordings/'
+accounts_folder = database_folder + 'accounts/'
 detections_folder = '/home/gstdenis/scratch/detections/'
 clusters_folder = '/home/gstdenis/scratch/clusters/'
 # Recording files' name

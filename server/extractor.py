@@ -116,7 +116,7 @@ def extract():
 
         # Save file into database
         recording_id = file_name_parts[0]
-        rec_db_folder = database_folder + recording_id + '/'
+        rec_db_folder = recordings_folder + recording_id + '/'
         if not os.path.exists(rec_db_folder):
             os.mkdir(rec_db_folder)
         rec_files = recording_files + [recording_infos_file]

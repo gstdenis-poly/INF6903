@@ -9,7 +9,7 @@ import nltk
 import numpy as np
 nltk.download('punkt')
 nltk.download('stopwords')
-from nltk.corpus import stopwords
+from nltk.corpus import stopwords, words
 from nltk.stem.porter import PorterStemmer
 from nltk.tokenize import word_tokenize
 import os
@@ -19,7 +19,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 import sys
 
 stemmer = PorterStemmer()
-stop_words = stopwords.words('french') + stopwords.words('english')
+stop_words = stopwords.words('english')
 vectorizer = TfidfVectorizer(stop_words = stop_words)
 K = 1 # Number of clusters (more than 1 is currently not supported)
 
@@ -29,11 +29,22 @@ def has_alpha_num(string):
             return True
     return False
 
+# Prepare tokens for a given documents
+def prepare_tokens(document):
+    tokens = word_tokenize(document.lower()) # Tokens of lowercased document
+    tokens = [stemmer.stem(t) for t in tokens] # Porter stemmed tokens
+    # Tokens with at least one alphanumeric character
+    tokens = [t for t in tokens if has_alpha_num(t)]
+
+    return tokens
+
 # Program main function
 def clusterize():
     clusterizer_worker_folder = detections_folder + 'worker' + clusterizer_worker_id + '/'
     if not os.path.exists(clusterizer_worker_folder):
         return
+    
+    english_corpus_tokens = prepare_tokens(words.words().join(' '))
 
     ocrs_folder = clusterizer_worker_folder + 'ocr/'
     for ocr_file_name in os.listdir(ocrs_folder):
@@ -48,13 +59,8 @@ def clusterize():
 
         ocr_tokens = []
         for ocr_content in ocr_json['texts']:
-            content = ocr_content['content'].lower() # Lowercased content
-            tokens = word_tokenize(content) # Tokens of lowercased content
-            tokens = [stemmer.stem(t) for t in tokens] # Porter stemmed tokens
-            # Tokens with at least one alphanumeric character
-            tokens = [t for t in tokens if has_alpha_num(t)]
-
-            ocr_tokens += tokens
+            ocr_tokens += prepare_tokens(ocr_content['content'])
+        ocr_tokens = [t for t in ocr_tokens if t in english_corpus_tokens]
 
         cluster_file_name = ocr_file_name_parts[0] + '.txt'
         cluster_file_path = clusters_folder + '/' + cluster_file_name
