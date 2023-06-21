@@ -2,6 +2,7 @@
 #              record all mouse and keyboard events in text files.
 
 # Include required librairies
+from authenticator import authenticate
 from datetime import datetime
 from ffmpeg import FFmpeg # Require ffmpeg, x11grab
 import os
@@ -83,6 +84,7 @@ def init_screen_recorder():
 def record_screen(screen_recorder):
     @screen_recorder.on('start')
     def on_start(arguments):
+        print('Recording started')
         recording_infos_file = open('./tmp/recording_infos.txt', 'a')
         recording_infos_file.write('rec_start|' + str(datetime.timestamp(datetime.now())) + '\n')
         recording_infos_file.write('frame_rate|15\n')
@@ -95,7 +97,7 @@ def record_screen(screen_recorder):
     screen_recorder.execute()
 
 # Upload recording on server
-def upload_recording(ssh_address, ssh_pwd):
+def upload_recording(ssh_address, ssh_pwd, user_name):
     rec_stamp = datetime.timestamp(datetime.now())
     scp_base_args = [
         'sshpass', '-p', ssh_pwd,
@@ -103,15 +105,16 @@ def upload_recording(ssh_address, ssh_pwd):
         '-l', '8192' # Limiting bandwidth to 1MB/s to avoid file transfer stalling
         ]
 
+    recording_id = user_name + '-' + str(rec_stamp)
     for rec_name in os.listdir('./tmp'):
         scp_command = scp_base_args + [ 
             './tmp/' + rec_name,
-            ssh_address + ':' + uploads_folder + str(rec_stamp) + '_' + rec_name
+            ssh_address + ':' + uploads_folder + recording_id + '_' + rec_name
             ]
         subprocess.Popen(scp_command).wait()
 
     # Save .final file to inform server that upload is completed
-    final_file_name = str(rec_stamp) + '.final'
+    final_file_name = recording_id + '.final'
     final_file_path = './tmp/' + final_file_name
     open(final_file_path, 'x')
     scp_command = scp_base_args + [
@@ -132,7 +135,7 @@ def init_recording_infos():
     recording_infos_file.close()
 
 # Program main function
-def record(ssh_address, ssh_pwd):
+def record(ssh_address, ssh_pwd, user_name):
     tmp_dir_path = './tmp'
     if os.path.exists(tmp_dir_path):
         shutil.rmtree(tmp_dir_path)
@@ -144,7 +147,7 @@ def record(ssh_address, ssh_pwd):
     screen_recorder = init_screen_recorder()
     record_keyboard(mouse_listener, screen_recorder)
     record_screen(screen_recorder)
-    upload_recording(ssh_address, ssh_pwd)
+    upload_recording(ssh_address, ssh_pwd, user_name)
 
     shutil.rmtree(tmp_dir_path)
 
@@ -156,5 +159,7 @@ if __name__ == '__main__':
         ssh_address = sys.argv[1]
         ssh_pwd = sys.argv[2]
 
-        time.sleep(1) # Sleep for 1 second before starting to record
-        record(ssh_address, ssh_pwd)
+        # Start recording only if user can be authenticated
+        user_name = authenticate(ssh_address, ssh_pwd)
+        if user_name:
+            record(ssh_address, ssh_pwd, user_name)

@@ -1,3 +1,4 @@
 database/
-*.txt
 *.mp4
+*.pyc
+*.txt
