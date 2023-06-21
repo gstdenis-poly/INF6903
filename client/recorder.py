@@ -123,7 +123,7 @@ def upload_recording(ssh_address, ssh_pwd, user_name):
     ]
     subprocess.Popen(scp_command).wait()
 
-    print('Recording saved')
+    print('Recording uploaded')
 
 # Initialize recording's metadata
 def init_recording_infos():
