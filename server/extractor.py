@@ -49,12 +49,12 @@ def frame_is_relevant(recording_id, frame_idx):
         elif line_infos[0] == 'frame_rate':
             frame_rate = int(line_infos[1])
 
-    print(rec_start)
-    print(frame_rate)
-
     frame_duration = 1000000 / frame_rate # Duration of a frame in microseconds
     frame_start = rec_start + (frame_idx - 1) * frame_duration
     frame_end = rec_start + frame_idx * frame_duration
+
+    print(frame_start)
+    print(frame_end)
 
     keyboard_rec_file_path = uploads_folder + recording_id + '_' + keyboard_recording_file
     keyboard_evt_is_occuring = os.path.isfile(keyboard_rec_file_path) and \
