@@ -45,7 +45,7 @@ def clusterize():
     if not os.path.exists(clusterizer_worker_folder):
         return
     
-    english_corpus_tokens = prepare_tokens(words.words().join(' '))
+    english_corpus_tokens = prepare_tokens(' '.join(words.words()))
 
     ips_folder = clusterizer_worker_folder + 'ip/'
     ocrs_folder = clusterizer_worker_folder + 'ocr/'
