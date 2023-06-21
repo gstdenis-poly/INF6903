@@ -30,7 +30,6 @@ def extract_frame_monitors(recording_id, frame_folder, frame_idx, frame):
 def event_is_occuring(events_file_name, start_time, end_time):
     event_file = open(events_file_name, 'r')
     for line in event_file.read().splitlines():
-        print(str(evt_stamp) + ' | ' + str(start_time) + ' | ' + str(end_time))
         evt_stamp = float(line.split('|')[0])
         if start_time < evt_stamp and evt_stamp < end_time:
             return True
@@ -50,16 +49,19 @@ def frame_is_relevant(recording_id, frame_idx):
         elif line_infos[0] == 'frame_rate':
             frame_rate = int(line_infos[1])
 
+    print(rec_start)
+    print(frame_rate)
+
     frame_duration = 1000000 / frame_rate # Duration of a frame in microseconds
     frame_start = rec_start + (frame_idx - 1) * frame_duration
     frame_end = rec_start + frame_idx * frame_duration
 
-    keyboard_rec_file_name = uploads_folder + recording_id + '_' + keyboard_recording_file
-    keyboard_evt_is_occuring = os.path.isfile(keyboard_rec_file_name) and \
-                               event_is_occuring(keyboard_rec_file_name, frame_start, frame_end)
-    mouse_rec_file_name = uploads_folder + recording_id + '_' + mouse_recording_file
-    mouse_evt_is_occuring = os.path.isfile(mouse_rec_file_name) and \
-                            event_is_occuring(mouse_rec_file_name, frame_start, frame_end)
+    keyboard_rec_file_path = uploads_folder + recording_id + '_' + keyboard_recording_file
+    keyboard_evt_is_occuring = os.path.isfile(keyboard_rec_file_path) and \
+                               event_is_occuring(keyboard_rec_file_path, frame_start, frame_end)
+    mouse_rec_file_path = uploads_folder + recording_id + '_' + mouse_recording_file
+    mouse_evt_is_occuring = os.path.isfile(mouse_rec_file_path) and \
+                            event_is_occuring(mouse_rec_file_path, frame_start, frame_end)
 
     return keyboard_evt_is_occuring or mouse_evt_is_occuring
 
