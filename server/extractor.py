@@ -30,8 +30,8 @@ def extract_frame_monitors(recording_id, frame_folder, frame_idx, frame):
 def event_is_occuring(events_file_name, start_time, end_time):
     event_file = open(events_file_name, 'r')
     for line in event_file.read().splitlines():
-        print(str(evt_stamp) + ' | ' + str(start_time) + ' | ' + str(end_time))
         evt_stamp = float(line.split('|')[0])
+        print(str(evt_stamp) + ' | ' + str(start_time) + ' | ' + str(end_time))
         if start_time < evt_stamp and evt_stamp < end_time:
             return True
     return False
