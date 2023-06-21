@@ -46,6 +46,7 @@ def clusterize():
     
     english_corpus_tokens = prepare_tokens(words.words().join(' '))
 
+    ips_folder = clusterizer_worker_folder + 'ip/'
     ocrs_folder = clusterizer_worker_folder + 'ocr/'
     for ocr_file_name in os.listdir(ocrs_folder):
         ocr_file_name_parts = os.path.splitext(ocr_file_name)
@@ -62,7 +63,8 @@ def clusterize():
             ocr_tokens += prepare_tokens(ocr_content['content'])
         ocr_tokens = [t for t in ocr_tokens if t in english_corpus_tokens]
 
-        cluster_file_name = ocr_file_name_parts[0] + '.txt'
+        recording_id = ocr_file_name_parts[0].split('_')[0]
+        cluster_file_name = recording_id + '.txt'
         cluster_file_path = clusters_folder + '/' + cluster_file_name
 
         km_init = 'k-means++' # Default init parameter for KMeans
@@ -85,16 +87,19 @@ def clusterize():
         km = KMeans(n_clusters = K, init = km_init)
         km.fit(vectors)
     
-        # Save centroid into file (term:tf-idf pairs)
+        # Save centroid into file (term:tf-idf pairs) for next step of pipeline
         output_file = open(cluster_file_path, 'w')
         for centroid in km.cluster_centers_:
             for term, vector in zip(terms, centroid):
                 output_file.write(term + '|' + str(vector) + '\n')
             output_file.close()
 
-        # Keep .json file but remove .png file
-        shutil.move(ocr_file_path, clusters_folder + ocr_file_name)
+        # Remove detections files
+        os.remove(ocr_file_path)
         os.remove(ocrs_folder + ocr_file_name_parts[0] + '.png')
+        os.remove(ips_folder + ocr_file_name_parts[0] + '.json')
+        os.remove(ips_folder + ocr_file_name_parts[0] + '.jpg')
+        os.remove(clusterizer_worker_folder + ocr_file_name_parts[0] + '.final')
 
 # Program's main
 if __name__ == '__main__':
