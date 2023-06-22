@@ -35,7 +35,7 @@ def detect():
         shutil.copytree(detector_worker_ip_folder, clusterizer_worker_folder + 'ip/', dirs_exist_ok = True)
         shutil.copytree(detector_worker_ocr_folder, clusterizer_worker_folder + 'ocr/', dirs_exist_ok = True)
         # Save .final file to inform worker that detection is fully completed
-        open(clusterizer_worker_folder + frame_name_parts[0] + '.final', 'x')
+        open(clusterizer_worker_folder + frame_name_parts[0] + '.final', 'x').close()
         
         # Delete frame and its detection folders after copying for next worker and to database
         shutil.rmtree(detector_worker_ip_folder) # Remove ip folder

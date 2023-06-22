@@ -56,8 +56,9 @@ def clusterize():
             continue
 
         ocr_file_path = ocrs_folder + ocr_file_name
-        ocr_text = open(ocr_file_path, 'r').read()
-        ocr_json = json.loads(ocr_text)
+        ocr_file = open(ocr_file_path, 'r')
+        ocr_json = json.loads(ocr_file.read())
+        ocr_file.close()
 
         ocr_tokens = []
         for ocr_content in ocr_json['texts']:
@@ -66,14 +67,24 @@ def clusterize():
 
         recording_id = ocr_file_name_parts[0].split('_')[0]
         cluster_file_name = recording_id + '.txt'
-        cluster_file_path = clusters_folder + '/' + cluster_file_name
+        cluster_file_path = clusters_folder + cluster_file_name
 
         km_init = 'k-means++' # Default init parameter for KMeans
         if os.path.exists(cluster_file_path):
-            # A cluster already exists so we init KMeans with its centroid
-            cluster_vectors = open(cluster_file_path, 'r').read().splitlines()
-            km_init = np.array([[float(v.split(' | ')[-1]) for v in cluster_vectors]])
+            cluster_lock_file_path = clusters_folder + recording_id + '.lock'
+            if os.path.isfile(cluster_lock_file_path):
+                continue # Skip iteration if cluster file is locked by another worker
+            else:
+                open(cluster_lock_file_path, 'x').close() # Lock file
 
+            # A cluster already exists so we init KMeans with its centroid
+            cluster_file = open(cluster_file_path, 'r')
+            cluster_vectors = cluster_file.read().splitlines()
+            cluster_file.close()
+            os.remove(cluster_lock_file_path) # Remove .lock file
+
+            km_init = np.array([[float(v.split(' | ')[-1]) for v in cluster_vectors]])
+            
         # tf-idf vectors with terms
         vectors = vectorizer.fit_transform([' '.join(ocr_tokens)])
         terms = vectorizer.get_feature_names_out()
@@ -89,11 +100,11 @@ def clusterize():
         km.fit(vectors)
     
         # Save centroid into file (term:tf-idf pairs) for next step of pipeline
-        output_file = open(cluster_file_path, 'w')
+        cluster_file = open(cluster_file_path, 'w')
         for centroid in km.cluster_centers_:
             for term, vector in zip(terms, centroid):
-                output_file.write(term + '|' + str(vector) + '\n')
-            output_file.close()
+                cluster_file.write(term + '|' + str(vector) + '\n')
+        cluster_file.close()
 
         # Remove detections files
         os.remove(ocr_file_path)

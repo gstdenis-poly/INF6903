@@ -12,14 +12,14 @@ def read_credentials(account_file_path):
     user_name, user_pwd = None, None
     try:
         account_file = open(account_file_path, 'r')
-        for line in account_file.read().splitlines():
+        account_file_lines = account_file.read().splitlines()
+        account_file.close()
+        for line in account_file_lines:
             line_infos = line.split('|')
             if line_infos[0] == 'user_name':
                 user_name = line_infos[1]
             elif line_infos[0] == 'user_pwd':
                 user_pwd = line_infos[1]
-
-        account_file.close()
     except Exception as e:
         print(e)
 

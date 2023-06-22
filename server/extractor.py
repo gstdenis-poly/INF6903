@@ -10,8 +10,10 @@ import shutil
 def extract_frame_monitors(recording_id, frame_folder, frame_idx, frame):
     rec_infos_file_name = uploads_folder + recording_id + '_' + recording_infos_file
     rec_infos_file = open(rec_infos_file_name, 'r')
+    rec_infos_file_lines = rec_infos_file.read().splitlines()
+    rec_infos_file.close()
     
-    for i, line in enumerate(rec_infos_file.read().splitlines()):
+    for i, line in enumerate(rec_infos_file_lines):
         line_infos = line.split('|')
         if line_infos[0] != 'monitor':
             continue
@@ -24,14 +26,15 @@ def extract_frame_monitors(recording_id, frame_folder, frame_idx, frame):
         frame_path = frame_folder + '_' + str(i + 1) + '_' + str(frame_idx) + '.png'
         cv2.imwrite(frame_path, frame[y:(y + h), x:(x + w)])
         # Save .final file to inform worker that image file is fully created
-        open(os.path.splitext(frame_path)[0] + '.final', 'x')
+        open(os.path.splitext(frame_path)[0] + '.final', 'x').close()
 
 # Check if an event recorded in given events file occurs during given period
 def event_is_occuring(events_file_name, start_time, end_time):
     event_file = open(events_file_name, 'r')
-    for line in event_file.read().splitlines():
+    event_file_lines = event_file.read().splitlines()
+    event_file.close()
+    for line in event_file_lines:
         evt_stamp = float(line.split('|')[0])
-        print(str(evt_stamp) + ' | ' + str(start_time) + ' | ' + str(end_time))
         if start_time < evt_stamp and evt_stamp < end_time:
             return True
     return False
@@ -41,9 +44,11 @@ def event_is_occuring(events_file_name, start_time, end_time):
 def frame_is_relevant(recording_id, frame_idx):
     rec_infos_file_name = uploads_folder + recording_id + '_' + recording_infos_file
     rec_infos_file = open(rec_infos_file_name, 'r')
+    rec_infos_file_lines = rec_infos_file.read().splitlines()
+    rec_infos_file.close()
 
     rec_start, frame_rate = None, None
-    for line in rec_infos_file.read().splitlines():
+    for line in rec_infos_file_lines:
         line_infos = line.split('|')
         if line_infos[0] == 'rec_start':
             rec_start = int(line_infos[1])

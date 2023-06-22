@@ -115,7 +115,7 @@ def upload_recording(ssh_address, ssh_pwd, user_name):
     # Save .final file to inform server that upload is completed
     final_file_name = recording_id + '.final'
     final_file_path = './tmp/' + final_file_name
-    open(final_file_path, 'x')
+    open(final_file_path, 'x').close()
     scp_command = scp_base_args + [
         final_file_path, 
         ssh_address + ':' + uploads_folder + final_file_name
