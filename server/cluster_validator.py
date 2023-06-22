@@ -12,7 +12,7 @@ import shutil
 # Return cluster's centroid of given cluster file
 def get_cluster_centroid(cluster_file_path):
     cluster_centroid = open(cluster_file_path, 'r').read().splitlines()
-    cluster_centroid = [float(v.split(' | ')[-1]) for v in cluster_centroid]
+    cluster_centroid = [float(v.split('|')[-1]) for v in cluster_centroid]
     cluster_centroid = np.array(cluster_centroid) 
 
     return cluster_centroid
