@@ -69,21 +69,35 @@ def clusterize():
         cluster_file_name = recording_id + '.txt'
         cluster_file_path = clusters_folder + cluster_file_name
 
+        cluster_lock_file_path = clusters_folder + recording_id + '.lock'
+        if os.path.isfile(cluster_lock_file_path):
+            continue # Skip iteration if cluster file is locked by another worker
+        else:
+            open(cluster_lock_file_path, 'x').close() # Lock file
+
+        cluster_frames_processed = 0
+
+        cluster_tmp_file_path = clusters_folder + recording_id + '.tmp'
+        if os.path.isfile(cluster_tmp_file_path):
+            cluster_tmp_file = open(cluster_tmp_file_path, 'r+')
+            cluster_frames_processed = int(cluster_tmp_file.read()) + 1
+            cluster_tmp_file.seek(0)
+            cluster_tmp_file.write(str(cluster_frames_processed))
+        else:
+            cluster_tmp_file = open(cluster_tmp_file_path, 'w')
+            cluster_tmp_file.write('1')
+
+        cluster_tmp_file.close()
+
         km_init = 'k-means++' # Default init parameter for KMeans
         if os.path.exists(cluster_file_path):
-            cluster_lock_file_path = clusters_folder + recording_id + '.lock'
-            if os.path.isfile(cluster_lock_file_path):
-                continue # Skip iteration if cluster file is locked by another worker
-            else:
-                open(cluster_lock_file_path, 'x').close() # Lock file
-
             # A cluster already exists so we init KMeans with its centroid
             cluster_file = open(cluster_file_path, 'r')
             cluster_vectors = cluster_file.read().splitlines()
             cluster_file.close()
-            os.remove(cluster_lock_file_path) # Remove .lock file
-
             km_init = np.array([[float(v.split('|')[-1]) for v in cluster_vectors]])
+
+        os.remove(cluster_lock_file_path) # Remove .lock file
             
         # tf-idf vectors with terms
         vectors = vectorizer.fit_transform([' '.join(ocr_tokens)])
@@ -105,6 +119,19 @@ def clusterize():
             for term, vector in zip(terms, centroid):
                 cluster_file.write(term + '|' + str(vector) + '\n')
         cluster_file.close()
+
+        # Replace .tmp file by .final file to inform worker that cluster is completed
+        rec_infos_file_name = recording_id + '_' + recording_infos_file
+        rec_infos_file_path = recordings_folder + recording_id + '/' + rec_infos_file_name
+        rec_infos_file = open(rec_infos_file_path, 'r')
+        rec_infos_file_lines = rec_infos_file.read().splitlines()
+        rec_infos_file.close()
+        for line in rec_infos_file_lines:
+            line_infos = line.split('|')
+            if line_infos[0] == 'frames_count' and int(line_infos[1]) == cluster_frames_processed:
+                os.remove(cluster_tmp_file_path)
+                open(clusters_folder + recording_id + '.final', 'x').close()
+                break
 
         # Remove detections files
         os.remove(ocr_file_path)

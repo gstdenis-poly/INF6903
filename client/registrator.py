@@ -9,8 +9,8 @@ accounts_folder = '~/projects/def-gabilode/gstdenis/database/accounts/'
 
 # Program main function
 def register(ssh_address, ssh_pwd, user_name, user_pwd, user_type):
-    if user_type not in ['client', 'provider']:
-        print('User type must be "client" or "provider"')
+    if user_type not in ['requester', 'provider']:
+        print('User type must be "requester" or "provider"')
         return
 
     local_account_file_path = './account.txt'

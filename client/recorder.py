@@ -3,6 +3,7 @@
 
 # Include required librairies
 from authenticator import authenticate
+import cv2
 from ffmpeg import FFmpeg # Require ffmpeg, x11grab
 import os
 from pynput import mouse, keyboard
@@ -92,6 +93,12 @@ def record_screen(screen_recorder):
     @screen_recorder.on('terminated')
     def on_terminated():
         print('Recording completed')
+        cap = cv2.VideoCapture("./tmp/screen_recording.mp4")
+        frames_count = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+
+        recording_infos_file = open('./tmp/recording_infos.txt', 'a')
+        recording_infos_file.write('frames_count|' + str(frames_count) + '\n')
+        recording_infos_file.close()
 
     screen_recorder.execute()
 

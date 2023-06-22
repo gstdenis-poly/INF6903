@@ -8,8 +8,8 @@ import shutil
 
 # Extract monitor's image from frame
 def extract_frame_monitors(recording_id, frame_folder, frame_idx, frame):
-    rec_infos_file_name = uploads_folder + recording_id + '_' + recording_infos_file
-    rec_infos_file = open(rec_infos_file_name, 'r')
+    rec_infos_file_path = uploads_folder + recording_id + '_' + recording_infos_file
+    rec_infos_file = open(rec_infos_file_path, 'r')
     rec_infos_file_lines = rec_infos_file.read().splitlines()
     rec_infos_file.close()
     
@@ -42,8 +42,8 @@ def event_is_occuring(events_file_name, start_time, end_time):
 # Check if frame is relevant for next step of pipeline:
 #   - A user event occured during the frame
 def frame_is_relevant(recording_id, frame_idx):
-    rec_infos_file_name = uploads_folder + recording_id + '_' + recording_infos_file
-    rec_infos_file = open(rec_infos_file_name, 'r')
+    rec_infos_file_path = uploads_folder + recording_id + '_' + recording_infos_file
+    rec_infos_file = open(rec_infos_file_path, 'r')
     rec_infos_file_lines = rec_infos_file.read().splitlines()
     rec_infos_file.close()
 
