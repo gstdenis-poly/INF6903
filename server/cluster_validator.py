@@ -61,7 +61,6 @@ def validate_cluster():
     if not clusters_to_validate:
        return
     
-    results = {}
     for cluster_file_name in os.path.listdir(res_clusters_folder):
         cluster_file_path = res_clusters_folder + cluster_file_name
         cluster_centroid = get_cluster_centroid(cluster_file_path)
