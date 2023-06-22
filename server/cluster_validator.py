@@ -53,7 +53,7 @@ def save_clusters():
 
         cluster_file_path = file_path_parts[0] + '.txt'
         shutil.move(cluster_file_path, res_clusters_folder)
-        os.remove(file_name) # Remove .final file
+        os.remove(file_path) # Remove .final file
         cluster_saved = True
 
     return cluster_saved
