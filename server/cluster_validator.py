@@ -7,61 +7,90 @@ from configurator import *
 import os
 import numpy as np
 from scipy.spatial.distance import cosine
+import shutil
 
+# Return cluster's centroid of given cluster file
+def get_cluster_centroid(cluster_file_path):
+    cluster_centroid = open(cluster_file_path, 'r').read().splitlines()
+    cluster_centroid = [float(v.split(' | ')[-1]) for v in cluster_centroid]
+    cluster_centroid = np.array(cluster_centroid) 
+
+    return cluster_centroid
+
+# Return cosine distance between two clusters' centroids
+def get_centroids_distance(centroid1, centroid2):
+    padding = centroid1.shape[0] - centroid2.shape[0]
+    if padding > 0:
+        centroid2 = np.pad(centroid2, (0, padding))
+    elif padding < 0:
+        centroid1 = np.pad(centroid1, (0, abs(padding)))
+
+    return cosine(centroid1, centroid2)
+
+# Return account type of given account name
+def get_account_type(acc_name):
+    acc_type = None
+
+    acc_file_path = accounts_folder + acc_name + '.txt'
+    acc_file = open(acc_file_path, 'r')
+    for line in acc_file.read().splitlines():
+        line_infos = line.split('|')
+        if line_infos[0] == 'acc_type':
+            acc_type = line_infos[1]
+            break
+
+    return acc_type
+
+# Save temporary cluster files to database and return True if at
+# least one cluster file was saved to database
+def save_clusters():
+    cluster_saved = False
+    for cluster_file_name in os.path.listdir(clusters_folder):
+        cluster_file_path = clusters_folder + cluster_file_name
+        if not os.path.isfile(os.path.splitext(cluster_file_path)[0] + '.final'):
+            continue
+              
+        shutil.move(cluster_file_path, res_clusters_folder)
+        cluster_saved = True
+
+    return cluster_saved
+
+# Program's main function
 def validate_cluster():
-  database_root = app_root + '/database'
-  test_db_root = database_root + '/test'
-  requesters_table = open(test_db_root + '/requester.csv', 'r').read().splitlines()
-  providers_table = open(test_db_root + '/provider.csv', 'r').read().splitlines()
+    clusters_to_validate = save_clusters()
+    if not clusters_to_validate:
+       return
+    
+    results = {}
+    for cluster_file_name in os.path.listdir(res_clusters_folder):
+        cluster_file_path = res_clusters_folder + cluster_file_name
+        cluster_centroid = get_cluster_centroid(cluster_file_path)
 
-  results = {} # Dictionary of distances between each clusters
-  for requester in requesters_table:
-    requester_id = requester.split(',')[0]
-    requester_db = database_root + '/' + requester_id
+        recording_id = os.path.splitext(cluster_file_name)[0]
+        acc_name = recording_id.split('-')[0]
+        acc_type = get_account_type(acc_name)
 
-    requester_clusters_root = requester_db + '/clusters'
-    if not os.path.exists(requester_clusters_root):
-      continue
+        for cmp_cluster_file_name in os.path.listdir(clusters_folder):
+            if cmp_cluster_file_name == cluster_file_name:
+                continue
 
-    requester_clusters = os.listdir(requester_clusters_root)
-    for requester_cluster in requester_clusters:
-      requester_cluster_path = requester_clusters_root + '/' + requester_cluster
-      requester_cluster_centroid = open(requester_cluster_path, 'r').read().splitlines()
-      requester_cluster_centroid = [float(v.split(' | ')[-1]) for v in requester_cluster_centroid]
-      requester_cluster_centroid = np.array(requester_cluster_centroid)
+            cmp_cluster_file_path = clusters_folder + cmp_cluster_file_name
+            cmp_recording_id = os.path.splitext(cmp_cluster_file_path)[0]
+            cmp_acc_name = cmp_recording_id.split('-')[0]
+            cmp_acc_type = get_account_type(cmp_acc_name)
 
-      for provider in providers_table:
-        provider_id = provider.split(',')[0]
-        provider_db = database_root + '/' + provider_id
+            # Compare clusters only if accounts not of same type
+            if cmp_acc_type == acc_type:
+                continue
 
-        provider_clusters_root = provider_db + '/clusters'
-        if not os.path.exists(provider_clusters_root):
-          continue
-
-        provider_clusters = os.listdir(provider_clusters_root)
-        for provider_cluster in provider_clusters:
-          provider_cluster_path = provider_clusters_root + '/' + provider_cluster
-          provider_cluster_centroid = open(provider_cluster_path, 'r').read().splitlines()
-          provider_cluster_centroid = np.array([float(v.split(' | ')[-1]) for v in provider_cluster_centroid])
-          provider_cluster_centroid = np.array(provider_cluster_centroid)
-
-          # Match shape of centroids if necessary
-          padding = requester_cluster_centroid.shape[0] - provider_cluster_centroid.shape[0]
-          if padding > 0:
-            provider_cluster_centroid = np.pad(provider_cluster_centroid, (0, padding))
-          elif padding < 0:
-            requester_cluster_centroid = np.pad(requester_cluster_centroid, (0, abs(padding)))
-
-          distance = cosine(requester_cluster_centroid, provider_cluster_centroid)
-          results[(requester_id, provider_id, requester_cluster, provider_cluster)] = distance
-
-  return dict(sorted(results.items(), key=lambda item: item[1]))
-
-distances = validate_cluster()
-for k in distances:
-  print('Requester ' + k[0] + ' : ' + k[2])
-  print('Provider ' + k[1] + ' : ' + k[3])
-  print('Distance : ' + str(distances[k]) + '\n')
+            cmp_cluster_centroid = get_cluster_centroid(cmp_cluster_file_path)
+            distance = get_centroids_distance(cluster_centroid, cmp_cluster_centroid)
+            
+            cluster_val_file_path = val_clusters_folder + cluster_file_name
+            cluster_val_path = open(cluster_val_file_path, 'w')
+            cluster_val_path.write('recording_id|' + cmp_recording_id + '\n')
+            cluster_val_path.write('distance|' + distance)
+            cluster_val_file_path.close()
 
 # Program's main
 if __name__ == '__main__':

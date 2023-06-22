@@ -103,7 +103,7 @@ def record_screen(screen_recorder):
     screen_recorder.execute()
 
 # Upload recording on server
-def upload_recording(ssh_address, ssh_pwd, user_name):
+def upload_recording(ssh_address, ssh_pwd, acc_name):
     rec_stamp = time.time_ns()
     scp_base_args = [
         'sshpass', '-p', ssh_pwd,
@@ -111,7 +111,7 @@ def upload_recording(ssh_address, ssh_pwd, user_name):
         '-l', '8192' # Limiting bandwidth to 1MB/s to avoid file transfer stalling
         ]
 
-    recording_id = user_name + '-' + str(rec_stamp)
+    recording_id = acc_name + '-' + str(rec_stamp)
     for rec_name in os.listdir('./tmp'):
         scp_command = scp_base_args + [ 
             './tmp/' + rec_name,
@@ -141,7 +141,7 @@ def init_recording_infos():
     recording_infos_file.close()
 
 # Program main function
-def record(ssh_address, ssh_pwd, user_name):
+def record(ssh_address, ssh_pwd, acc_name):
     tmp_dir_path = './tmp'
     if os.path.exists(tmp_dir_path):
         shutil.rmtree(tmp_dir_path)
@@ -153,7 +153,7 @@ def record(ssh_address, ssh_pwd, user_name):
     screen_recorder = init_screen_recorder()
     record_keyboard(mouse_listener, screen_recorder)
     record_screen(screen_recorder)
-    upload_recording(ssh_address, ssh_pwd, user_name)
+    upload_recording(ssh_address, ssh_pwd, acc_name)
 
     shutil.rmtree(tmp_dir_path)
 
@@ -166,6 +166,6 @@ if __name__ == '__main__':
         ssh_pwd = sys.argv[2]
 
         # Start recording only if user can be authenticated
-        user_name = authenticate(ssh_address, ssh_pwd)
-        if user_name:
-            record(ssh_address, ssh_pwd, user_name)
+        acc_name = authenticate(ssh_address, ssh_pwd)
+        if acc_name:
+            record(ssh_address, ssh_pwd, acc_name)
