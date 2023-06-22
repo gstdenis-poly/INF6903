@@ -3,7 +3,6 @@
 
 # Include required librairies
 from authenticator import authenticate
-from datetime import datetime
 from ffmpeg import FFmpeg # Require ffmpeg, x11grab
 import os
 from pynput import mouse, keyboard
@@ -30,7 +29,7 @@ def record_keyboard(mouse_listener, screen_recorder):
         elif key not in [Key.enter, Key.tab, Key.left, Key.right, Key.up, Key.down]:
             return True
 
-        evt_stamp = datetime.timestamp(datetime.now())
+        evt_stamp = time.time_ns()
 
         keyboard_rec_file = open(keyboard_rec_file_path, 'a')
         keyboard_rec_file.write(str(evt_stamp) + '|' + str(key) + '|Release\n')
@@ -49,14 +48,14 @@ def record_mouse():
         if pressed:
             return
 
-        evt_stamp = datetime.timestamp(datetime.now())
+        evt_stamp = time.time_ns()
 
         mouse_rec_file = open(mouse_rec_file_path, 'a')
         mouse_rec_file.write(str(evt_stamp) + '|' + str(button) + '|' + str(x) + '|' + str(y) + '\n')
         mouse_rec_file.close()
 
     def on_scroll(x, y, dx, dy): # On scroll handler
-        evt_stamp = datetime.timestamp(datetime.now())
+        evt_stamp = time.time_ns()
 
         mouse_rec_file = open(mouse_rec_file_path, 'a')
         mouse_rec_file.write(str(evt_stamp) + '|Scroll|' + str(x) + '|' + str(y) + '\n')
@@ -86,7 +85,7 @@ def record_screen(screen_recorder):
     def on_start(arguments):
         print('Recording started')
         recording_infos_file = open('./tmp/recording_infos.txt', 'a')
-        recording_infos_file.write('rec_start|' + str(datetime.timestamp(datetime.now())) + '\n')
+        recording_infos_file.write('rec_start|' + str(time.time_ns()) + '\n')
         recording_infos_file.write('frame_rate|15\n')
         recording_infos_file.close()
 
@@ -98,7 +97,7 @@ def record_screen(screen_recorder):
 
 # Upload recording on server
 def upload_recording(ssh_address, ssh_pwd, user_name):
-    rec_stamp = datetime.timestamp(datetime.now())
+    rec_stamp = time.time_ns()
     scp_base_args = [
         'sshpass', '-p', ssh_pwd,
         'scp', '-o', 'StrictHostKeyChecking=no',

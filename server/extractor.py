@@ -46,11 +46,11 @@ def frame_is_relevant(recording_id, frame_idx):
     for line in rec_infos_file.read().splitlines():
         line_infos = line.split('|')
         if line_infos[0] == 'rec_start':
-            rec_start = float(line_infos[1])
+            rec_start = int(line_infos[1])
         elif line_infos[0] == 'frame_rate':
             frame_rate = int(line_infos[1])
 
-    frame_duration = 1000000 / frame_rate # Duration of a frame in microseconds
+    frame_duration = 1000000000 / frame_rate # Duration of a frame in nanoseconds
     frame_start = rec_start + (frame_idx - 1) * frame_duration
     frame_end = rec_start + frame_idx * frame_duration
 
