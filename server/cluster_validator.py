@@ -45,7 +45,7 @@ def get_account_type(acc_name):
 # least one cluster file was saved to database
 def save_clusters():
     cluster_saved = False
-    for cluster_file_name in os.path.listdir(clusters_folder):
+    for cluster_file_name in os.listdir(clusters_folder):
         cluster_file_path = clusters_folder + cluster_file_name
         cluster_final_file_path = os.path.splitext(cluster_file_path)[0] + '.final'
         if not os.path.isfile(cluster_final_file_path):
@@ -63,7 +63,7 @@ def validate_cluster():
     if not clusters_to_validate:
        return
     
-    for cluster_file_name in os.path.listdir(res_clusters_folder):
+    for cluster_file_name in os.listdir(res_clusters_folder):
         cluster_file_path = res_clusters_folder + cluster_file_name
         cluster_centroid = get_cluster_centroid(cluster_file_path)
 
@@ -71,7 +71,7 @@ def validate_cluster():
         acc_name = recording_id.split('-')[0]
         acc_type = get_account_type(acc_name)
 
-        for cmp_cluster_file_name in os.path.listdir(clusters_folder):
+        for cmp_cluster_file_name in os.listdir(clusters_folder):
             if cmp_cluster_file_name == cluster_file_name:
                 continue
 
