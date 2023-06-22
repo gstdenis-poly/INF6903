@@ -83,7 +83,7 @@ def clusterize():
             cluster_file.close()
             os.remove(cluster_lock_file_path) # Remove .lock file
 
-            km_init = np.array([[float(v.split(' | ')[-1]) for v in cluster_vectors]])
+            km_init = np.array([[float(v.split('|')[-1]) for v in cluster_vectors]])
             
         # tf-idf vectors with terms
         vectors = vectorizer.fit_transform([' '.join(ocr_tokens)])
