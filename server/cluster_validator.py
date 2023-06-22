@@ -47,10 +47,12 @@ def save_clusters():
     cluster_saved = False
     for cluster_file_name in os.path.listdir(clusters_folder):
         cluster_file_path = clusters_folder + cluster_file_name
-        if not os.path.isfile(os.path.splitext(cluster_file_path)[0] + '.final'):
+        cluster_final_file_path = os.path.splitext(cluster_file_path)[0] + '.final'
+        if not os.path.isfile(cluster_final_file_path):
             continue
               
         shutil.move(cluster_file_path, res_clusters_folder)
+        os.remove(cluster_final_file_path) # Remove .final file
         cluster_saved = True
 
     return cluster_saved
