@@ -45,14 +45,15 @@ def get_account_type(acc_name):
 # least one cluster file was saved to database
 def save_clusters():
     cluster_saved = False
-    for cluster_file_name in os.listdir(clusters_folder):
-        cluster_file_path = clusters_folder + cluster_file_name
-        cluster_final_file_path = os.path.splitext(cluster_file_path)[0] + '.final'
-        if not os.path.isfile(cluster_final_file_path):
+    for file_name in os.listdir(clusters_folder):
+        file_path = clusters_folder + file_name
+        file_path_parts = os.path.splitext(file_path)
+        if file_path_parts[1] != '.final':
             continue
-              
+
+        cluster_file_path = clusters_folder + file_path_parts[0] + '.txt'
         shutil.move(cluster_file_path, res_clusters_folder)
-        os.remove(cluster_final_file_path) # Remove .final file
+        os.remove(file_name) # Remove .final file
         cluster_saved = True
 
     return cluster_saved
