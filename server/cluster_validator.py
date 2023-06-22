@@ -72,6 +72,9 @@ def validate_cluster():
         acc_name = recording_id.split('-')[0]
         acc_type = get_account_type(acc_name)
 
+        cluster_val_file_path = val_clusters_folder + cluster_file_name
+        cluster_val_file = open(cluster_val_file_path, 'w')
+
         for cmp_cluster_file_name in os.listdir(clusters_folder):
             if cmp_cluster_file_name == cluster_file_name:
                 continue
@@ -88,11 +91,10 @@ def validate_cluster():
             cmp_cluster_centroid = get_cluster_centroid(cmp_cluster_file_path)
             distance = get_centroids_distance(cluster_centroid, cmp_cluster_centroid)
             
-            cluster_val_file_path = val_clusters_folder + cluster_file_name
-            cluster_val_file = open(cluster_val_file_path, 'w')
             cluster_val_file.write('recording_id|' + cmp_recording_id + '\n')
             cluster_val_file.write('distance|' + distance)
-            cluster_val_file.close()
+        
+        cluster_val_file.close()
 
 # Program's main
 if __name__ == '__main__':
