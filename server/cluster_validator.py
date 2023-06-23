@@ -90,9 +90,7 @@ def validate_cluster():
 
             cmp_cluster_centroid = get_cluster_centroid(cmp_cluster_file_path)
             distance = get_centroids_distance(cluster_centroid, cmp_cluster_centroid)
-            
-            cluster_val_file.write('recording_id|' + cmp_recording_id + '\n')
-            cluster_val_file.write('distance|' + distance)
+            cluster_val_file.write(cmp_recording_id + '|' + str(distance) + '\n')
         
         cluster_val_file.close()
 
