@@ -102,16 +102,20 @@ def record_screen(screen_recorder):
 
     screen_recorder.execute()
 
+# Save given recording id in recordings.txt local file
+def save_recording(recording_id):
+    recordings_file = open('./recordings.txt', 'a')
+    recordings_file.write('recording|' + recording_id + '\n')
+    recordings_file.close()
+
 # Upload recording on server
-def upload_recording(ssh_address, ssh_pwd, acc_name):
-    rec_stamp = time.time_ns()
+def upload_recording(ssh_address, ssh_pwd, recording_id):
     scp_base_args = [
         'sshpass', '-p', ssh_pwd,
         'scp', '-o', 'StrictHostKeyChecking=no',
         '-l', '8192' # Limiting bandwidth to 1MB/s to avoid file transfer stalling
         ]
 
-    recording_id = acc_name + '-' + str(rec_stamp)
     for rec_name in os.listdir('./tmp'):
         scp_command = scp_base_args + [ 
             './tmp/' + rec_name,
@@ -153,7 +157,11 @@ def record(ssh_address, ssh_pwd, acc_name):
     screen_recorder = init_screen_recorder()
     record_keyboard(mouse_listener, screen_recorder)
     record_screen(screen_recorder)
-    upload_recording(ssh_address, ssh_pwd, acc_name)
+
+    rec_stamp = time.time_ns()
+    recording_id = acc_name + '-' + str(rec_stamp)
+    save_recording(recording_id)
+    upload_recording(ssh_address, ssh_pwd, recording_id)
 
     shutil.rmtree(tmp_dir_path)
 
