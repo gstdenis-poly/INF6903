@@ -27,7 +27,6 @@ cd client
 bash ./installer.sh
 ```
 ### Serveur
-- Placer les répertoires server/, database/, keys/ et uploads/ sur une machine serveur. TMP: PLACER DANS UN RÉPERTOIRE SUR GOOGLE DRIVE.
 - Exécuter le script d'installation du serveur:
 ```sh
 cd server
@@ -35,6 +34,9 @@ bash ./installer.sh
 ```
 - (Optionnel: au besoin) Remplacer "from collections" par "from collections.abc" partout dans le site-packages attrdict de l'installation de Python3.
 - (Optionnel: au besoin) Réinstaller libbz2-dev avec sudo apt-get install.
+- Ajuster les chemins de dossiers définis dans server/configurator.py et s'assurer que tous les dossiers existent sur le serveur.
+- Exécuter configurator.py avec python3.
+- Ajuster les scripts d'exécution .sh pour qu'ils pointent sur l'emplacement exact de l'exécutable python3 et qu'ils utilisent un workload manager distinct de Slurm si nécessaire.
 
 ## Licence
 Polytechnique Montréal
