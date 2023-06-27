@@ -91,6 +91,7 @@ def extract_frames(video_name):
             extract_frame_monitors(recording_id, frame_folder, frame_idx, frame_img)
 
             detector_worker_idx = detector_worker_idx % detector_workers_count + 1
+            relevant_frames_count += 1
 
         frame_idx += 1
 
