@@ -79,13 +79,13 @@ def clusterize_ocr(ocr_file_path, cluster_file_path):
 # Save progress of clustering given recording's frames
 def save_progress(recording_id):
     # Increment number of processed frames for cluster
-    cluster_frames_processed = 1
+    cluster_frames_processed = 0
     cluster_tmp_file_path = clusters_folder + recording_id + '.tmp'
     if os.path.isfile(cluster_tmp_file_path):
         cluster_tmp_file = open(cluster_tmp_file_path, 'r+')
-        cluster_frames_processed = int(cluster_tmp_file.read()) + 1
+        cluster_frames_processed = int(cluster_tmp_file.read())
         cluster_tmp_file.seek(0)
-        cluster_tmp_file.write(str(cluster_frames_processed))
+        cluster_tmp_file.write(str(cluster_frames_processed + 1))
     else:
         cluster_tmp_file = open(cluster_tmp_file_path, 'w')
         cluster_tmp_file.write('1')
@@ -119,12 +119,12 @@ def clusterize():
             continue
 
         recording_id = ocr_file_name_parts[0].split('_')[0]
+        ocr_file_path = ocrs_folder + ocr_file_name
+        cluster_file_path = clusters_folder + recording_id + '.txt'
 
         # Lock cluster files to avoid conflict with other worker
         cluster_lock_file_path = clusters_folder + recording_id + '.lock'
         with FileLock(cluster_lock_file_path):
-            ocr_file_path = ocrs_folder + ocr_file_name
-            cluster_file_path = clusters_folder + recording_id + '.txt'
             clusterize_ocr(ocr_file_path, cluster_file_path) # K-means clustering
             save_progress(recording_id) # Save processed recording's frames
 
