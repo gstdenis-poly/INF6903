@@ -96,7 +96,7 @@ def extract_frames(video_name):
         frame_idx += 1
 
     rec_infos_file = open(rec_infos_file_path, 'a')
-    rec_infos_file.write('relevant_frames_count|' + str(relevant_frames_count))
+    rec_infos_file.write('relevant_frames_count|' + str(relevant_frames_count) + '\n')
     rec_infos_file.close()
 
     cap.release()
