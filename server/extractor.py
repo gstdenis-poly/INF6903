@@ -84,7 +84,7 @@ def extract_frames(video_name):
             break
 
         # Extract frame only if relevant
-        if frame_is_relevant(recording_id, frame_idx):
+        if frame_is_relevant(rec_infos_file_path, recording_id, frame_idx):
             # Put frame image in a worker folder for next step of pipeline
             detector_worker_folder = frames_folder + 'worker' + str(detector_worker_idx) + '/'
             frame_folder = detector_worker_folder + video_name
