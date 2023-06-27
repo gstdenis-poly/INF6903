@@ -3,6 +3,7 @@
 
 # Include required libraries
 from configurator import *
+from filelock import FileLock
 import json
 import nltk
 import numpy as np
@@ -120,18 +121,13 @@ def clusterize():
 
         # Lock cluster files to avoid conflict with other worker
         cluster_lock_file_path = clusters_folder + recording_id + '.lock'
-        if os.path.isfile(cluster_lock_file_path):
-            continue # Skip iteration if cluster file is locked by another worker
-        else:
-            open(cluster_lock_file_path, 'x').close() # Lock file
-
-        ocr_file_path = ocrs_folder + ocr_file_name
-        cluster_file_path = clusters_folder + recording_id + '.txt'
-        clusterize_ocr(ocr_file_path, cluster_file_path) # K-means clustering
-        save_progress(recording_id) # Save processed recording's frames
+        with FileLock(cluster_lock_file_path):
+            ocr_file_path = ocrs_folder + ocr_file_name
+            cluster_file_path = clusters_folder + recording_id + '.txt'
+            clusterize_ocr(ocr_file_path, cluster_file_path) # K-means clustering
+            save_progress(recording_id) # Save processed recording's frames
 
         # Remove detections files
-        os.remove(cluster_lock_file_path)
         os.remove(ocr_file_path)
         os.remove(ocrs_folder + ocr_file_name_parts[0] + '.png')
         os.remove(ips_folder + ocr_file_name_parts[0] + '.json')
