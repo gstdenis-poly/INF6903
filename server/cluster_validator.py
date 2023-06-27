@@ -80,7 +80,7 @@ def validate_cluster():
                 continue
 
             cmp_cluster_file_path = clusters_folder + cmp_cluster_file_name
-            cmp_recording_id = os.path.splitext(cmp_cluster_file_path)[0]
+            cmp_recording_id = os.path.splitext(cmp_cluster_file_name)[0]
             cmp_acc_name = cmp_recording_id.split('-')[0]
             cmp_acc_type = get_account_type(cmp_acc_name)
 
