@@ -81,13 +81,13 @@ def save_progress(recording_id):
     # Increment number of processed frames for cluster
     cluster_frames_processed = 1
     cluster_tmp_file_path = clusters_folder + recording_id + '.tmp'
+    cluster_tmp_file = None
     if os.path.isfile(cluster_tmp_file_path):
         cluster_tmp_file = open(cluster_tmp_file_path, 'r+')
         cluster_frames_processed = int(cluster_tmp_file.read()) + 1
         cluster_tmp_file.seek(0)
     else:
-        cluster_tmp_file = open(cluster_tmp_file_path, 'w')
-        
+        cluster_tmp_file = open(cluster_tmp_file_path, 'w')   
     cluster_tmp_file.write(str(cluster_frames_processed))
     cluster_tmp_file.close()
     # Replace .tmp file by .final file to inform worker that cluster is completed
