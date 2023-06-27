@@ -103,7 +103,7 @@ def save_progress(recording_id):
            int(line_infos[1]) == cluster_frames_processed:
             os.remove(cluster_tmp_file_path)
             test = open(clusters_folder + recording_id + '.final', 'a')
-            test.write(str(cluster_frames_processed))
+            test.write(str(cluster_frames_processed) + ' ')
             test.close()
             return
 
