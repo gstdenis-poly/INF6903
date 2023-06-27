@@ -107,11 +107,12 @@ def save_progress(recording_id):
 # Program main function
 def clusterize():
     clusterizer_worker_folder = detections_folder + 'worker' + clusterizer_worker_id + '/'
-    if not os.path.exists(clusterizer_worker_folder):
-        return
-
     ips_folder = clusterizer_worker_folder + 'ip/'
     ocrs_folder = clusterizer_worker_folder + 'ocr/'
+    if not (os.path.exists(clusterizer_worker_folder) or \
+            os.path.exists(ips_folder) or os.path.exists(ocrs_folder)):
+        return
+
     for ocr_file_name in os.listdir(ocrs_folder):
         ocr_file_name_parts = os.path.splitext(ocr_file_name)
         if not os.path.isfile(clusterizer_worker_folder + ocr_file_name_parts[0] + '.final') or \
