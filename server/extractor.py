@@ -41,8 +41,7 @@ def event_is_occuring(events_file_name, start_time, end_time):
 
 # Check if frame is relevant for next step of pipeline:
 #   - A user event occured during the frame
-def frame_is_relevant(recording_id, frame_idx):
-    rec_infos_file_path = uploads_folder + recording_id + '_' + recording_infos_file
+def frame_is_relevant(rec_infos_file_path, recording_id, frame_idx):
     rec_infos_file = open(rec_infos_file_path, 'r')
     rec_infos_file_lines = rec_infos_file.read().splitlines()
     rec_infos_file.close()
@@ -73,15 +72,17 @@ def frame_is_relevant(recording_id, frame_idx):
 def extract_frames(video_name):
     cap = cv2.VideoCapture(uploads_folder + video_name)
     video_name = os.path.splitext(video_name)[0]
+    recording_id = video_name.split('_')[0]
+    rec_infos_file_path = uploads_folder + recording_id + '_' + recording_infos_file
 
     frame_idx = 1
+    relevant_frames_count = 0
     detector_worker_idx = 1
     while cap.isOpened():
         ret, frame_img = cap.read()
         if not ret:
             break
 
-        recording_id = video_name.split('_')[0]
         # Extract frame only if relevant
         if frame_is_relevant(recording_id, frame_idx):
             # Put frame image in a worker folder for next step of pipeline
@@ -92,6 +93,10 @@ def extract_frames(video_name):
             detector_worker_idx = detector_worker_idx % detector_workers_count + 1
 
         frame_idx += 1
+
+    rec_infos_file = open(rec_infos_file_path, 'a')
+    rec_infos_file.write('relevant_frames_count|' + str(relevant_frames_count))
+    rec_infos_file.close()
 
     cap.release()
     cv2.destroyAllWindows()
