@@ -127,13 +127,12 @@ def clusterize():
         with FileLock(cluster_lock_file_path):
             clusterize_ocr(ocr_file_path, cluster_file_path) # K-means clustering
             save_progress(recording_id) # Save processed recording's frames
-
-        # Remove detections files
-        os.remove(ocr_file_path)
-        os.remove(ocrs_folder + ocr_file_name_parts[0] + '.png')
-        os.remove(ips_folder + ocr_file_name_parts[0] + '.json')
-        os.remove(ips_folder + ocr_file_name_parts[0] + '.jpg')
-        os.remove(clusterizer_worker_folder + ocr_file_name_parts[0] + '.final')
+            # Remove detections files
+            os.remove(ocr_file_path)
+            os.remove(ocrs_folder + ocr_file_name_parts[0] + '.png')
+            os.remove(ips_folder + ocr_file_name_parts[0] + '.json')
+            os.remove(ips_folder + ocr_file_name_parts[0] + '.jpg')
+            os.remove(clusterizer_worker_folder + ocr_file_name_parts[0] + '.final')
 
 # Program's main
 if __name__ == '__main__':
