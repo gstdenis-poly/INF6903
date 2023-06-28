@@ -54,7 +54,8 @@ def save_clusters():
             continue
 
         cluster_file_path = file_path_parts[0] + '.txt'
-        shutil.move(cluster_file_path, res_clusters_folder)
+        if not os.path.isfile(res_clusters_folder):
+            shutil.move(cluster_file_path, res_clusters_folder)
         os.remove(file_path) # Remove .final file
         cluster_saved = True
 
