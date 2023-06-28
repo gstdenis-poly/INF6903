@@ -2,6 +2,34 @@ from aiohttp import web
 from configurator import *
 import os
 
+async def handle_index(request):
+    html = ''
+
+    account_id = request.match_info.get('account_id')
+    requests = ''
+    for rec_folder in os.listdir(recordings_folder):
+        if account_id not in rec_folder:
+            continue
+
+        req_vid_file_name = rec_folder + '_' + screen_recording_file
+        req_vid_file_path = '/recordings/' + rec_folder + '/' + req_vid_file_name
+        requests += '<h2><a href="/solutions/' + rec_folder + '">Request: ' + rec_folder + '</a></h2>' + \
+            '<video style="width:100%" controls src="' + req_vid_file_path + '" type="video/mp4"></video>'
+
+    html = '<!DOCTYPE html>' + \
+        '<html>' + \
+            '<head>' + \
+                '<title>Solutions</title>' + \
+            '</head>' + \
+            '<body>' + \
+                '<h1>Welcome ' + account_id + ' !</h1>' + \
+                requests + \
+            '</body>' + \
+        '</html>'
+   
+    return web.Response(text = html, content_type = 'text/html')
+
+
 async def handle_solutions(request):
     html = ''
 
@@ -39,8 +67,10 @@ async def handle_solutions(request):
    
     return web.Response(text = html, content_type = 'text/html')
 
+
 app = web.Application()
-app.add_routes([web.get('/solutions/{recording_id}', handle_solutions), 
+app.add_routes([web.get('/index/{account_id}', handle_index),
+                web.get('/solutions/{recording_id}', handle_solutions), 
                 web.static('/recordings', recordings_folder)])
 
 if __name__ == '__main__':
