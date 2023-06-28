@@ -1,4 +1,5 @@
 results/
+recordings/
 *.mp4
 *.pyc
 *.txt

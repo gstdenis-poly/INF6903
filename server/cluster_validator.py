@@ -77,6 +77,7 @@ def validate_cluster():
         cluster_val_file_path = val_clusters_folder + cluster_file_name
         cluster_val_file = open(cluster_val_file_path, 'w')
 
+        distances = {} # Dictionary of distances per recording id
         for cmp_cluster_file_name in os.listdir(res_clusters_folder):
             if cmp_cluster_file_name == cluster_file_name:
                 continue
@@ -92,8 +93,11 @@ def validate_cluster():
 
             cmp_cluster_centroid = get_cluster_centroid(cmp_cluster_file_path)
             distance = get_centroids_distance(cluster_centroid, cmp_cluster_centroid)
-            cluster_val_file.write(cmp_recording_id + '|' + str(distance) + '\n')
+            distances[cmp_recording_id] = distance
         
+        for item in sorted(distances.items(), key = lambda item: item[1]):
+            cluster_val_file.write(item[0] + '|' + str(item[1]) + '\n')
+
         cluster_val_file.close()
 
 # Program's main

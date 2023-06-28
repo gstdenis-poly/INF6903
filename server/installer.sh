@@ -2,7 +2,6 @@
 
 # Python librairies
 pip install attrdict3
-pip install filelock
 pip install keras
 pip install nltk
 pip install numpy==1.22.3

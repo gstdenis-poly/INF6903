@@ -102,11 +102,15 @@ def record_screen(screen_recorder):
 
     screen_recorder.execute()
 
-# Save given recording id in recordings.txt local file
+# Save video recording in a local recordings folder
 def save_recording(recording_id):
-    recordings_file = open('./recordings.txt', 'a')
-    recordings_file.write('recording|' + recording_id + '\n')
-    recordings_file.close()
+    recordings_folder = './recordings/'
+    if not os.path.exists(recordings_folder):
+        os.mkdir(recordings_folder)
+
+    tmp_rec_name = 'screen_recording.mp4'
+    saved_rec_path = recordings_folder + recording_id + '_' + tmp_rec_name
+    shutil.copyfile('./tmp/' + tmp_rec_name, saved_rec_path)
 
 # Upload recording on server
 def upload_recording(ssh_address, ssh_pwd, recording_id):
