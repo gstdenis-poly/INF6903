@@ -84,7 +84,7 @@ def validate_cluster():
         cluster_val_file_path = val_clusters_folder + cluster_file_name
         cluster_val_file = open(cluster_val_file_path, 'w')
 
-        for cmp_cluster_file_name in os.listdir(clusters_folder):
+        for cmp_cluster_file_name in os.listdir(res_clusters_folder):
             print(cmp_cluster_file_name)
             if cmp_cluster_file_name == cluster_file_name:
                 continue
