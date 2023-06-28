@@ -27,10 +27,8 @@ recording_files = [ # Video file must be first in list
 recording_infos_file = 'recording_infos.txt'
 # Number of workers
 detector_workers_count = 100
-clusterizer_workers_count = 50
 # Index variables of workers
 detector_worker_id = None
-clusterizer_worker_id = None
 
 # Program's main
 if __name__ == '__main__':
@@ -41,13 +39,3 @@ if __name__ == '__main__':
             continue
             
         os.mkdir(detector_worker_folder)
-
-    # Create clusterizer worker folder for each clusterizer server
-    for i in range(clusterizer_workers_count):
-        clusterizer_worker_folder = detections_folder + 'worker' + str(i + 1)
-        if os.path.exists(clusterizer_worker_folder):
-            continue
-            
-        os.mkdir(clusterizer_worker_folder)
-        os.mkdir(clusterizer_worker_folder + '/ip')
-        os.mkdir(clusterizer_worker_folder + '/ocr')

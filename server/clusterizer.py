@@ -107,16 +107,14 @@ def save_progress(recording_id):
 
 # Program main function
 def clusterize():
-    clusterizer_worker_folder = detections_folder + 'worker' + clusterizer_worker_id + '/'
-    ips_folder = clusterizer_worker_folder + 'ip/'
-    ocrs_folder = clusterizer_worker_folder + 'ocr/'
-    if not (os.path.exists(clusterizer_worker_folder) or \
-            os.path.exists(ips_folder) or os.path.exists(ocrs_folder)):
+    ips_folder = detections_folder + 'ip/'
+    ocrs_folder = detections_folder + 'ocr/'
+    if not (os.path.exists(ips_folder) or os.path.exists(ocrs_folder)):
         return
 
     for ocr_file_name in os.listdir(ocrs_folder):
         ocr_file_name_parts = os.path.splitext(ocr_file_name)
-        if not os.path.isfile(clusterizer_worker_folder + ocr_file_name_parts[0] + '.final') or \
+        if not os.path.isfile(detections_folder + ocr_file_name_parts[0] + '.final') or \
            ocr_file_name_parts[-1] != '.json':
             continue
 
@@ -124,26 +122,16 @@ def clusterize():
         ocr_file_path = ocrs_folder + ocr_file_name
         cluster_file_path = clusters_folder + recording_id + '.txt'
 
-        # Lock cluster files to avoid conflict with other worker
-        cluster_lock_file_path = clusters_folder + recording_id + '.lock'
-        with FileLock(cluster_lock_file_path):
-            clusterize_ocr(ocr_file_path, cluster_file_path) # K-means clustering
-            save_progress(recording_id) # Save processed recording's frames
-            # Remove detections files
-            os.remove(ocr_file_path)
-            os.remove(ocrs_folder + ocr_file_name_parts[0] + '.png')
-            os.remove(ips_folder + ocr_file_name_parts[0] + '.json')
-            os.remove(ips_folder + ocr_file_name_parts[0] + '.jpg')
-            os.remove(clusterizer_worker_folder + ocr_file_name_parts[0] + '.final')
-
-        if os.path.isfile(cluster_lock_file_path):
-            os.remove(cluster_lock_file_path) # Remove .lock file
+        clusterize_ocr(ocr_file_path, cluster_file_path) # K-means clustering
+        save_progress(recording_id) # Save processed recording's frames
+        # Remove detections files
+        os.remove(ocr_file_path)
+        os.remove(ocrs_folder + ocr_file_name_parts[0] + '.png')
+        os.remove(ips_folder + ocr_file_name_parts[0] + '.json')
+        os.remove(ips_folder + ocr_file_name_parts[0] + '.jpg')
+        os.remove(detections_folder + ocr_file_name_parts[0] + '.final')
 
 # Program's main
 if __name__ == '__main__':
-    if len(sys.argv) != 2:
-        print('Wrong arguments')
-    else:
-        clusterizer_worker_id = sys.argv[1]
-        while True:
-            clusterize()
+    while True:
+        clusterize()
