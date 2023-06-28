@@ -33,11 +33,18 @@ def get_account_type(acc_name):
 
     acc_file_path = accounts_folder + acc_name + '.txt'
     acc_file = open(acc_file_path, 'r')
-    for line in acc_file.read().splitlines():
+    acc_file_lines = acc_file.read().splitlines()
+    acc_file.close()
+
+    print(acc_name)
+
+    for line in acc_file_lines:
         line_infos = line.split('|')
         if line_infos[0] == 'acc_type':
             acc_type = line_infos[1]
             break
+
+    print(acc_type)
 
     return acc_type
 
