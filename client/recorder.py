@@ -102,18 +102,11 @@ def record_screen(screen_recorder):
 
     screen_recorder.execute()
 
-# Save video recording in a local recordings folder
-def save_recording(recording_id):
-    recordings_folder = './recordings/'
-    if not os.path.exists(recordings_folder):
-        os.mkdir(recordings_folder)
-
-    tmp_rec_name = 'screen_recording.mp4'
-    saved_rec_path = recordings_folder + recording_id + '_' + tmp_rec_name
-    shutil.copyfile('./tmp/' + tmp_rec_name, saved_rec_path)
-
 # Upload recording on server
-def upload_recording(ssh_address, ssh_pwd, recording_id):
+def upload_recording(ssh_address, ssh_pwd, acc_name):
+    rec_stamp = time.time_ns()
+    recording_id = acc_name + '-' + str(rec_stamp)
+
     scp_base_args = [
         'sshpass', '-p', ssh_pwd,
         'scp', '-o', 'StrictHostKeyChecking=no',
@@ -161,11 +154,7 @@ def record(ssh_address, ssh_pwd, acc_name):
     screen_recorder = init_screen_recorder()
     record_keyboard(mouse_listener, screen_recorder)
     record_screen(screen_recorder)
-
-    rec_stamp = time.time_ns()
-    recording_id = acc_name + '-' + str(rec_stamp)
-    save_recording(recording_id)
-    upload_recording(ssh_address, ssh_pwd, recording_id)
+    upload_recording(ssh_address, ssh_pwd, acc_name)
 
     shutil.rmtree(tmp_dir_path)
 

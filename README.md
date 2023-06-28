@@ -26,6 +26,8 @@ L'application utilise des technologies multiplateforme mais n'a été testée qu
 cd client
 bash ./installer.sh
 ```
+- TMP: Démarrer le tunnel SSH suivant: sshpass -p SSH_PASS ssh -D 8888 -C -N SSH_ADDRESS
+- Configurer le paramètre Réseau SOCKS Proxy du navigateur Web de défaut sur la machine client avec l'adresse IP 127.0.0.1 et le port 8080.
 ### Serveur
 - Exécuter le script d'installation du serveur:
 ```sh
