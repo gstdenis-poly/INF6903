@@ -46,6 +46,8 @@ def extract_ocr_tokens(ocr_file_path):
 # Clusterize tokens of given ocr detection file and save result into given cluster file
 def clusterize_ocr(ocr_file_path, cluster_file_path):
     ocr_tokens = extract_ocr_tokens(ocr_file_path)
+    if not ocr_tokens: # Return if no tokens
+        return
     # Set k-means initial cluster
     km_init = 'k-means++' # Default init parameter for KMeans
     if os.path.exists(cluster_file_path):
@@ -78,7 +80,7 @@ def clusterize_ocr(ocr_file_path, cluster_file_path):
 
 # Save progress of clustering given recording's frames
 def save_progress(recording_id):
-    # Increment number of processed frames for cluster
+    # Increment number of processed frames' images for cluster
     cluster_frames_images_processed = 1
     cluster_tmp_file_path = clusters_folder + recording_id + '.tmp'
     cluster_tmp_file = None
