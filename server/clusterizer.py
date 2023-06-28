@@ -101,7 +101,6 @@ def save_progress(recording_id):
         line_infos = line.split('|')
         if line_infos[0] == 'relevant_frames_count' and \
            int(line_infos[1]) == cluster_frames_processed:
-            os.remove(cluster_tmp_file_path)
             open(clusters_folder + recording_id + '.final', 'w')
             return
 
