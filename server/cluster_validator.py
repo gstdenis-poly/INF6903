@@ -84,6 +84,8 @@ def validate_cluster():
             cmp_acc_name = cmp_recording_id.split('-')[0]
             cmp_acc_type = get_account_type(cmp_acc_name)
 
+            print(acc_type + ' | ' + cmp_acc_type)
+
             # Compare clusters only if accounts not of same type
             if cmp_acc_type == acc_type:
                 continue
