@@ -65,10 +65,12 @@ def validate_cluster():
        return
     
     for cluster_file_name in os.listdir(res_clusters_folder):
+        print(cluster_file_name)
         cluster_file_path = res_clusters_folder + cluster_file_name
         cluster_centroid = get_cluster_centroid(cluster_file_path)
 
         recording_id = os.path.splitext(cluster_file_name)[0]
+        print(recording_id)
         acc_name = recording_id.split('-')[0]
         acc_type = get_account_type(acc_name)
 
@@ -76,11 +78,13 @@ def validate_cluster():
         cluster_val_file = open(cluster_val_file_path, 'w')
 
         for cmp_cluster_file_name in os.listdir(clusters_folder):
+            print(cmp_cluster_file_name)
             if cmp_cluster_file_name == cluster_file_name:
                 continue
 
             cmp_cluster_file_path = clusters_folder + cmp_cluster_file_name
             cmp_recording_id = os.path.splitext(cmp_cluster_file_name)[0]
+            print(cmp_recording_id)
             cmp_acc_name = cmp_recording_id.split('-')[0]
             cmp_acc_type = get_account_type(cmp_acc_name)
 
