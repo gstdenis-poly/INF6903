@@ -136,7 +136,8 @@ def clusterize():
             os.remove(ips_folder + ocr_file_name_parts[0] + '.jpg')
             os.remove(clusterizer_worker_folder + ocr_file_name_parts[0] + '.final')
 
-        os.remove(cluster_lock_file_path) # Remove .lock file
+        if os.path.isfile(cluster_lock_file_path):
+            os.remove(cluster_lock_file_path) # Remove .lock file
 
 # Program's main
 if __name__ == '__main__':
