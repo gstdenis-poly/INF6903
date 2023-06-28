@@ -2,11 +2,11 @@ from aiohttp import web
 from configurator import *
 import os
 
-async def handle(request):
+async def handle_solutions(request):
     html = ''
 
     recording_id = request.match_info.get('recording_id')
-    results_file_path = res_clusters_folder + recording_id + '.txt'
+    results_file_path = val_clusters_folder + recording_id + '.txt'
 
     if os.path.isfile(results_file_path):
         results_file = open(results_file_path, 'r')
@@ -40,7 +40,7 @@ async def handle(request):
     return web.Response(text = html, content_type = 'text/html')
 
 app = web.Application()
-app.add_routes([web.get('/solutions/{recording_id}', handle), 
+app.add_routes([web.get('/solutions/{recording_id}', handle_solutions), 
                 web.static('/recordings', recordings_folder)])
 
 if __name__ == '__main__':
