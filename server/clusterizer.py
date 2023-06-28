@@ -79,17 +79,17 @@ def clusterize_ocr(ocr_file_path, cluster_file_path):
 # Save progress of clustering given recording's frames
 def save_progress(recording_id):
     # Increment number of processed frames for cluster
-    cluster_frames_processed = 1
+    cluster_frames_images_processed = 1
     cluster_tmp_file_path = clusters_folder + recording_id + '.tmp'
     cluster_tmp_file = None
     if os.path.isfile(cluster_tmp_file_path):
         cluster_tmp_file = open(cluster_tmp_file_path, 'r+')
-        cluster_frames_processed = int(cluster_tmp_file.read()) + 1
+        cluster_frames_images_processed = int(cluster_tmp_file.read()) + 1
         cluster_tmp_file.seek(0)
     else:
         cluster_tmp_file = open(cluster_tmp_file_path, 'w')
 
-    cluster_tmp_file.write(str(cluster_frames_processed))
+    cluster_tmp_file.write(str(cluster_frames_images_processed))
     cluster_tmp_file.close()
     # Replace .tmp file by .final file to inform worker that cluster is completed
     rec_infos_file_name = recording_id + '_' + recording_infos_file
@@ -99,8 +99,9 @@ def save_progress(recording_id):
     rec_infos_file.close()
     for line in rec_infos_file_lines:
         line_infos = line.split('|')
-        if line_infos[0] == 'relevant_frames_count' and \
-           int(line_infos[1]) == cluster_frames_processed:
+        if line_infos[0] == 'frames_images_count' and \
+           int(line_infos[1]) == cluster_frames_images_processed:
+            os.remove(cluster_tmp_file_path)
             open(clusters_folder + recording_id + '.final', 'w')
             return
 

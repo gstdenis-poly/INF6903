@@ -6,18 +6,20 @@ import cv2
 import os
 import shutil
 
-# Extract monitor's image from frame
+# Extract monitor's image from frame and return count of monitors for frame
 def extract_frame_monitors(recording_id, frame_folder, frame_idx, frame):
     rec_infos_file_path = uploads_folder + recording_id + '_' + recording_infos_file
     rec_infos_file = open(rec_infos_file_path, 'r')
     rec_infos_file_lines = rec_infos_file.read().splitlines()
     rec_infos_file.close()
     
+    monitors_count = 0
     for i, line in enumerate(rec_infos_file_lines):
         line_infos = line.split('|')
         if line_infos[0] != 'monitor':
             continue
 
+        monitors_count += 1
         x = int(line_infos[1]) # Monitor's horizontal position
         y = int(line_infos[2]) # Monitor's vertical position
         w = int(line_infos[3]) # Monitor's width
@@ -27,6 +29,8 @@ def extract_frame_monitors(recording_id, frame_folder, frame_idx, frame):
         cv2.imwrite(frame_path, frame[y:(y + h), x:(x + w)])
         # Save .final file to inform worker that image file is fully created
         open(os.path.splitext(frame_path)[0] + '.final', 'x').close()
+
+    return monitors_count
 
 # Check if an event recorded in given events file occurs during given period
 def event_is_occuring(events_file_name, start_time, end_time):
@@ -76,7 +80,7 @@ def extract_frames(video_name):
     rec_infos_file_path = uploads_folder + recording_id + '_' + recording_infos_file
 
     frame_idx = 1
-    relevant_frames_count = 0
+    frames_images_count = 0
     detector_worker_idx = 1
     while cap.isOpened():
         ret, frame_img = cap.read()
@@ -88,15 +92,14 @@ def extract_frames(video_name):
             # Put frame image in a worker folder for next step of pipeline
             detector_worker_folder = frames_folder + 'worker' + str(detector_worker_idx) + '/'
             frame_folder = detector_worker_folder + video_name
-            extract_frame_monitors(recording_id, frame_folder, frame_idx, frame_img)
+            frames_images_count += extract_frame_monitors(recording_id, frame_folder, frame_idx, frame_img)
 
             detector_worker_idx = detector_worker_idx % detector_workers_count + 1
-            relevant_frames_count += 1
 
         frame_idx += 1
 
     rec_infos_file = open(rec_infos_file_path, 'a')
-    rec_infos_file.write('relevant_frames_count|' + str(relevant_frames_count) + '\n')
+    rec_infos_file.write('frames_images_count|' + str(frames_images_count) + '\n')
     rec_infos_file.close()
 
     cap.release()
