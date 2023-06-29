@@ -39,3 +39,12 @@ if __name__ == '__main__':
             continue
             
         os.mkdir(detector_worker_folder)
+
+    # Create ip and ocr folders in clusterizer worker folder
+    clusters_folder_ip = clusters_folder + 'ip/'
+    if not os.path.exists(clusters_folder_ip):
+        os.mkdir(clusters_folder_ip)
+
+    clusters_folder_ocr = clusters_folder + 'ocr/'
+    if not os.path.exists(clusters_folder_ocr):
+        os.mkdir(clusters_folder_ocr)
