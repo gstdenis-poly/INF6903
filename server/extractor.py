@@ -50,8 +50,8 @@ def monitor_is_relevant(rec_infos_file_path, recording_id, frame_idx, monitor):
 
         evt_x = int(line_infos[2])
         evt_y = int(line_infos[3])
-        if monitor.x <= evt_x and evt_x < monitor.w and \
-           monitor.y <= evt_y and evt_y < monitor.h:
+        if monitor[0] <= evt_x and evt_x < monitor[1] and \
+           monitor[2] <= evt_y and evt_y < monitor[3]:
             return True
 
     return False
