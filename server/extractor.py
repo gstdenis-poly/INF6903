@@ -6,46 +6,8 @@ import cv2
 import os
 import shutil
 
-# Extract monitor's image from frame and return count of monitors for frame
-def extract_frame_monitors(recording_id, frame_folder, frame_idx, frame):
-    rec_infos_file_path = uploads_folder + recording_id + '_' + recording_infos_file
-    rec_infos_file = open(rec_infos_file_path, 'r')
-    rec_infos_file_lines = rec_infos_file.read().splitlines()
-    rec_infos_file.close()
-    
-    monitors_count = 0
-    for i, line in enumerate(rec_infos_file_lines):
-        line_infos = line.split('|')
-        if line_infos[0] != 'monitor':
-            continue
-
-        monitors_count += 1
-        x = int(line_infos[1]) # Monitor's horizontal position
-        y = int(line_infos[2]) # Monitor's vertical position
-        w = int(line_infos[3]) # Monitor's width
-        h = int(line_infos[4]) # Monitor's height
-
-        frame_path = frame_folder + '_' + str(i + 1) + '_' + str(frame_idx) + '.png'
-        cv2.imwrite(frame_path, frame[y:(y + h), x:(x + w)])
-        # Save .final file to inform worker that image file is fully created
-        open(os.path.splitext(frame_path)[0] + '.final', 'x').close()
-
-    return monitors_count
-
-# Check if an event recorded in given events file occurs during given period
-def event_is_occuring(events_file_name, start_time, end_time):
-    event_file = open(events_file_name, 'r')
-    event_file_lines = event_file.read().splitlines()
-    event_file.close()
-    for line in event_file_lines:
-        evt_stamp = float(line.split('|')[0])
-        if start_time < evt_stamp and evt_stamp < end_time:
-            return True
-    return False
-
-# Check if frame is relevant for next step of pipeline:
-#   - A user event occured during the frame
-def frame_is_relevant(rec_infos_file_path, recording_id, frame_idx):
+# Return time interval of given frame according to given recording infos file
+def get_frame_time_interval(rec_infos_file_path, frame_idx):
     rec_infos_file = open(rec_infos_file_path, 'r')
     rec_infos_file_lines = rec_infos_file.read().splitlines()
     rec_infos_file.close()
@@ -61,6 +23,79 @@ def frame_is_relevant(rec_infos_file_path, recording_id, frame_idx):
     frame_duration = 1000000000 / frame_rate # Duration of a frame in nanoseconds
     frame_start = rec_start + (frame_idx - 1) * frame_duration
     frame_end = rec_start + frame_idx * frame_duration
+
+    return frame_start, frame_end
+
+# Check if frame is relevant for next step of pipeline:
+#   - A user event occured inside the monitor during the frame
+def monitor_is_relevant(rec_infos_file_path, recording_id, frame_idx, monitor):
+    frame_start, frame_end = get_frame_time_interval(rec_infos_file_path, frame_idx)
+
+    mouse_rec_file_path = uploads_folder + recording_id + '_' + mouse_recording_file
+    mouse_rec_file = open(mouse_rec_file_path, 'r')
+    mouse_rec_file_lines = mouse_rec_file.read().splitlines()
+    mouse_rec_file.close()
+
+    for line in mouse_rec_file_lines:
+        line_infos = line.split('|')
+
+        evt_stamp = float(line_infos[0])
+        if evt_stamp < frame_start:
+            continue
+        elif frame_end <= evt_stamp:
+            break
+
+        evt_x = int(line_infos[1])
+        evt_y = int(line_infos[2])
+        if monitor.x <= evt_x and evt_x < monitor.w and \
+           monitor.y <= evt_y and evt_y < monitor.h:
+            return True
+
+    return False
+
+
+# Extract monitor's image from frame and return count of monitors for frame
+def extract_frame_monitors(recording_id, frame_folder, frame_idx, frame):
+    rec_infos_file_path = uploads_folder + recording_id + '_' + recording_infos_file
+    rec_infos_file = open(rec_infos_file_path, 'r')
+    rec_infos_file_lines = rec_infos_file.read().splitlines()
+    rec_infos_file.close()
+    
+    monitors_count = 0
+    for i, line in enumerate(rec_infos_file_lines):
+        line_infos = line.split('|')
+        if line_infos[0] != 'monitor':
+            continue
+
+        x = int(line_infos[1]) # Monitor's horizontal position
+        y = int(line_infos[2]) # Monitor's vertical position
+        w = int(line_infos[3]) # Monitor's width
+        h = int(line_infos[4]) # Monitor's height
+
+        if monitor_is_relevant(rec_infos_file_path, recording_id, frame_idx, (x, y, w, h)):
+            frame_path = frame_folder + '_' + str(i + 1) + '_' + str(frame_idx) + '.png'
+            cv2.imwrite(frame_path, frame[y:(y + h), x:(x + w)])
+            # Save .final file to inform worker that image file is fully created
+            open(os.path.splitext(frame_path)[0] + '.final', 'x').close()
+            monitors_count += 1 # Increment number of extracted frame's monitors
+
+    return monitors_count
+
+# Check if an event recorded in given events file occurs during given period
+def event_is_occuring(events_file_path, start_time, end_time):
+    event_file = open(events_file_path, 'r')
+    event_file_lines = event_file.read().splitlines()
+    event_file.close()
+    for line in event_file_lines:
+        evt_stamp = float(line.split('|')[0])
+        if start_time <= evt_stamp and evt_stamp < end_time:
+            return True
+    return False
+
+# Check if frame is relevant for next step of pipeline:
+#   - A user event occured during the frame
+def frame_is_relevant(rec_infos_file_path, recording_id, frame_idx):
+    frame_start, frame_end = get_frame_time_interval(rec_infos_file_path, frame_idx)
 
     keyboard_rec_file_path = uploads_folder + recording_id + '_' + keyboard_recording_file
     keyboard_evt_is_occuring = os.path.isfile(keyboard_rec_file_path) and \
