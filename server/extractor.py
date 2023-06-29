@@ -32,6 +32,9 @@ def monitor_is_relevant(rec_infos_file_path, recording_id, frame_idx, monitor):
     frame_start, frame_end = get_frame_time_interval(rec_infos_file_path, frame_idx)
 
     mouse_rec_file_path = uploads_folder + recording_id + '_' + mouse_recording_file
+    if not os.path.isfile(mouse_rec_file_path):
+        return True
+
     mouse_rec_file = open(mouse_rec_file_path, 'r')
     mouse_rec_file_lines = mouse_rec_file.read().splitlines()
     mouse_rec_file.close()
