@@ -45,8 +45,8 @@ def monitor_is_relevant(rec_infos_file_path, recording_id, frame_idx, monitor):
         elif frame_end <= evt_stamp:
             break
 
-        evt_x = int(line_infos[1])
-        evt_y = int(line_infos[2])
+        evt_x = int(line_infos[2])
+        evt_y = int(line_infos[3])
         if monitor.x <= evt_x and evt_x < monitor.w and \
            monitor.y <= evt_y and evt_y < monitor.h:
             return True
