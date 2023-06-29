@@ -26,6 +26,11 @@ def get_frame_time_interval(rec_infos_file_path, frame_idx):
 
     return frame_start, frame_end
 
+# Check if given event (x, y) occurs inside given monitor (x1, y1, x2, y2)
+def event_occurs_inside_monitor(event, monitor):
+    return (monitor[0] <= event[0] and event[0] < monitor[2] and \
+            monitor[1] <= event[1] and event[1] < monitor[3])
+
 # Check if frame is relevant for next step of pipeline:
 #   - A mouse event occured inside the monitor during the frame
 #   - The last mouse event before the frame was inside the monitor
@@ -38,30 +43,21 @@ def monitor_is_relevant(rec_infos_file_path, recording_id, frame_idx, monitor):
 
     mouse_rec_file = open(mouse_rec_file_path, 'r')
     mouse_rec_file_lines = mouse_rec_file.read().splitlines()
-    mouse_rec_file.close()
-    
-    prev_line_infos = None
-    for line in mouse_rec_file_lines:
-        line_infos = line.split('|')
+    mouse_rec_file.close()    
+
+    for i in reversed(range(len(mouse_rec_file_lines))):
+        line_infos = mouse_rec_file_lines[i].split('|')
 
         evt_stamp = float(line_infos[0])
-        if frame_end <= evt_stamp:
-            break
-        elif evt_stamp >= frame_start:
-            if prev_line_infos != None and float(prev_line_infos[0]) < frame_start:
-                prev_evt_x = int(prev_line_infos[2])
-                prev_evt_y = int(prev_line_infos[3])
-                if monitor[0] <= prev_evt_x and prev_evt_x < monitor[2] and \
-                   monitor[1] <= prev_evt_y and prev_evt_y < monitor[3]:
-                    return True
-                
-            evt_x = int(line_infos[2])
-            evt_y = int(line_infos[3])
-            if monitor[0] <= evt_x and evt_x < monitor[2] and \
-               monitor[1] <= evt_y and evt_y < monitor[3]:
+        if frame_end <= evt_stamp: # Event is after frame
+            continue
+        
+        event = (int(line_infos[2]), int(line_infos[3]))
+        if evt_stamp >= frame_start: # Event is during frame
+            if event_occurs_inside_monitor(event, monitor):
                 return True
-
-        prev_line_infos = line_infos
+        else: # Event is before frame
+            return event_occurs_inside_monitor(event, monitor)           
 
     return False
 
