@@ -47,20 +47,19 @@ def monitor_is_relevant(rec_infos_file_path, recording_id, frame_idx, monitor):
         evt_stamp = float(line_infos[0])
         if frame_end <= evt_stamp:
             break
-
-        if prev_line_infos != None and float(prev_line_infos[0]) < frame_start and \
-           evt_stamp >= frame_start:
-            prev_evt_x = int(prev_line_infos[2])
-            prev_evt_y = int(prev_line_infos[3])
-            if monitor[0] <= prev_evt_x and prev_evt_x < monitor[1] and \
-               monitor[2] <= prev_evt_y and prev_evt_y < monitor[3]:
+        elif evt_stamp >= frame_start:
+            if prev_line_infos != None and float(prev_line_infos[0]) < frame_start:
+                prev_evt_x = int(prev_line_infos[2])
+                prev_evt_y = int(prev_line_infos[3])
+                if monitor[0] <= prev_evt_x and prev_evt_x < monitor[1] and \
+                   monitor[2] <= prev_evt_y and prev_evt_y < monitor[3]:
+                    return True
+                
+            evt_x = int(line_infos[2])
+            evt_y = int(line_infos[3])
+            if monitor[0] <= evt_x and evt_x < monitor[1] and \
+               monitor[2] <= evt_y and evt_y < monitor[3]:
                 return True
-
-        evt_x = int(line_infos[2])
-        evt_y = int(line_infos[3])
-        if monitor[0] <= evt_x and evt_x < monitor[1] and \
-           monitor[2] <= evt_y and evt_y < monitor[3]:
-            return True
 
         prev_line_infos = line_infos
 
@@ -85,7 +84,7 @@ def extract_frame_monitors(recording_id, frame_folder, frame_idx, frame):
         w = int(line_infos[3]) # Monitor's width
         h = int(line_infos[4]) # Monitor's height
 
-        if monitor_is_relevant(rec_infos_file_path, recording_id, frame_idx, (x, y, w, h)):
+        if monitor_is_relevant(rec_infos_file_path, recording_id, frame_idx, (x, y, x + w, y + h)):
             frame_path = frame_folder + '_' + str(i + 1) + '_' + str(frame_idx) + '.png'
             cv2.imwrite(frame_path, frame[y:(y + h), x:(x + w)])
             # Save .final file to inform worker that image file is fully created
