@@ -48,8 +48,8 @@ def monitor_is_relevant(rec_infos_file_path, recording_id, frame_idx, monitor):
         if frame_end <= evt_stamp:
             break
 
-        prev_evt_stamp = float(prev_line_infos[0])
-        if prev_evt_stamp < frame_start and evt_stamp >= frame_start:
+        if prev_line_infos != None and float(prev_line_infos[0]) < frame_start and \
+           evt_stamp >= frame_start:
             prev_evt_x = int(prev_line_infos[2])
             prev_evt_y = int(prev_line_infos[3])
             if monitor[0] <= prev_evt_x and prev_evt_x < monitor[1] and \
