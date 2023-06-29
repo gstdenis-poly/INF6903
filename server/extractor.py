@@ -51,8 +51,8 @@ def monitor_is_relevant(rec_infos_file_path, recording_id, frame_idx, monitor):
             if prev_line_infos != None and float(prev_line_infos[0]) < frame_start:
                 prev_evt_x = int(prev_line_infos[2])
                 prev_evt_y = int(prev_line_infos[3])
-                if monitor[0] <= prev_evt_x and prev_evt_x < monitor[1] and \
-                   monitor[2] <= prev_evt_y and prev_evt_y < monitor[3]:
+                if monitor[0] <= prev_evt_x and prev_evt_x < monitor[2] and \
+                   monitor[1] <= prev_evt_y and prev_evt_y < monitor[3]:
                     return True
                 
             evt_x = int(line_infos[2])
