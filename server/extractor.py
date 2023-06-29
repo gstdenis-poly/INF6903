@@ -27,32 +27,42 @@ def get_frame_time_interval(rec_infos_file_path, frame_idx):
     return frame_start, frame_end
 
 # Check if frame is relevant for next step of pipeline:
-#   - A user event occured inside the monitor during the frame
+#   - A mouse event occured inside the monitor during the frame
+#   - The last mouse event before the frame was inside the monitor
 def monitor_is_relevant(rec_infos_file_path, recording_id, frame_idx, monitor):
-    frame_start, frame_end = get_frame_time_interval(rec_infos_file_path, frame_idx)
-
     mouse_rec_file_path = uploads_folder + recording_id + '_' + mouse_recording_file
     if not os.path.isfile(mouse_rec_file_path):
         return True
+    
+    frame_start, frame_end = get_frame_time_interval(rec_infos_file_path, frame_idx)
 
     mouse_rec_file = open(mouse_rec_file_path, 'r')
     mouse_rec_file_lines = mouse_rec_file.read().splitlines()
     mouse_rec_file.close()
-
+    
+    prev_line_infos = None
     for line in mouse_rec_file_lines:
         line_infos = line.split('|')
 
         evt_stamp = float(line_infos[0])
-        if evt_stamp < frame_start:
-            continue
-        elif frame_end <= evt_stamp:
+        if frame_end <= evt_stamp:
             break
+
+        prev_evt_stamp = float(prev_line_infos[0])
+        if prev_evt_stamp < frame_start and evt_stamp >= frame_start:
+            prev_evt_x = int(prev_line_infos[2])
+            prev_evt_y = int(prev_line_infos[3])
+            if monitor[0] <= prev_evt_x and prev_evt_x < monitor[1] and \
+               monitor[2] <= prev_evt_y and prev_evt_y < monitor[3]:
+                return True
 
         evt_x = int(line_infos[2])
         evt_y = int(line_infos[3])
         if monitor[0] <= evt_x and evt_x < monitor[1] and \
            monitor[2] <= evt_y and evt_y < monitor[3]:
             return True
+
+        prev_line_infos = line_infos
 
     return False
 
