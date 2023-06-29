@@ -27,7 +27,8 @@ def record_keyboard(mouse_listener, screen_recorder):
             mouse_listener.stop()
             screen_recorder.terminate()
             return False
-        elif key not in [Key.enter, Key.tab, Key.left, Key.right, Key.up, Key.down]:
+        elif key not in [Key.enter, Key.tab, Key.left, Key.right, Key.up,
+                         Key.down, Key.alt, Key.shift, Key.ctrl]:
             return True
 
         evt_stamp = time.time_ns()
