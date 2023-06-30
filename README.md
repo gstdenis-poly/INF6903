@@ -36,6 +36,9 @@ bash ./installer.sh
 ```
 - (Optionnel: au besoin) Remplacer "from collections" par "from collections.abc" partout dans le site-packages attrdict de l'installation de Python3.
 - (Optionnel: au besoin) Réinstaller libbz2-dev avec sudo apt-get install.
+- Clôner le répertoire [UIED_custom] à la racine du répertoire (INF6903).
+- Créer un dossier models/ à la racine du répertoire (INF6903) puis y placer le fichier de modèle que le CNN de UIED doit utiliser.
+- Ajuster les chemins de modèles définis dans config/CONFIG.py à la racine de UIED_custom afin de pointer sur les fichiers de modèles du dossier models/.
 - Ajuster les chemins de dossiers définis dans server/configurator.py et s'assurer que tous les dossiers existent sur le serveur.
 - Exécuter configurator.py avec python3.
 - Ajuster les scripts d'exécution .sh pour qu'ils pointent sur l'emplacement exact de l'exécutable python3 et qu'ils utilisent un workload manager distinct de Slurm si nécessaire.
@@ -53,4 +56,5 @@ INF6903 - Projet de maîtrise en ingénierie III
    [PaddleOCR]: <https://github.com/PaddlePaddle/PaddleOCR>
    [Keras]: <https://keras.io/>
    [Scikit-learn]: <https://scikit-learn.org/stable/index.html>
+   [UIED_custom]: <https://github.com/gstdenis-poly/UIED_custom>
 
