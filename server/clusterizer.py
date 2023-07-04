@@ -58,7 +58,7 @@ def update_corpus(recording_id, words):
 # among different recordings of the same account.
 def get_corpus():
     accounts_terms_counter = {}
-    for document_name in corpus_folder:
+    for document_name in os.listdir(corpus_folder):
         account = document_name.split('-')[0]
         if account not in accounts_terms_counter:
             accounts_terms_counter[account] = Counter()
