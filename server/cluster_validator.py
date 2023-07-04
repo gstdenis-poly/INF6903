@@ -33,8 +33,8 @@ def get_clusters_centroid(cluster1_file_path, cluster2_file_path):
 
     cluster1_centroid, cluster2_centroid = [], []
     for token in tokens:
-        cluster1_centroid += float(cluster1_vectors[token])
-        cluster2_centroid += float(cluster2_vectors[token])
+        cluster1_centroid += [float(cluster1_vectors[token])]
+        cluster2_centroid += [float(cluster2_vectors[token])]
 
     return np.array(cluster1_centroid), np.array(cluster2_centroid)
 
