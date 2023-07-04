@@ -16,6 +16,7 @@ validations_folder = database_folder + 'validations/'
 val_clusters_folder = validations_folder + 'clusters/'
 detections_folder = '/home/gstdenis/scratch/detections/'
 clusters_folder = '/home/gstdenis/scratch/clusters/'
+corpus_folder = database_folder + 'corpus/'
 # Recording files' name
 mouse_recording_file = 'mouse_recording.txt'
 keyboard_recording_file = 'keyboard_recording.txt'

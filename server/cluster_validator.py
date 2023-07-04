@@ -3,6 +3,7 @@
 #              file.
 
 # Include required libraries
+from clusterizer import get_account_type
 from configurator import *
 import os
 import numpy as np
@@ -26,22 +27,6 @@ def get_centroids_distance(centroid1, centroid2):
         centroid1 = np.pad(centroid1, (0, abs(padding)))
 
     return cosine(centroid1, centroid2)
-
-# Return account type of given account name
-def get_account_type(acc_name):
-    acc_type = None
-    acc_file_path = accounts_folder + acc_name + '.txt'
-    acc_file = open(acc_file_path, 'r')
-    acc_file_lines = acc_file.read().splitlines()
-    acc_file.close()
-
-    for line in acc_file_lines:
-        line_infos = line.split('|')
-        if line_infos[0] == 'acc_type':
-            acc_type = line_infos[1]
-            break
-
-    return acc_type
 
 # Save temporary cluster files to database and return True if at
 # least one cluster file was saved to database
