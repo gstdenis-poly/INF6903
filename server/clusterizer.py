@@ -116,6 +116,7 @@ def extract_ocr_tokens(recording_id, ocr_file_path):
 
 # Clusterize given tokens and save result into given cluster file
 def clusterize_ocr(ocr_tokens, cluster_file_path):
+    print(ocr_tokens)
     # Set k-means initial cluster
     km_init = 'k-means++' # Default init parameter for KMeans
     if os.path.exists(cluster_file_path):
