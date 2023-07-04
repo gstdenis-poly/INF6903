@@ -19,7 +19,7 @@ def get_cluster_vectors(cluster_file_path):
     cluster_vectors = {}
     for line in cluster_file_lines:
         line_parts = line.split('|')
-        cluster_vectors[line_parts[0]] = [float(line_parts[1])]
+        cluster_vectors[line_parts[0]] = float(line_parts[1])
 
     return cluster_vectors
 
