@@ -20,7 +20,13 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 stemmer = PorterStemmer()
 stop_words = stopwords.words('french') + stopwords.words('english')
 vectorizer = TfidfVectorizer(stop_words = stop_words)
-K = 1 # Number of clusters (more than 1 is currently not supported)    
+K = 1 # Number of clusters (more than 1 is currently not supported)
+
+def is_alphabetical(string):
+    for c in string:
+        if not c.isalpha():
+            return False
+    return True
 
 # Return account type of given account name
 def get_account_type(acc_name):
@@ -77,9 +83,11 @@ def get_corpus():
 
     return corpus
 
-# Return lowercased and stemmed tokens for given words
+# Return lowercased and stemmed tokens for given words, non alphanumeric
+# are excluded.
 def prepare_tokens(words):
-    tokens = [w.lower() for w in words] # Tokens of lowercased words
+    tokens = [w for w in words if is_alphabetical(w)] # Tokens of alphabetical words only
+    tokens = [t.lower() for t in tokens] # Tokens of lowercased words
     tokens = [stemmer.stem(t) for t in tokens] # Porter stemmed tokens
     return tokens
 

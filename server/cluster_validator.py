@@ -10,13 +10,33 @@ import numpy as np
 from scipy.spatial.distance import cosine
 import shutil
 
-# Return cluster's centroid of given cluster file
-def get_cluster_centroid(cluster_file_path):
-    cluster_centroid = open(cluster_file_path, 'r').read().splitlines()
-    cluster_centroid = [float(v.split('|')[-1]) for v in cluster_centroid]
-    cluster_centroid = np.array(cluster_centroid) 
+# Return a dict of vectors per token according to given cluster file.
+def get_cluster_vectors(cluster_file_path):
+    cluster_file = open(cluster_file_path, 'r')
+    cluster_file_lines = cluster_file.read().splitlines()
+    cluster_file.close()
 
-    return cluster_centroid
+    cluster_vectors = {}
+    for line in cluster_file_lines:
+        line_parts = line.split('|')
+        cluster_vectors[line_parts[0]] = [float(line_parts[1])]
+
+    return cluster_vectors
+
+# Return the centroid the given cluster files considering only the tokens 
+# that exist in both of the given cluster files.
+def get_clusters_centroid(cluster1_file_path, cluster2_file_path):
+    cluster1_vectors = get_cluster_vectors(cluster1_file_path)
+    cluster2_vectors = get_cluster_vectors(cluster2_file_path)
+
+    tokens = list(set(cluster1_vectors.keys()) & set(cluster2_vectors.keys()))
+
+    cluster1_centroid, cluster2_centroid = [], []
+    for token in tokens:
+        cluster1_centroid += float(cluster1_vectors[token])
+        cluster2_centroid += float(cluster2_vectors[token])
+
+    return np.array(cluster1_centroid), np.array(cluster2_centroid)
 
 # Return cosine distance between two clusters' centroids
 def get_centroids_distance(centroid1, centroid2):
@@ -53,7 +73,6 @@ def validate_cluster():
     
     for cluster_file_name in os.listdir(res_clusters_folder):
         cluster_file_path = res_clusters_folder + cluster_file_name
-        cluster_centroid = get_cluster_centroid(cluster_file_path)
 
         recording_id = os.path.splitext(cluster_file_name)[0]
         acc_name = recording_id.split('-')[0]
@@ -76,9 +95,11 @@ def validate_cluster():
             if cmp_acc_type == acc_type:
                 continue
 
-            cmp_cluster_centroid = get_cluster_centroid(cmp_cluster_file_path)
-            distance = get_centroids_distance(cluster_centroid, cmp_cluster_centroid)
-            distances[cmp_recording_id] = distance
+            c1, c2 = get_clusters_centroid(cluster_file_path, cmp_cluster_file_path)
+            if c1.size > 0 and c2.size > 0:
+                distances[cmp_recording_id] = get_centroids_distance(c1, c2)
+            else:
+                distances[cmp_recording_id] = 1.0
         
         for item in sorted(distances.items(), key = lambda item: item[1]):
             cluster_val_file.write(item[0] + '|' + str(item[1]) + '\n')
