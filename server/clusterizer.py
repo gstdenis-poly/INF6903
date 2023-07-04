@@ -4,7 +4,6 @@
 # Include required libraries
 from collections import Counter
 from configurator import *
-from filelock import FileLock
 import json
 import nltk
 import numpy as np
@@ -86,7 +85,8 @@ def get_corpus():
 # Return lowercased and stemmed tokens for given words; non alphanumeric
 # and stop words are excluded.
 def prepare_tokens(words):
-    tokens = [w for w in words if is_alphabetical(w)] # Tokens of alphabetical words only
+    tokens = [w for w in words if len(w) > 1] # Tokens of 2 characters words minimum
+    tokens = [t for t in tokens if is_alphabetical(t)] # Tokens of alphabetical words only
     tokens = [t.lower() for t in tokens] # Tokens of lowercased words
     tokens = [t for t in tokens if t not in stop_words] # Remove stop words from tokens
     tokens = [stemmer.stem(t) for t in tokens] # Porter stemmed tokens
@@ -116,7 +116,6 @@ def extract_ocr_tokens(recording_id, ocr_file_path):
 
 # Clusterize given tokens and save result into given cluster file
 def clusterize_ocr(ocr_tokens, cluster_file_path):
-    print(ocr_tokens)
     # Set k-means initial cluster
     km_init = 'k-means++' # Default init parameter for KMeans
     if os.path.exists(cluster_file_path):
