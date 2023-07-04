@@ -90,9 +90,11 @@ def extract_ocr_tokens(recording_id, ocr_file_path):
     ocr_file = open(ocr_file_path, 'r')
     ocr_json = json.loads(ocr_file.read())
     ocr_file.close()
-    ocr_tokens = []
 
-    ocr_words = [w for w in word_tokenize(ocr_json['texts'])]
+    ocr_words = []
+    for ocr_content in ocr_json['texts']:
+        ocr_words += word_tokenize(ocr_content['content'])
+
     account = recording_id.split('-')[0]
     if get_account_type(account) == 'provider':
         update_corpus(recording_id, ocr_words)
