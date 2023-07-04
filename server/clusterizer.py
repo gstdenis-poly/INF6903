@@ -19,7 +19,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 
 stemmer = PorterStemmer()
 stop_words = stopwords.words('french') + stopwords.words('english')
-vectorizer = TfidfVectorizer(stop_words = stop_words)
+vectorizer = TfidfVectorizer()
 K = 1 # Number of clusters (more than 1 is currently not supported)
 
 def is_alphabetical(string):
@@ -83,11 +83,12 @@ def get_corpus():
 
     return corpus
 
-# Return lowercased and stemmed tokens for given words, non alphanumeric
-# are excluded.
+# Return lowercased and stemmed tokens for given words; non alphanumeric
+# and stop words are excluded.
 def prepare_tokens(words):
     tokens = [w for w in words if is_alphabetical(w)] # Tokens of alphabetical words only
     tokens = [t.lower() for t in tokens] # Tokens of lowercased words
+    tokens = [t for t in tokens if t not in stop_words] # Remove stop words from tokens
     tokens = [stemmer.stem(t) for t in tokens] # Porter stemmed tokens
     return tokens
 

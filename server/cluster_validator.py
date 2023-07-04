@@ -38,16 +38,6 @@ def get_clusters_centroid(cluster1_file_path, cluster2_file_path):
 
     return np.array(cluster1_centroid), np.array(cluster2_centroid)
 
-# Return cosine distance between two clusters' centroids
-def get_centroids_distance(centroid1, centroid2):
-    padding = centroid1.shape[0] - centroid2.shape[0]
-    if padding > 0:
-        centroid2 = np.pad(centroid2, (0, padding))
-    elif padding < 0:
-        centroid1 = np.pad(centroid1, (0, abs(padding)))
-
-    return cosine(centroid1, centroid2)
-
 # Save temporary cluster files to database and return True if at
 # least one cluster file was saved to database
 def save_clusters():
@@ -96,10 +86,7 @@ def validate_cluster():
                 continue
 
             c1, c2 = get_clusters_centroid(cluster_file_path, cmp_cluster_file_path)
-            if c1.size > 0 and c2.size > 0:
-                distances[cmp_recording_id] = get_centroids_distance(c1, c2)
-            else:
-                distances[cmp_recording_id] = 1.0
+            distances[cmp_recording_id] = cosine(c1, c2) if c1.size > 0 else 1.0
         
         for item in sorted(distances.items(), key = lambda item: item[1]):
             cluster_val_file.write(item[0] + '|' + str(item[1]) + '\n')
