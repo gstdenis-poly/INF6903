@@ -1,3 +1,6 @@
+# Description: Http server providing Web pages for visualizing results.
+
+# Include required libraries
 from aiohttp import web
 from configurator import *
 import os
@@ -48,7 +51,7 @@ async def handle_solutions(request):
             res_vid_file_name = line_infos[0] + '_' + screen_recording_file
             res_vid_file_path = '/recordings/' + line_infos[0] + '/' + res_vid_file_name
             results += '<h2>Solution #' + str(i + 1) + ': ' + line_infos[0] + '</h2>' + \
-                '<h3>Distance: ' + line_infos[1] + '</h3>' + \
+                '<h3>Score: ' + line_infos[1] + '</h3>' + \
                 '<video style="width:100%" controls src="' + res_vid_file_path + '" type="video/mp4"></video>'
 
         req_vid_file_name = recording_id + '_' + screen_recording_file
