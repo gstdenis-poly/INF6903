@@ -4,6 +4,7 @@
 from configurator import *
 import cv2
 import os
+import random
 import shutil
 
 # Return time interval of given frame according to given recording infos file
@@ -124,7 +125,6 @@ def extract_frames(video_name):
 
     frame_idx = 1
     frames_images_count = 0
-    detector_worker_idx = 1
     while cap.isOpened():
         ret, frame_img = cap.read()
         if not ret:
@@ -132,12 +132,11 @@ def extract_frames(video_name):
 
         # Extract frame only if relevant
         if frame_is_relevant(rec_infos_file_path, recording_id, frame_idx):
+            detector_worker_idx = random.randint(1, detector_workers_count)
             # Put frame image in a worker folder for next step of pipeline
             detector_worker_folder = frames_folder + 'worker' + str(detector_worker_idx) + '/'
             frame_folder = detector_worker_folder + video_name
             frames_images_count += extract_frame_monitors(recording_id, frame_folder, frame_idx, frame_img)
-
-            detector_worker_idx = detector_worker_idx % detector_workers_count + 1
 
         frame_idx += 1
 
