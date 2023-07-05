@@ -48,8 +48,12 @@ def save_clusters():
         if file_path_parts[1] != '.final':
             continue
 
+        res_cluster_file_path = res_clusters_folder + file_path_parts[0] + '.txt'
+        if os.path.isfile(res_cluster_file_path):
+            os.remove(res_cluster_file_path) # Delete res cluster file if already exists
+
         cluster_file_path = file_path_parts[0] + '.txt'
-        shutil.move(cluster_file_path, res_clusters_folder)
+        shutil.move(cluster_file_path, res_cluster_file_path)
         os.remove(file_path) # Remove .final file
         cluster_saved = True
 
