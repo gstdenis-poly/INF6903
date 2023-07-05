@@ -122,10 +122,10 @@ def frame_is_relevant(rec_infos_file_path, recording_id, frame_idx):
 
 # Extract frames from video
 def extract_frames(video_name):
-    rec_db_folder = recordings_folder + recording_id + '/'
-    cap = cv2.VideoCapture(rec_db_folder + video_name)
     video_name = os.path.splitext(video_name)[0]
     recording_id = video_name.split('_')[0]
+    rec_db_folder = recordings_folder + recording_id + '/'
+    cap = cv2.VideoCapture(rec_db_folder + video_name)
     rec_infos_file_path = rec_db_folder + recording_id + '_' + recording_infos_file
 
     frame_idx = 1
