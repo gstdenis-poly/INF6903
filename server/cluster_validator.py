@@ -3,12 +3,12 @@
 #              file.
 
 # Include required libraries
-from clusterizer import get_account_type
 from configurator import *
 import os
 import numpy as np
 from scipy.spatial.distance import cosine
 import shutil
+from tokenizer import get_account_type
 
 # Return a dict of vectors per token according to given cluster file.
 def get_cluster_vectors(cluster_file_path):
