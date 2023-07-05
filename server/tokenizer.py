@@ -1,5 +1,5 @@
-# Description: extract, tokenize, stem, remove stop words and clusterize 
-#              text previously detected in uploaded images.
+# Description: extract tokens from text previously detected in 
+# uploaded images.
 
 # Include required libraries
 from configurator import *

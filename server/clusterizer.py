@@ -1,5 +1,4 @@
-# Description: extract, tokenize, stem, remove stop words and clusterize 
-#              text previously detected in uploaded images.
+# Description: clusterize previously extracted tokens.
 
 # Include required libraries
 from collections import Counter
@@ -101,7 +100,7 @@ def clusterize():
             clusterize_tokens(recording_id, tokens) # K-means clustering
 
         # Save .final file to inform worker that clusterizing is completed
-        open(clusters_folder + recording_id + '.final', 'x').close()
+        open(clusters_folder + recording_id + '.final', 'w').close()
 
 # Program's main
 if __name__ == '__main__':
