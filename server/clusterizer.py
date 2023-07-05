@@ -7,7 +7,6 @@ import os
 import shutil
 from sklearn.cluster import KMeans
 from sklearn.feature_extraction.text import TfidfVectorizer
-from tokenizer import tokenize_words
 
 vectorizer = TfidfVectorizer()
 K = 1 # Number of clusters (more than 1 is currently not supported)
@@ -93,7 +92,7 @@ def clusterize():
     if not tokens_to_clusterize:
        return
 
-    corpus_tokens = tokenize_words(get_corpus())
+    corpus_tokens = get_corpus()
 
     for tokens_file_name in os.listdir(res_tokens_folder):
         tokens_file_name_parts = os.path.splitext(tokens_file_name)

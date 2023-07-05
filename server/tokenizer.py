@@ -38,17 +38,17 @@ def get_account_type(acc_name):
 
     return acc_type
 
-# Update terms in corpus document of given recording id with given words.
+# Update terms in corpus document of given recording id with given words' tokens.
 def update_corpus(recording_id, words):
-    terms = set(words)
+    terms = set(tokenize_words(words))
     
     rec_document_file_path = corpus_folder + recording_id + '.txt'
     if os.path.isfile(rec_document_file_path):
         rec_document_file = open(rec_document_file_path, 'r')
-        rec_document_words = rec_document_file.read().split('|')
+        rec_document_terms = rec_document_file.read().split('|')
         rec_document_file.close() 
 
-        terms = terms.union(set(rec_document_words))
+        terms = terms.union(set(rec_document_terms))
 
     rec_document_file = open(rec_document_file_path, 'w')
     rec_document_file.write('|'.join(terms))
@@ -71,19 +71,19 @@ def tokenize_detection(recording_id, det_file_path):
     detection_json = json.loads(detection_file.read())
     detection_file.close()
 
-    det_words = []
-    for det_content in detection_json['texts']:
-        det_words += word_tokenize(det_content['content'].lower())
+    detection_words = []
+    for detection_content in detection_json['texts']:
+        detection_words += word_tokenize(detection_content['content'].lower())
 
     account = recording_id.split('-')[0]
     if get_account_type(account) == 'provider':
-        update_corpus(recording_id, det_words)
+        update_corpus(recording_id, detection_words)
     
-    det_tokens = tokenize_words(det_words)
+    detection_tokens = tokenize_words(detection_words)
 
     tokens_file_path = tokens_folder + recording_id + '.txt'
     tokens_file = open(tokens_file_path, 'a')
-    tokens_file.write('|'.join(det_tokens) + '\n')
+    tokens_file.write('|'.join(detection_tokens) + '\n')
     tokens_file.close()
 
 # Save progress of tokenizing given recording's frames
