@@ -1,4 +1,4 @@
-# Description: evaluate distance between each requester's clusters and each
+# Description: evaluate score between each requester's clusters and each
 #              provider's clusters in database and save it into a validation
 #              file.
 
@@ -75,7 +75,7 @@ def validate_cluster():
         cluster_val_file_path = val_clusters_folder + cluster_file_name
         cluster_val_file = open(cluster_val_file_path, 'w')
 
-        distances = {} # Dictionary of distances per recording id
+        scores = {} # Dictionary of scores per recording id
         for cmp_cluster_file_name in os.listdir(res_clusters_folder):
             if cmp_cluster_file_name == cluster_file_name:
                 continue
@@ -90,9 +90,10 @@ def validate_cluster():
                 continue
 
             c1, c2 = get_clusters_centroid(cluster_file_path, cmp_cluster_file_path)
-            distances[cmp_recording_id] = cosine(c1, c2) if c1.size > 0 else 1.0
+            distance = cosine(c1, c2) if c1.size > 0 else 1.0
+            scores[cmp_recording_id] = 1.0 - distance + c1.size
         
-        for item in sorted(distances.items(), key = lambda item: item[1]):
+        for item in sorted(scores.items(), key = lambda item: item[1], reverse = True):
             cluster_val_file.write(item[0] + '|' + str(item[1]) + '\n')
 
         cluster_val_file.close()

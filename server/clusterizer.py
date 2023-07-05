@@ -9,7 +9,7 @@ from sklearn.cluster import KMeans
 from sklearn.feature_extraction.text import TfidfVectorizer
 
 vectorizer = TfidfVectorizer()
-K = 1 # Number of clusters (more than 1 is currently not supported)
+K = 1 # Number of clusters
 
 # Get full corpus in database and keep only the terms that are unique
 # among different recordings of the same account.
