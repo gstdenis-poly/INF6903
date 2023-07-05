@@ -75,6 +75,10 @@ def save_tokens():
         if file_name_parts[1] != '.final':
             continue
 
+        res_tokens_file_path = res_tokens_folder + file_name_parts[0] + '.txt'
+        if os.path.isfile(res_tokens_file_path):
+            os.remove(res_tokens_file_path) # Delete res tokens file if already exists
+
         tokens_file_path = tokens_folder + file_name_parts[0] + '.txt'
         shutil.move(tokens_file_path, res_tokens_folder)
         os.remove(file_path) # Remove .final file
@@ -101,14 +105,17 @@ def clusterize():
         if tokens:
             clusterize_tokens(recording_id, tokens) # K-means clustering
 
-    # Save .final file for each .tmp file to inform worker that clusterizing is completed
+    # Save .final file for each new cluster file to inform worker that clusterizing is completed
     for cluster_file_name in os.listdir(clusters_folder):
         cluster_file_path = clusters_folder + cluster_file_name
         cluster_file_path_parts = os.path.splitext(cluster_file_path)
         if cluster_file_path_parts[-1] != '.tmp':
             continue
 
-        os.rename(cluster_file_path_parts[0] + '.tmp', cluster_file_path_parts[0] + '.final')
+        if os.path.isfile(cluster_file_path_parts[0] + '.txt'):
+            os.rename(cluster_file_path_parts[0] + '.tmp', cluster_file_path_parts[0] + '.final')
+        else:
+            os.remove(cluster_file_path_parts[0] + '.tmp')
 
 # Program's main
 if __name__ == '__main__':
