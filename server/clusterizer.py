@@ -94,7 +94,7 @@ def clusterize():
     for tokens_file_name in os.listdir(res_tokens_folder):
         tokens_file_name_parts = os.path.splitext(tokens_file_name)
         recording_id = tokens_file_name_parts[0].split('_')[0]
-        tokens_file_path = tokens_folder + tokens_file_name_parts[0] + '.txt'
+        tokens_file_path = res_tokens_folder + tokens_file_name_parts[0] + '.txt'
 
         tokens = extract_tokens(tokens_file_path, corpus_tokens) # Extract tokens
         if tokens:
