@@ -44,15 +44,15 @@ def save_clusters():
     cluster_saved = False
     for file_name in os.listdir(clusters_folder):
         file_path = clusters_folder + file_name
-        file_path_parts = os.path.splitext(file_path)
-        if file_path_parts[1] != '.final':
+        file_name_parts = os.path.splitext(file_name)
+        if file_name_parts[1] != '.final':
             continue
 
-        res_cluster_file_path = res_clusters_folder + file_path_parts[0] + '.txt'
+        res_cluster_file_path = res_clusters_folder + file_name_parts[0] + '.txt'
         if os.path.isfile(res_cluster_file_path):
             os.remove(res_cluster_file_path) # Delete res cluster file if already exists
 
-        cluster_file_path = file_path_parts[0] + '.txt'
+        cluster_file_path = clusters_folder + file_name_parts[0] + '.txt'
         shutil.move(cluster_file_path, res_cluster_file_path)
         os.remove(file_path) # Remove .final file
         cluster_saved = True
