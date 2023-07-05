@@ -63,27 +63,27 @@ def tokenize_words(words):
     tokens = [stemmer.stem(t) for t in tokens] # Porter stemmed tokens
     return tokens
 
-# Extract and save tokens from given ocr detection file. If the account 
+# Extract and save tokens from given det detection file. If the account 
 # related to the given recording id is of type 'provider', its corpus is
 # updated.
-def tokenize_ocr(recording_id, ocr_file_path):
-    ocr_file = open(ocr_file_path, 'r')
-    ocr_json = json.loads(ocr_file.read())
-    ocr_file.close()
+def tokenize_detection(recording_id, det_file_path):
+    detection_file = open(det_file_path, 'r')
+    detection_json = json.loads(detection_file.read())
+    detection_file.close()
 
-    ocr_words = []
-    for ocr_content in ocr_json['texts']:
-        ocr_words += word_tokenize(ocr_content['content'].lower())
+    det_words = []
+    for det_content in detection_json['texts']:
+        det_words += word_tokenize(det_content['content'].lower())
 
     account = recording_id.split('-')[0]
     if get_account_type(account) == 'provider':
-        update_corpus(recording_id, ocr_words)
+        update_corpus(recording_id, det_words)
     
-    ocr_tokens = tokenize_words(ocr_words)
+    det_tokens = tokenize_words(det_words)
 
     tokens_file_path = tokens_folder + recording_id + '.txt'
     tokens_file = open(tokens_file_path, 'a')
-    tokens_file.write('|'.join(ocr_tokens) + '\n')
+    tokens_file.write('|'.join(det_tokens) + '\n')
     tokens_file.close()
 
 # Save progress of tokenizing given recording's frames
@@ -117,29 +117,22 @@ def save_progress(recording_id):
 
 # Program main function
 def tokenize():
-    ips_folder = detections_folder + 'ip/'
-    ocrs_folder = detections_folder + 'ocr/'
-    if not (os.path.exists(ips_folder) or os.path.exists(ocrs_folder)):
-        return
-
-    for ocr_file_name in os.listdir(ocrs_folder):
-        ocr_file_name_parts = os.path.splitext(ocr_file_name)
-        if not os.path.isfile(detections_folder + ocr_file_name_parts[0] + '.final') or \
-           ocr_file_name_parts[-1] != '.json':
+    for det_file_name in os.listdir(detections_folder):
+        det_file_name_parts = os.path.splitext(det_file_name)
+        if not os.path.isfile(detections_folder + det_file_name_parts[0] + '.final') or \
+           det_file_name_parts[-1] != '.json':
             continue
 
-        recording_id = ocr_file_name_parts[0].split('_')[0]
-        ocr_file_path = ocrs_folder + ocr_file_name
+        recording_id = det_file_name_parts[0].split('_')[0]
+        det_file_path = detections_folder + det_file_name
 
-        tokenize_ocr(recording_id, ocr_file_path) # Extract ocr tokens
+        tokenize_detection(recording_id, det_file_path) # Extract tokens from detection
         save_progress(recording_id) # Save processed recording's frames
 
         # Remove detections files
-        os.remove(ocr_file_path)
-        os.remove(ocrs_folder + ocr_file_name_parts[0] + '.png')
-        os.remove(ips_folder + ocr_file_name_parts[0] + '.json')
-        os.remove(ips_folder + ocr_file_name_parts[0] + '.jpg')
-        os.remove(detections_folder + ocr_file_name_parts[0] + '.final')
+        os.remove(det_file_path)
+        os.remove(detections_folder + det_file_name_parts[0] + '.png')
+        os.remove(detections_folder + det_file_name_parts[0] + '.final')
 
 # Program's main
 if __name__ == '__main__':
