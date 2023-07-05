@@ -36,7 +36,8 @@ def event_occurs_inside_monitor(event, monitor):
 #   - A mouse event occured inside the monitor during the frame
 #   - The last mouse event before the frame was inside the monitor
 def monitor_is_relevant(rec_infos_file_path, recording_id, frame_idx, monitor):
-    mouse_rec_file_path = uploads_folder + recording_id + '_' + mouse_recording_file
+    rec_db_folder = recordings_folder + recording_id + '/'
+    mouse_rec_file_path = rec_db_folder + recording_id + '_' + mouse_recording_file
     if not os.path.isfile(mouse_rec_file_path):
         return True
     
@@ -65,7 +66,8 @@ def monitor_is_relevant(rec_infos_file_path, recording_id, frame_idx, monitor):
 
 # Extract monitor's image from frame and return count of monitors for frame
 def extract_frame_monitors(recording_id, frame_folder, frame_idx, frame):
-    rec_infos_file_path = uploads_folder + recording_id + '_' + recording_infos_file
+    rec_db_folder = recordings_folder + recording_id + '/'
+    rec_infos_file_path = rec_db_folder + recording_id + '_' + recording_infos_file
     rec_infos_file = open(rec_infos_file_path, 'r')
     rec_infos_file_lines = rec_infos_file.read().splitlines()
     rec_infos_file.close()
@@ -106,10 +108,12 @@ def event_is_occuring(events_file_path, start_time, end_time):
 def frame_is_relevant(rec_infos_file_path, recording_id, frame_idx):
     frame_start, frame_end = get_frame_time_interval(rec_infos_file_path, frame_idx)
 
-    keyboard_rec_file_path = uploads_folder + recording_id + '_' + keyboard_recording_file
+    rec_db_folder = recordings_folder + recording_id + '/'
+    
+    keyboard_rec_file_path = rec_db_folder + recording_id + '_' + keyboard_recording_file
     keyboard_evt_is_occuring = os.path.isfile(keyboard_rec_file_path) and \
                                event_is_occuring(keyboard_rec_file_path, frame_start, frame_end)
-    mouse_rec_file_path = uploads_folder + recording_id + '_' + mouse_recording_file
+    mouse_rec_file_path = rec_db_folder + recording_id + '_' + mouse_recording_file
     mouse_evt_is_occuring = os.path.isfile(mouse_rec_file_path) and \
                             event_is_occuring(mouse_rec_file_path, frame_start, frame_end)
 
@@ -118,10 +122,11 @@ def frame_is_relevant(rec_infos_file_path, recording_id, frame_idx):
 
 # Extract frames from video
 def extract_frames(video_name):
-    cap = cv2.VideoCapture(uploads_folder + video_name)
+    rec_db_folder = recordings_folder + recording_id + '/'
+    cap = cv2.VideoCapture(rec_db_folder + video_name)
     video_name = os.path.splitext(video_name)[0]
     recording_id = video_name.split('_')[0]
-    rec_infos_file_path = uploads_folder + recording_id + '_' + recording_infos_file
+    rec_infos_file_path = rec_db_folder + recording_id + '_' + recording_infos_file
 
     frame_idx = 1
     frames_images_count = 0
@@ -152,13 +157,13 @@ def extract_file(file_name, src_folder, dest_folder):
     file_path = src_folder + file_name
     if not os.path.isfile(file_path):
         return
+
+    shutil.move(file_path, dest_folder) # Save recording files in database
     
     # Extract frames of video 
     if os.path.splitext(file_name)[1] == '.mp4':
         extract_frames(file_name)
     
-    shutil.move(file_path, dest_folder)
-
     print('Extraction of file ' + file_name + ' completed')
 
 # Program main function
@@ -178,7 +183,8 @@ def extract():
         rec_db_folder = recordings_folder + recording_id + '/'
         if not os.path.exists(rec_db_folder):
             os.mkdir(rec_db_folder)
-        rec_files = recording_files + [recording_infos_file]
+        rec_files = [mouse_recording_file, keyboard_recording_file, 
+                     recording_infos_file, screen_recording_file]
         for rec_file in rec_files:
             extract_file(recording_id + '_' + rec_file, uploads_folder, rec_db_folder)
 
