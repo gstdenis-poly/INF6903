@@ -101,7 +101,7 @@ def clusterize():
             clusterize_tokens(recording_id, tokens) # K-means clustering
 
         # Save .final file to inform worker that clusterizing is completed
-        open(clusters_folder + tokens_file_name, 'x').close()
+        open(clusters_folder + recording_id + '.final', 'x').close()
 
 # Program's main
 if __name__ == '__main__':
