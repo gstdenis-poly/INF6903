@@ -11,6 +11,7 @@ from nltk.corpus import stopwords
 from nltk.stem.porter import PorterStemmer
 from nltk.tokenize import word_tokenize
 import os
+import shutil
 
 stemmer = PorterStemmer()
 stop_words = stopwords.words('french') + stopwords.words('english')
@@ -129,8 +130,9 @@ def tokenize():
         tokenize_detection(recording_id, det_file_path) # Extract tokens from detection
         save_progress(recording_id) # Save processed recording's frames
 
+        shutil.move(det_file_path, res_detections_folder) # Move detection file to database
+
         # Remove detections files
-        os.remove(det_file_path)
         os.remove(detections_folder + det_file_name_parts[0] + '.png')
         os.remove(detections_folder + det_file_name_parts[0] + '.final')
 
