@@ -13,23 +13,26 @@ import shutil
 def update_statistics(recording_id):
     rec_db_folder = recordings_folder + recording_id + '/'
     # Number and distance of mouse events
-    mouse_rec_file_path = rec_db_folder + recording_id + '_' + mouse_recording_file
-    mouse_rec_file = open(mouse_rec_file_path, 'r')
     mouse_events_count, mouse_events_distance = 0, 0.0
     prev_evt_x, prev_evt_y = None, None
-    for line in mouse_rec_file.read().splitlines():
-        mouse_events_count += 1
-        line_parts = line.split('|')
-        evt_x, evt_y = float(line_parts[2]), float(line_parts[3])
-        if not (prev_evt_x is None or prev_evt_y is None):
-            mouse_events_distance += math.sqrt(math.pow(evt_x - prev_evt_x, 2) + math.pow(evt_y - prev_evt_y, 2))
-        prev_evt_x, prev_evt_y = evt_x, evt_y
-    mouse_rec_file.close()
+    mouse_rec_file_path = rec_db_folder + recording_id + '_' + mouse_recording_file
+    if os.path.isfile(mouse_rec_file_path):
+        mouse_rec_file = open(mouse_rec_file_path, 'r')
+        for line in mouse_rec_file.read().splitlines():
+            mouse_events_count += 1
+            line_parts = line.split('|')
+            evt_x, evt_y = float(line_parts[2]), float(line_parts[3])
+            if not (prev_evt_x is None or prev_evt_y is None):
+                mouse_events_distance += math.sqrt(math.pow(evt_x - prev_evt_x, 2) + math.pow(evt_y - prev_evt_y, 2))
+            prev_evt_x, prev_evt_y = evt_x, evt_y
+        mouse_rec_file.close()
     # Number of keyboard events
+    keyboard_events_count = 0
     keyboard_rec_file_path = rec_db_folder + recording_id + '_' + keyboard_recording_file
-    keyboard_rec_file = open(keyboard_rec_file_path, 'r')
-    keyboard_events_count = len(keyboard_rec_file.read().splitlines())
-    keyboard_rec_file.close()
+    if os.path.isfile(keyboard_rec_file_path):
+        keyboard_rec_file = open(keyboard_rec_file_path, 'r')
+        keyboard_events_count = len(keyboard_rec_file.read().splitlines())
+        keyboard_rec_file.close()
     # Save statistics
     rec_stats_file_path = res_statistics_folder + recording_id + '.json'
     rec_stats_file = open(rec_stats_file_path, 'w')
@@ -96,7 +99,6 @@ def monitor_is_relevant(rec_infos_file_path, recording_id, frame_idx, monitor):
 
     return False
 
-
 # Extract monitor's image from frame and return count of monitors for frame
 def extract_frame_monitors(recording_id, frame_folder, frame_idx, frame):
     rec_db_folder = recordings_folder + recording_id + '/'
@@ -151,7 +153,6 @@ def frame_is_relevant(rec_infos_file_path, recording_id, frame_idx):
                             event_is_occuring(mouse_rec_file_path, frame_start, frame_end)
 
     return keyboard_evt_is_occuring or mouse_evt_is_occuring
-
 
 # Extract frames from video
 def extract_frames(video_name):
