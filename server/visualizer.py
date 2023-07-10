@@ -48,6 +48,7 @@ def get_accounts():
             account[line_parts[0]] = line_parts[1]
 
         accounts += [account]
+        print(accounts)
 
 # Handle http requests to solutions page
 async def handle_solutions(request):
