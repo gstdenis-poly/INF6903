@@ -2,6 +2,7 @@
 # uploaded images.
 
 # Include required libraries
+from afinn import Afinn
 from configurator import *
 import json
 import nltk
@@ -11,10 +12,45 @@ from nltk.corpus import stopwords
 from nltk.stem.porter import PorterStemmer
 from nltk.tokenize import word_tokenize
 import os
-import shutil
 
 stemmer = PorterStemmer()
+afinn = Afinn() # Module for sentiment analysis of text
 stop_words = stopwords.words('french') + stopwords.words('english')
+
+# Get global statistics of given recording
+def get_statistics(recording_id):
+    rec_stats = {}
+
+    rec_stats_file_path = res_statistics_folder + recording_id + '.json'
+    if os.path.isfile(rec_stats_file_path):
+        rec_stats_file = open(rec_stats_file_path, 'r')
+        rec_stats = json.loads(rec_stats_file.read())
+        rec_stats_file.close()
+
+    rec_stats['text_elements_count'] = 0
+    rec_stats['text_sizes_count'] = 0
+    rec_stats['text_sentiment_score'] = 0.0
+
+    return rec_stats
+
+# Update global statistics for given recording
+def update_statistics(recording_id, det_file_path):
+    detection_file = open(det_file_path, 'r')
+    detection_json = json.loads(detection_file.read())
+    detection_file.close()
+    # Count of text elements, sizes and sentiment score
+    text_stats = get_statistics(recording_id)
+    text_sizes = set()
+    for detection_content in detection_json['texts']:
+        text_stats['text_elements_count'] += 1
+        text_sizes.add(detection_content['height'])
+        text_stats['text_sentiment_score'] += afinn.score(detection_content['content'])
+    text_stats['text_sizes_count'] = len(text_sizes)
+    # Save statistics
+    rec_stats_file_path = res_statistics_folder + recording_id + '.json'
+    rec_stats_file = open(rec_stats_file_path, 'w')
+    rec_stats_file.write(json.dumps(text_stats))
+    rec_stats_file.close()
 
 # Return True if given string is fully alphabetical.
 def is_alphabetical(string):
@@ -129,10 +165,10 @@ def tokenize():
 
         tokenize_detection(recording_id, det_file_path) # Extract tokens from detection
         save_progress(recording_id) # Save processed recording's frames
-
-        shutil.move(det_file_path, res_detections_folder) # Move detection file to database
+        update_statistics(recording_id, det_file_path) # Update statistics of recording
 
         # Remove detections files
+        os.remove(det_file_path)
         os.remove(detections_folder + det_file_name_parts[0] + '.png')
         os.remove(detections_folder + det_file_name_parts[0] + '.final')
 

@@ -1,6 +1,7 @@
 # Description: server installer
 
 # Python librairies
+pip install afinn
 pip install attrdict3
 pip install keras
 pip install nltk

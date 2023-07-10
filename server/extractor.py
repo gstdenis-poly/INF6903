@@ -3,9 +3,42 @@
 # Include required libraries
 from configurator import *
 import cv2
+import json
+import math
 import os
 import random
 import shutil
+
+# Update global statistics for given recording
+def update_statistics(recording_id):
+    rec_db_folder = recordings_folder + recording_id + '/'
+    # Number and distance of mouse events
+    mouse_rec_file_path = rec_db_folder + recording_id + '_' + mouse_recording_file
+    mouse_rec_file = open(mouse_rec_file_path, 'r')
+    mouse_events_count, mouse_events_distance = 0, 0.0
+    prev_evt_x, prev_evt_y = None, None
+    for line in mouse_rec_file.read().splitlines():
+        mouse_events_count += 1
+        line_parts = line.split('|')
+        evt_x, evt_y = float(line_parts[2]), float(line_parts[3])
+        if not (prev_evt_x is None or prev_evt_y is None):
+            mouse_events_distance += math.sqrt(math.pow(evt_x - prev_evt_x) + math.pow(evt_y - prev_evt_y))
+        prev_evt_x, prev_evt_y = evt_x, evt_y
+    mouse_rec_file.close()
+    # Number of keyboard events
+    keyboard_rec_file_path = rec_db_folder + recording_id + '_' + keyboard_recording_file
+    keyboard_rec_file = open(keyboard_rec_file_path, 'r')
+    keyboard_events_count = len(keyboard_rec_file.read().splitlines())
+    keyboard_rec_file.close()
+    # Save statistics
+    rec_stats_file_path = res_statistics_folder + recording_id + '.json'
+    rec_stats_file = open(rec_stats_file_path, 'w')
+    rec_stats_file.write(json.dumps({
+        'mouse_events_count': mouse_events_count,
+        'keyboard_events_count': keyboard_events_count,
+        'mouse_events_distance': mouse_events_distance
+    }))
+    rec_stats_file.close()
 
 # Return time interval of given frame according to given recording infos file
 def get_frame_time_interval(rec_infos_file_path, frame_idx):
@@ -187,6 +220,8 @@ def extract():
                      recording_infos_file, screen_recording_file]
         for rec_file in rec_files:
             extract_file(recording_id + '_' + rec_file, uploads_folder, rec_db_folder)
+
+        update_statistics(recording_id) # Update statistics of recording
 
         # Delete .final file after storage into database and extraction
         os.remove(file_path)
