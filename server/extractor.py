@@ -22,7 +22,7 @@ def update_statistics(recording_id):
         line_parts = line.split('|')
         evt_x, evt_y = float(line_parts[2]), float(line_parts[3])
         if not (prev_evt_x is None or prev_evt_y is None):
-            mouse_events_distance += math.sqrt(math.pow(evt_x - prev_evt_x) + math.pow(evt_y - prev_evt_y))
+            mouse_events_distance += math.sqrt(math.pow(evt_x - prev_evt_x, 2) + math.pow(evt_y - prev_evt_y, 2))
         prev_evt_x, prev_evt_y = evt_x, evt_y
     mouse_rec_file.close()
     # Number of keyboard events
