@@ -45,7 +45,7 @@ def get_accounts():
         account = {}
         for line in account_file_lines:
             line_parts = line.split('|')
-            accounts[line_parts[0]] = line_parts[1]
+            account[line_parts[0]] = line_parts[1]
 
         accounts += [account]
 
