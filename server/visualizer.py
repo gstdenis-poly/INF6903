@@ -5,6 +5,7 @@ from aiohttp import web
 from configurator import *
 import os
 
+# Handle http requests to index page
 async def handle_index(request):
     html = ''
 
@@ -32,7 +33,23 @@ async def handle_index(request):
    
     return web.Response(text = html, content_type = 'text/html')
 
+# Get all account registered on database
+def get_accounts():
+    accounts = []
+    for account_file_name in os.listdir(accounts_folder):
+        account_file_path = accounts_folder + account_file_name
+        account_file = open(account_file_path, 'r')
+        account_file_lines = account_file.read().splitlines()
+        account_file.close()
 
+        account = {}
+        for line in account_file_lines:
+            line_parts = line.split('|')
+            accounts[line_parts[0]] = line_parts[1]
+
+        accounts += [account]
+
+# Handle http requests to solutions page
 async def handle_solutions(request):
     html = ''
 
@@ -44,8 +61,13 @@ async def handle_solutions(request):
         results_file_lines = results_file.read().splitlines()
         results_file.close()
 
+        providers_count = len([a for a in get_accounts() if a['acc_type'] == 'provider'])
+
         results = ''
         for i, line in enumerate(results_file_lines):
+            if i == providers_count:
+                break
+
             line_infos = line.split('|')
             
             res_vid_file_name = line_infos[0] + '_' + screen_recording_file
