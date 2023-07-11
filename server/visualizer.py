@@ -84,9 +84,9 @@ def get_recording_criterias(recording):
     rec_infos = get_recording_infos(recording)
     rec_stats = get_recording_stats(recording)
 
-    criterias += [rec_infos['mouse_events_count']]
-    criterias += [rec_infos['keyboard_events_count']]
-    criterias += [rec_infos['mouse_events_distance']]
+    criterias += [rec_stats['mouse_events_count']]
+    criterias += [rec_stats['keyboard_events_count']]
+    criterias += [rec_stats['mouse_events_distance']]
     criterias += [rec_stats['text_elements_count'] / rec_infos['frames_images_count']]
     criterias += [rec_stats['text_sizes_count'] / rec_infos['frames_images_count']]
     criterias += [rec_stats['text_sentiment_score'] / rec_infos['frames_images_count']]
