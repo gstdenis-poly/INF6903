@@ -70,7 +70,7 @@ def get_recording_infos(recording):
         
 # Get all global statistics of given recording in a dictionnary format
 def get_recording_stats(recording):
-    rec_stats_file_path = validations_folder + recording + '.json'
+    rec_stats_file_path = res_statistics_folder + recording + '.json'
     rec_stats_file = open(rec_stats_file_path, 'r')
     rec_stats = json.loads(rec_stats_file.read())
     rec_stats_file.close()
