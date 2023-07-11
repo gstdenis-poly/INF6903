@@ -3,6 +3,7 @@
 # Include required libraries
 from aiohttp import web
 from configurator import *
+import functools
 import json
 import os
 
@@ -124,10 +125,11 @@ async def handle_solutions(request):
         results_file.close()
 
         providers_count = len([a for a in get_accounts() if a['acc_type'] == 'provider'])
-        sorted_result_file_lines = sorted(results_file_lines, key = cmp_solutions_score)
+        cmp_key = functools.cmp_to_key(cmp_solutions_score)
+        sorted_result_file_lines = sorted(results_file_lines, key = cmp_key)
 
         results = ''
-        for i, line in enumerate(results_file_lines):
+        for i, line in enumerate(sorted_result_file_lines):
             if i == providers_count:
                 break
 
