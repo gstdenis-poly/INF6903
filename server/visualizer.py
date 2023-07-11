@@ -126,13 +126,10 @@ async def handle_solutions(request):
 
         providers_count = len([a for a in get_accounts() if a['acc_type'] == 'provider'])
         cmp_key = functools.cmp_to_key(cmp_solutions_score)
-        sorted_result_file_lines = sorted(results_file_lines, key = cmp_key)
+        sorted_result_file_lines = sorted(results_file_lines[0:providers_count], key = cmp_key)
 
         results = ''
         for i, line in enumerate(sorted_result_file_lines):
-            if i == providers_count:
-                break
-
             line_infos = line.split('|')
             
             res_vid_file_name = line_infos[0] + '_' + screen_recording_file
