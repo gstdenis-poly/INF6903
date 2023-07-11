@@ -108,7 +108,7 @@ def cmp_solutions_score(s1, s2):
         elif s2_criteria > s1_criteria:
             s2_score += 1
     
-    print('S1 score: ' + s1_score + ' ; ' + 'S2 score: ' + s2_score)
+    print('S1 score: ' + str(s1_score) + ' ; ' + 'S2 score: ' + str(s2_score))
     return 1 if s1_score > s2_score else 0 if s1_score == s2_score else -1
 
 
