@@ -3,6 +3,7 @@
 # Include required libraries
 from aiohttp import web
 from configurator import *
+import json
 import os
 
 # Handle http requests to index page
@@ -48,8 +49,67 @@ def get_accounts():
             account[line_parts[0]] = line_parts[1]
 
         accounts += [account]
-        
+
     return accounts
+
+# Get all recording infos of given recording in a dictionnary format
+def get_recording_infos(recording):
+    rec_db_folder = recordings_folder + recording + '/'
+    rec_infos_file_path = rec_db_folder + recording + '_' + recording_infos_file
+    rec_infos_file = open(rec_infos_file_path, 'r')
+    rec_infos_file_lines = rec_infos_file.read().splitlines()
+    rec_infos_file.close()
+
+    rec_infos = {}
+    for line in rec_infos_file_lines:
+        line_parts = line.split('|')
+        rec_infos[line_parts[0]] = line_parts[1]
+
+    return rec_infos
+        
+# Get all global statistics of given recording in a dictionnary format
+def get_recording_stats(recording):
+    rec_stats_file_path = validations_folder + recording + '.json'
+    rec_stats_file = open(rec_stats_file_path, 'r')
+    rec_stats = json.loads(rec_stats_file.read())
+    rec_stats_file.close()
+
+    return rec_stats
+
+# Get all ergonomic comparison criterias of given recording
+def get_recording_criterias(recording):
+    criterias = []
+
+    rec_infos = get_recording_infos(recording)
+    rec_stats = get_recording_stats(recording)
+
+    criterias += [rec_infos['mouse_events_count']]
+    criterias += [rec_infos['keyboard_events_count']]
+    criterias += [rec_infos['mouse_events_distance']]
+    criterias += [rec_stats['text_elements_count'] / rec_infos['frames_images_count']]
+    criterias += [rec_stats['text_sizes_count'] / rec_infos['frames_images_count']]
+    criterias += [rec_stats['text_sentiment_score'] / rec_infos['frames_images_count']]
+    criterias += [rec_infos['frames_count'] / rec_infos['frame_rate'] * 1000000000] # Duration in nanoseconds
+
+    return criterias
+
+# Compare ergonomic criterias of two providers' solutions given in format 
+# recording_id|distance
+def cmp_solutions_score(s1, s2):
+    s1_rec_id, s2_rec_id = s1.split('|')[0], s2.split('|')[0]
+    s1_criterias = get_recording_criterias(s1_rec_id)
+    s2_criterias = get_recording_criterias(s2_rec_id)
+
+    s1_score, s2_score = 0, 0
+    for s1_criteria, s2_criteria in zip(s1_criterias, s2_criterias):
+        if s1_criteria > s2_criteria:
+            s1_score += 1
+        elif s2_criteria > s1_criteria:
+            s2_score += 1
+    
+    print('S1 score: ' + s1_score + ' ; ' + 'S2 score: ' + s2_score)
+    return 1 if s1_score > s2_score else 0 if s1_score == s2_score else -1
+
 
 # Handle http requests to solutions page
 async def handle_solutions(request):
@@ -64,6 +124,7 @@ async def handle_solutions(request):
         results_file.close()
 
         providers_count = len([a for a in get_accounts() if a['acc_type'] == 'provider'])
+        sorted_result_file_lines = sorted(results_file_lines, key = cmp_solutions_score)
 
         results = ''
         for i, line in enumerate(results_file_lines):
