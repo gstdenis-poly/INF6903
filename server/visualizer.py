@@ -64,7 +64,7 @@ def get_recording_infos(recording):
     rec_infos = {}
     for line in rec_infos_file_lines:
         line_parts = line.split('|')
-        rec_infos[line_parts[0]] = line_parts[1]
+        rec_infos[line_parts[0]] = int(line_parts[1])
 
     return rec_infos
         
