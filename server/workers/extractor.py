@@ -7,7 +7,7 @@ import math
 import os
 import random
 import shutil
-from web.models import KeyboardEvent, Monitor, MouseEvent, Recording
+from web.models import Account, KeyboardEvent, Monitor, MouseEvent, Recording
 
 # Update global statistics for given recording
 def update_statistics(recording_id):
@@ -177,8 +177,8 @@ def extract_rec_infos_file(recording_id, file_path):
     rec_infos = rec_infos_file.read().splitlines()
     rec_infos_file.close()
 
-    account_id = recording_id.split('-')[0]
-    recording = Recording(id = recording_id, account_id = account_id)
+    account = Account(username = recording_id.split('-')[0])
+    recording = Recording(id = recording_id, account = account)
     for info in rec_infos:
         info_parts = info.split('|')
         if info_parts[0] == 'monitor':

@@ -9,7 +9,7 @@ class Account(User):
     logo = models.CharField(max_length = 200)
 
 class Recording(models.Model):
-    id = models.CharField(max_length = 200, primary_key = True)
+    id = models.CharField(max_length = 200, primary_key = True, unique = True)
     account = models.ForeignKey(Account, related_name = 'recordings', on_delete = models.CASCADE)
     title = models.CharField(max_length = 200)
     rec_start = models.PositiveBigIntegerField()
