@@ -3,11 +3,11 @@
 # Include required libraries
 from configurator import *
 import cv2
-from main.app.models import KeyboardEvent, Monitor, MouseEvent, Recording
 import math
 import os
 import random
 import shutil
+from web.models import KeyboardEvent, Monitor, MouseEvent, Recording
 
 # Update global statistics for given recording
 def update_statistics(recording_id):

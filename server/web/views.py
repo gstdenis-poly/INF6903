@@ -1,4 +1,4 @@
-from app.models import Account
+from web.models import Account
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.hashers import make_password
 from django.http import HttpResponse

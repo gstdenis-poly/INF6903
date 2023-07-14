@@ -1,8 +1,13 @@
 # Description: provide global variables for server configurations and
 #              initialize server.
 
-# Include required libraries
+# Include required libraries and setup django for use from workers
+import sys
+sys.path.append('../')
 import os
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "server.settings")
+import django
+django.setup()
 
 # Folders
 uploads_folder = '/home/gstdenis/scratch/uploads/'
