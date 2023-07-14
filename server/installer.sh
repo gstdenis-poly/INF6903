@@ -3,6 +3,7 @@
 # Python librairies
 pip install afinn
 pip install attrdict3
+pip install Django
 pip install keras
 pip install nltk
 pip install numpy==1.22.3

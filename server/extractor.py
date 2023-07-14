@@ -3,7 +3,7 @@
 # Include required libraries
 from configurator import *
 import cv2
-import json
+from main.app.models import KeyboardEvent, Monitor, MouseEvent, Recording
 import math
 import os
 import random
@@ -11,87 +11,53 @@ import shutil
 
 # Update global statistics for given recording
 def update_statistics(recording_id):
-    rec_db_folder = recordings_folder + recording_id + '/'
     # Number and distance of mouse events
     mouse_events_count, mouse_events_distance = 0, 0.0
     prev_evt_x, prev_evt_y = None, None
-    mouse_rec_file_path = rec_db_folder + recording_id + '_' + mouse_recording_file
-    if os.path.isfile(mouse_rec_file_path):
-        mouse_rec_file = open(mouse_rec_file_path, 'r')
-        for line in mouse_rec_file.read().splitlines():
-            mouse_events_count += 1
-            line_parts = line.split('|')
-            evt_x, evt_y = float(line_parts[2]), float(line_parts[3])
-            if not (prev_evt_x is None or prev_evt_y is None):
-                mouse_events_distance += math.sqrt(math.pow(evt_x - prev_evt_x, 2) + math.pow(evt_y - prev_evt_y, 2))
-            prev_evt_x, prev_evt_y = evt_x, evt_y
-        mouse_rec_file.close()
+    for mouse_evt in MouseEvent.objects.all():
+        mouse_events_count += 1
+        evt_x, evt_y = mouse_evt.x, mouse_evt.y
+        if not (prev_evt_x is None or prev_evt_y is None):
+            mouse_events_distance += math.sqrt(math.pow(evt_x - prev_evt_x, 2) + math.pow(evt_y - prev_evt_y, 2))
+        prev_evt_x, prev_evt_y = evt_x, evt_y
     # Number of keyboard events
-    keyboard_events_count = 0
-    keyboard_rec_file_path = rec_db_folder + recording_id + '_' + keyboard_recording_file
-    if os.path.isfile(keyboard_rec_file_path):
-        keyboard_rec_file = open(keyboard_rec_file_path, 'r')
-        keyboard_events_count = len(keyboard_rec_file.read().splitlines())
-        keyboard_rec_file.close()
+    keyboard_events_count = len(KeyboardEvent.objects.all())
     # Save statistics
-    rec_stats_file_path = res_statistics_folder + recording_id + '.json'
-    rec_stats_file = open(rec_stats_file_path, 'w')
-    rec_stats_file.write(json.dumps({
-        'mouse_events_count': mouse_events_count,
-        'keyboard_events_count': keyboard_events_count,
-        'mouse_events_distance': mouse_events_distance
-    }))
-    rec_stats_file.close()
+    recording = Recording.objects.get(id = recording_id)
+    if recording != None:
+        recording.mouse_events_count = mouse_events_count
+        recording.keyboard_events_count = keyboard_events_count
+        recording.mouse_events_distance = mouse_events_distance
+        recording.save()
 
 # Return time interval of given frame according to given recording infos file
-def get_frame_time_interval(rec_infos_file_path, frame_idx):
-    rec_infos_file = open(rec_infos_file_path, 'r')
-    rec_infos_file_lines = rec_infos_file.read().splitlines()
-    rec_infos_file.close()
-
-    rec_start, frame_rate = None, None
-    for line in rec_infos_file_lines:
-        line_infos = line.split('|')
-        if line_infos[0] == 'rec_start':
-            rec_start = int(line_infos[1])
-        elif line_infos[0] == 'frame_rate':
-            frame_rate = int(line_infos[1])
-
-    frame_duration = 1000000000 / frame_rate # Duration of a frame in nanoseconds
-    frame_start = rec_start + (frame_idx - 1) * frame_duration
-    frame_end = rec_start + frame_idx * frame_duration
+def get_frame_time_interval(recording, frame_idx):
+    frame_duration = 1000000000 / recording.frame_rate # Duration of a frame in nanoseconds
+    frame_start = recording.rec_start + (frame_idx - 1) * frame_duration
+    frame_end = recording.rec_start + frame_idx * frame_duration
 
     return frame_start, frame_end
 
 # Check if given event (x, y) occurs inside given monitor (x1, y1, x2, y2)
 def event_occurs_inside_monitor(event, monitor):
-    return (monitor[0] <= event[0] and event[0] < monitor[2] and \
-            monitor[1] <= event[1] and event[1] < monitor[3])
+    return (monitor.x <= event.x and event.x < (monitor.x + monitor.width) and \
+            monitor.y <= event.y and event.y < (monitor.y + monitor.height))
 
 # Check if frame is relevant for next step of pipeline:
 #   - A mouse event occured inside the monitor during the frame
 #   - The last mouse event before the frame was inside the monitor
-def monitor_is_relevant(rec_infos_file_path, recording_id, frame_idx, monitor):
-    rec_db_folder = recordings_folder + recording_id + '/'
-    mouse_rec_file_path = rec_db_folder + recording_id + '_' + mouse_recording_file
-    if not os.path.isfile(mouse_rec_file_path):
+def monitor_is_relevant(recording, frame_idx, monitor):
+    mouse_events = recording.mouse_events.all()
+    if not mouse_events:
         return True
     
-    frame_start, frame_end = get_frame_time_interval(rec_infos_file_path, frame_idx)
+    frame_start, frame_end = get_frame_time_interval(recording, frame_idx)
 
-    mouse_rec_file = open(mouse_rec_file_path, 'r')
-    mouse_rec_file_lines = mouse_rec_file.read().splitlines()
-    mouse_rec_file.close()    
-
-    for i in reversed(range(len(mouse_rec_file_lines))):
-        line_infos = mouse_rec_file_lines[i].split('|')
-
-        evt_stamp = float(line_infos[0])
-        if frame_end <= evt_stamp: # Event is after frame
+    for event in sorted(mouse_events, key = lambda e: e.stamp, reverse = True):
+        if frame_end <= event.stamp: # Event is after frame
             continue
         
-        event = (int(line_infos[2]), int(line_infos[3]))
-        if evt_stamp >= frame_start: # Event is during frame
+        if event.stamp >= frame_start: # Event is during frame
             if event_occurs_inside_monitor(event, monitor):
                 return True
         else: # Event is before frame
@@ -100,67 +66,47 @@ def monitor_is_relevant(rec_infos_file_path, recording_id, frame_idx, monitor):
     return False
 
 # Extract monitor's image from frame and return count of monitors for frame
-def extract_frame_monitors(recording_id, frame_folder, frame_idx, frame):
-    rec_db_folder = recordings_folder + recording_id + '/'
-    rec_infos_file_path = rec_db_folder + recording_id + '_' + recording_infos_file
-    rec_infos_file = open(rec_infos_file_path, 'r')
-    rec_infos_file_lines = rec_infos_file.read().splitlines()
-    rec_infos_file.close()
-    
+def extract_frame_monitors(recording, frame_folder, frame_idx, frame):
     monitors_count = 0
-    for i, line in enumerate(rec_infos_file_lines):
-        line_infos = line.split('|')
-        if line_infos[0] != 'monitor':
+    for i, m in recording.monitors.all():
+        if not monitor_is_relevant(recording, frame_idx, m):
             continue
 
-        x = int(line_infos[1]) # Monitor's horizontal position
-        y = int(line_infos[2]) # Monitor's vertical position
-        w = int(line_infos[3]) # Monitor's width
-        h = int(line_infos[4]) # Monitor's height
-
-        if monitor_is_relevant(rec_infos_file_path, recording_id, frame_idx, (x, y, x + w, y + h)):
-            frame_path = frame_folder + '_' + str(i + 1) + '_' + str(frame_idx) + '.png'
-            cv2.imwrite(frame_path, frame[y:(y + h), x:(x + w)])
-            # Save .final file to inform worker that image file is fully created
-            open(os.path.splitext(frame_path)[0] + '.final', 'w').close()
-            monitors_count += 1 # Increment number of extracted frame's monitors
+        frame_path = frame_folder + '_' + str(i + 1) + '_' + str(frame_idx) + '.png'
+        cv2.imwrite(frame_path, frame[m.y:(m.y + m.h), m.x:(m.x + m.w)])
+        # Save .final file to inform worker that image file is fully created
+        open(os.path.splitext(frame_path)[0] + '.final', 'w').close()
+        monitors_count += 1 # Increment number of extracted frame's monitors
 
     return monitors_count
 
 # Check if an event recorded in given events file occurs during given period
-def event_is_occuring(events_file_path, start_time, end_time):
-    event_file = open(events_file_path, 'r')
-    event_file_lines = event_file.read().splitlines()
-    event_file.close()
-    for line in event_file_lines:
-        evt_stamp = float(line.split('|')[0])
-        if start_time <= evt_stamp and evt_stamp < end_time:
+def event_is_occuring(events, start_time, end_time):
+    for evt in events:
+        if start_time <= evt.stamp and evt.stamp < end_time:
             return True
     return False
 
 # Check if frame is relevant for next step of pipeline:
 #   - A user event occured during the frame
-def frame_is_relevant(rec_infos_file_path, recording_id, frame_idx):
-    frame_start, frame_end = get_frame_time_interval(rec_infos_file_path, frame_idx)
+def frame_is_relevant(recording, frame_idx):
+    frame_start, frame_end = get_frame_time_interval(recording, frame_idx)
 
-    rec_db_folder = recordings_folder + recording_id + '/'
-    
-    keyboard_rec_file_path = rec_db_folder + recording_id + '_' + keyboard_recording_file
-    keyboard_evt_is_occuring = os.path.isfile(keyboard_rec_file_path) and \
-                               event_is_occuring(keyboard_rec_file_path, frame_start, frame_end)
-    mouse_rec_file_path = rec_db_folder + recording_id + '_' + mouse_recording_file
-    mouse_evt_is_occuring = os.path.isfile(mouse_rec_file_path) and \
-                            event_is_occuring(mouse_rec_file_path, frame_start, frame_end)
+    keyboard_events = recording.keyboard_events.all()    
+    keyboard_evt_is_occuring = keyboard_events and \
+                               event_is_occuring(keyboard_events, frame_start, frame_end)
+    mouse_events = recording.mouse_events.all()
+    mouse_evt_is_occuring = mouse_events and \
+                            event_is_occuring(mouse_events, frame_start, frame_end)
 
     return keyboard_evt_is_occuring or mouse_evt_is_occuring
 
 # Extract frames from video
 def extract_frames(video_name):
     recording_id = video_name.split('_')[0]
-    rec_db_folder = recordings_folder + recording_id + '/'
-    cap = cv2.VideoCapture(rec_db_folder + video_name)
+    cap = cv2.VideoCapture(recordings_folder + video_name)
     video_name = os.path.splitext(video_name)[0]
-    rec_infos_file_path = rec_db_folder + recording_id + '_' + recording_infos_file
+    recording = Recording.objects.get(id = recording_id)
 
     frame_idx = 1
     frames_images_count = 0
@@ -170,35 +116,102 @@ def extract_frames(video_name):
             break
 
         # Extract frame only if relevant
-        if frame_is_relevant(rec_infos_file_path, recording_id, frame_idx):
+        if frame_is_relevant(recording, frame_idx):
             detector_worker_idx = random.randint(1, detector_workers_count)
             # Put frame image in a worker folder for next step of pipeline
             detector_worker_folder = frames_folder + 'worker' + str(detector_worker_idx) + '/'
             frame_folder = detector_worker_folder + video_name
-            frames_images_count += extract_frame_monitors(recording_id, frame_folder, frame_idx, frame_img)
+            frames_images_count += extract_frame_monitors(recording, frame_folder, frame_idx, frame_img)
 
         frame_idx += 1
 
-    rec_infos_file = open(rec_infos_file_path, 'a')
-    rec_infos_file.write('frames_images_count|' + str(frames_images_count) + '\n')
-    rec_infos_file.close()
+    recording.frames_images_count = frames_images_count
+    recording.save()
 
     cap.release()
     cv2.destroyAllWindows()
 
-# Extract recording files from uploads to database and extract frames if video
-def extract_file(file_name, src_folder, dest_folder):
-    file_path = src_folder + file_name
+def extract_mouse_evt_file(recording_id, file_path):
     if not os.path.isfile(file_path):
         return
 
-    shutil.move(file_path, dest_folder) # Save recording files in database
+    mouse_evt_file = open(file_path, 'r')
+    mouse_events = mouse_evt_file.read().splitlines()
+    mouse_evt_file.close()
+
+    for evt in mouse_events:
+        evt_infos = evt.split('|')
+        MouseEvent(recording_id = recording_id,
+                   stamp = evt_infos[0],
+                   button = evt_infos[1],
+                   x = evt_infos[2],
+                   y = evt_infos[3]).save()
+
+    os.remove(file_path) # Delete file
     
-    # Extract frames of video 
-    if os.path.splitext(file_name)[1] == '.mp4':
-        extract_frames(file_name)
+    print('Extraction of file ' + mouse_recording_file + ' completed')
+
+def extract_keyboard_evt_file(recording_id, file_path):
+    if not os.path.isfile(file_path):
+        return
+
+    keyboard_evt_file = open(file_path, 'r')
+    keyboard_events = keyboard_evt_file.read().splitlines()
+    keyboard_evt_file.close()
+
+    for evt in keyboard_events:
+        evt_infos = evt.split('|')
+        KeyboardEvent(recording_id = recording_id,
+                      stamp = evt_infos[0],
+                      key = evt_infos[1]).save()
+
+    os.remove(file_path) # Delete file
+
+    print('Extraction of file ' + keyboard_recording_file + ' completed')
+
+def extract_rec_infos_file(recording_id, file_path):
+    if not os.path.isfile(file_path):
+        return
+
+    rec_infos_file = open(file_path, 'r')
+    rec_infos = rec_infos_file.read().splitlines()
+    rec_infos_file.close()
+
+    account_id = recording_id.split('-')[0]
+    recording = Recording(id = recording_id, account_id = account_id)
+    for info in rec_infos:
+        info_parts = info.split('|')
+        if info_parts[0] == 'monitor':
+            continue # Monitors must be saved after Recordings
+
+        setattr(recording, info_parts[0], info_parts[1])
+    recording.save()
+
+    for info in rec_infos: 
+        info_parts = info.split('|')
+        if info_parts[0] != 'monitor':
+            continue
+
+        Monitor(recording_id = recording_id,
+                x = info_parts[1],
+                y = info_parts[2],
+                width = info_parts[3],
+                height = info_parts[4]).save()
+
+    os.remove(file_path) # Delete file
+
+    print('Extraction of file ' + recording_infos_file + ' completed')
+
+def extract_screen_rec_file(recording_id, file_path):
+    if not os.path.isfile(file_path):
+        return
     
-    print('Extraction of file ' + file_name + ' completed')
+     # Save video file in database and extract its frames
+    video_name = recording_id + '.mp4'
+    shutil.move(file_path, recordings_folder + video_name)
+    extract_frames(video_name)
+
+    print('Extraction of file ' + screen_recording_file + ' completed')
 
 # Program main function
 def extract():
@@ -212,20 +225,20 @@ def extract():
         if file_name_parts[1] != '.final':
             continue
 
-        # Save file into database
         recording_id = file_name_parts[0]
-        rec_db_folder = recordings_folder + recording_id + '/'
-        if not os.path.exists(rec_db_folder):
-            os.mkdir(rec_db_folder)
-        rec_files = [mouse_recording_file, keyboard_recording_file, 
-                     recording_infos_file, screen_recording_file]
-        for rec_file in rec_files:
-            extract_file(recording_id + '_' + rec_file, uploads_folder, rec_db_folder)
+        rec_upload_folder = uploads_folder + recording_id + '/'
+
+        # Save file into database
+        extract_rec_infos_file(recording_id, rec_upload_folder + recording_infos_file)
+        extract_mouse_evt_file(recording_id, rec_upload_folder + mouse_recording_file)
+        extract_keyboard_evt_file(recording_id, rec_upload_folder + keyboard_recording_file)
+        extract_screen_rec_file(recording_id, rec_upload_folder + screen_recording_file)
 
         update_statistics(recording_id) # Update statistics of recording
 
-        # Delete .final file after storage into database and extraction
+        # Delete .final file and rec folder after extraction
         os.remove(file_path)
+        shutil.rmtree(rec_upload_folder)
 
         # Print completion of file extraction
         print('Extraction of recording ' + recording_id + ' completed')
