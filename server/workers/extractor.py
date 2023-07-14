@@ -10,20 +10,19 @@ import shutil
 from web.models import Account, KeyboardEvent, Monitor, MouseEvent, Recording
 
 # Update global statistics for given recording
-def update_statistics(recording_id):
+def update_statistics(recording):
     # Number and distance of mouse events
     mouse_events_count, mouse_events_distance = 0, 0.0
     prev_evt_x, prev_evt_y = None, None
-    for mouse_evt in MouseEvent.objects.all():
+    for mouse_evt in recording.mouse_events.all():
         mouse_events_count += 1
         evt_x, evt_y = mouse_evt.x, mouse_evt.y
         if not (prev_evt_x is None or prev_evt_y is None):
             mouse_events_distance += math.sqrt(math.pow(evt_x - prev_evt_x, 2) + math.pow(evt_y - prev_evt_y, 2))
         prev_evt_x, prev_evt_y = evt_x, evt_y
     # Number of keyboard events
-    keyboard_events_count = len(KeyboardEvent.objects.all())
+    keyboard_events_count = len(recording.keyboard_events.all())
     # Save statistics
-    recording = Recording.objects.get(id = recording_id)
     if recording != None:
         recording.mouse_events_count = mouse_events_count
         recording.keyboard_events_count = keyboard_events_count
