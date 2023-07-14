@@ -102,14 +102,11 @@ def frame_is_relevant(recording, frame_idx):
     return keyboard_evt_is_occuring or mouse_evt_is_occuring
 
 # Extract frames from video
-def extract_frames(video_name):
-    recording_id = video_name.split('_')[0]
-    cap = cv2.VideoCapture(recordings_folder + video_name)
-    video_name = os.path.splitext(video_name)[0]
-    recording = Recording.objects.get(id = recording_id)
-
+def extract_frames(recording):
+    cap = cv2.VideoCapture(recordings_folder + recording.id + '.mp4')
     frame_idx = 1
     frames_images_count = 0
+    
     while cap.isOpened():
         ret, frame_img = cap.read()
         if not ret:
@@ -120,7 +117,7 @@ def extract_frames(video_name):
             detector_worker_idx = random.randint(1, detector_workers_count)
             # Put frame image in a worker folder for next step of pipeline
             detector_worker_folder = frames_folder + 'worker' + str(detector_worker_idx) + '/'
-            frame_folder = detector_worker_folder + video_name
+            frame_folder = detector_worker_folder + recording.id
             frames_images_count += extract_frame_monitors(recording, frame_folder, frame_idx, frame_img)
 
         frame_idx += 1
@@ -131,7 +128,7 @@ def extract_frames(video_name):
     cap.release()
     cv2.destroyAllWindows()
 
-def extract_mouse_evt_file(recording_id, file_path):
+def extract_mouse_evt_file(recording, file_path):
     if not os.path.isfile(file_path):
         return
 
@@ -141,7 +138,7 @@ def extract_mouse_evt_file(recording_id, file_path):
 
     for evt in mouse_events:
         evt_infos = evt.split('|')
-        MouseEvent(recording_id = recording_id,
+        MouseEvent(recording = recording,
                    stamp = evt_infos[0],
                    button = evt_infos[1],
                    x = evt_infos[2],
@@ -151,7 +148,7 @@ def extract_mouse_evt_file(recording_id, file_path):
     
     print('Extraction of file ' + mouse_recording_file + ' completed')
 
-def extract_keyboard_evt_file(recording_id, file_path):
+def extract_keyboard_evt_file(recording, file_path):
     if not os.path.isfile(file_path):
         return
 
@@ -161,7 +158,7 @@ def extract_keyboard_evt_file(recording_id, file_path):
 
     for evt in keyboard_events:
         evt_infos = evt.split('|')
-        KeyboardEvent(recording_id = recording_id,
+        KeyboardEvent(recording = recording,
                       stamp = evt_infos[0],
                       key = evt_infos[1]).save()
 
@@ -169,7 +166,7 @@ def extract_keyboard_evt_file(recording_id, file_path):
 
     print('Extraction of file ' + keyboard_recording_file + ' completed')
 
-def extract_rec_infos_file(recording_id, file_path):
+def extract_rec_infos_file(recording, file_path):
     if not os.path.isfile(file_path):
         return
 
@@ -177,15 +174,12 @@ def extract_rec_infos_file(recording_id, file_path):
     rec_infos = rec_infos_file.read().splitlines()
     rec_infos_file.close()
 
-    account = Account(username = recording_id.split('-')[0])
-    recording = Recording(id = recording_id, account = account)
     for info in rec_infos:
         info_parts = info.split('|')
         if info_parts[0] == 'monitor':
             continue # Monitors must be saved after Recordings
 
         setattr(recording, info_parts[0], info_parts[1])
-    account.save()
     recording.save()
 
     for info in rec_infos: 
@@ -193,7 +187,7 @@ def extract_rec_infos_file(recording_id, file_path):
         if info_parts[0] != 'monitor':
             continue
 
-        Monitor(recording_id = recording_id,
+        Monitor(recording = recording,
                 x = info_parts[1],
                 y = info_parts[2],
                 width = info_parts[3],
@@ -203,14 +197,13 @@ def extract_rec_infos_file(recording_id, file_path):
 
     print('Extraction of file ' + recording_infos_file + ' completed')
 
-def extract_screen_rec_file(recording_id, file_path):
+def extract_screen_rec_file(recording, file_path):
     if not os.path.isfile(file_path):
         return
     
      # Save video file in database and extract its frames
-    video_name = recording_id + '.mp4'
-    shutil.move(file_path, recordings_folder + video_name)
-    extract_frames(video_name)
+    shutil.move(file_path, recordings_folder + recording.id + '.mp4')
+    extract_frames(recording)
 
     print('Extraction of file ' + screen_recording_file + ' completed')
 
@@ -227,15 +220,19 @@ def extract():
             continue
 
         recording_id = file_name_parts[0]
+        account = Account.objects.get(username = recording_id.split('-')[0])
+        if account == None:
+            continue
+
+        recording = Recording(id = recording_id, account = account)
         rec_upload_folder = uploads_folder + recording_id + '/'
 
-        # Save file into database
-        extract_rec_infos_file(recording_id, rec_upload_folder + recording_infos_file)
-        extract_mouse_evt_file(recording_id, rec_upload_folder + mouse_recording_file)
-        extract_keyboard_evt_file(recording_id, rec_upload_folder + keyboard_recording_file)
-        extract_screen_rec_file(recording_id, rec_upload_folder + screen_recording_file)
-
-        update_statistics(recording_id) # Update statistics of recording
+        # Update database with extracted recording files
+        extract_rec_infos_file(recording, rec_upload_folder + recording_infos_file)
+        extract_mouse_evt_file(recording, rec_upload_folder + mouse_recording_file)
+        extract_keyboard_evt_file(recording, rec_upload_folder + keyboard_recording_file)
+        extract_screen_rec_file(recording, rec_upload_folder + screen_recording_file)
+        update_statistics(recording) # Update statistics of recording
 
         # Delete .final file and rec folder after extraction
         os.remove(file_path)
