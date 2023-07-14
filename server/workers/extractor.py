@@ -185,6 +185,7 @@ def extract_rec_infos_file(recording_id, file_path):
             continue # Monitors must be saved after Recordings
 
         setattr(recording, info_parts[0], info_parts[1])
+    account.save()
     recording.save()
 
     for info in rec_infos: 
