@@ -3,7 +3,7 @@ from django.db import models
 
 # Create your models here.
 class Account(User):
-    type = models.IntegerField(default = 0)
+    type = models.CharField(max_length = 20)
     company = models.CharField(default = None, null = True, blank = True, max_length = 200)
     summary = models.CharField(default = None, null = True, blank = True, max_length = 10000)
     logo = models.CharField(default = None, null = True, blank = True, max_length = 200)
