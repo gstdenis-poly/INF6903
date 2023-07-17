@@ -29,7 +29,7 @@ def update_statistics(recording):
         recording.mouse_events_distance = mouse_events_distance
         recording.save()
 
-# Return time interval of given frame according to given recording infos file
+# Return time interval of given frame according to given recording
 def get_frame_time_interval(recording, frame_idx):
     frame_duration = 1000000000 / recording.frame_rate # Duration of a frame in nanoseconds
     frame_start = recording.rec_start + (frame_idx - 1) * frame_duration
@@ -79,7 +79,7 @@ def extract_frame_monitors(recording, frame_folder, frame_idx, frame):
 
     return monitors_count
 
-# Check if an event recorded in given events file occurs during given period
+# Check if an event recorded in given events during given period
 def event_is_occuring(events, start_time, end_time):
     for evt in events:
         if start_time <= evt.stamp and evt.stamp < end_time:
@@ -127,6 +127,7 @@ def extract_frames(recording):
     cap.release()
     cv2.destroyAllWindows()
 
+# Extract mouse events from given file to database
 def extract_mouse_evt_file(recording, file_path):
     if not os.path.isfile(file_path):
         return
@@ -147,6 +148,7 @@ def extract_mouse_evt_file(recording, file_path):
     
     print('Extraction of file ' + mouse_recording_file + ' completed')
 
+# Extract keyboard events from given file to database
 def extract_keyboard_evt_file(recording, file_path):
     if not os.path.isfile(file_path):
         return
@@ -165,6 +167,7 @@ def extract_keyboard_evt_file(recording, file_path):
 
     print('Extraction of file ' + keyboard_recording_file + ' completed')
 
+# Extract recoding infos from given file to database
 def extract_rec_infos_file(recording, file_path):
     if not os.path.isfile(file_path):
         return
@@ -196,6 +199,7 @@ def extract_rec_infos_file(recording, file_path):
 
     print('Extraction of file ' + recording_infos_file + ' completed')
 
+# Extract frames from given video file and save video file to database
 def extract_screen_rec_file(recording, file_path):
     if not os.path.isfile(file_path):
         return
