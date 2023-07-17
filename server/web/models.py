@@ -4,24 +4,24 @@ from django.db import models
 # Create your models here.
 class Account(User):
     type = models.IntegerField(default = 0)
-    company = models.CharField(max_length = 200)
-    summary = models.CharField(max_length = 10000)
-    logo = models.CharField(max_length = 200)
+    company = models.CharField(default = None, null = True, blank = True, max_length = 200)
+    summary = models.CharField(default = None, null = True, blank = True, max_length = 10000)
+    logo = models.CharField(default = None, null = True, blank = True, max_length = 200)
 
 class Recording(models.Model):
     id = models.CharField(max_length = 200, primary_key = True, unique = True)
     account = models.ForeignKey(Account, related_name = 'recordings', on_delete = models.CASCADE)
-    title = models.CharField(max_length = 200)
-    rec_start = models.PositiveBigIntegerField()
-    frame_rate = models.IntegerField(default = 15)
-    frames_count = models.IntegerField()
-    frames_images_count = models.IntegerField()
-    mouse_events_count = models.IntegerField()
-    keyboard_events_count = models.IntegerField()
-    mouse_events_distance = models.FloatField()
-    text_elements_count = models.IntegerField()
-    text_sizes_count = models.IntegerField()
-    text_sentiment_score = models.FloatField()
+    title = models.CharField(default = None, blank = True, null = True, max_length = 200)
+    rec_start = models.PositiveBigIntegerField(default = None, null = True)
+    frame_rate = models.IntegerField(default = 15, null = True)
+    frames_count = models.IntegerField(default = None, null = True)
+    frames_images_count = models.IntegerField(default = None, null = True)
+    mouse_events_count = models.IntegerField(default = None, null = True)
+    keyboard_events_count = models.IntegerField(default = None, null = True)
+    mouse_events_distance = models.FloatField(default = None, null = True)
+    text_elements_count = models.IntegerField(default = None, null = True)
+    text_sizes_count = models.IntegerField(default = None, null = True)
+    text_sentiment_score = models.FloatField(default = None, null = True)
 
 class Monitor(models.Model):
     recording = models.ForeignKey(Recording, related_name = 'monitors', on_delete = models.CASCADE)
