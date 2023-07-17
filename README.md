@@ -26,8 +26,7 @@ L'application utilise des technologies multiplateforme mais n'a été testée qu
 cd client
 bash ./installer.sh
 ```
-- TMP: Démarrer le tunnel SSH suivant: sshpass -p SSH_PASS ssh -D 8888 -C -N SSH_ADDRESS
-- Configurer le paramètre Réseau SOCKS Proxy du navigateur Web de défaut sur la machine client avec l'adresse IP 127.0.0.1 et le port 8080.
+- Démarrer le tunnel SSH suivant: sshpass -p SSH_PASS ssh -L 8000:localhost:8000 SSH_ADDRESS 
 ### Serveur
 - Exécuter le script d'installation du serveur:
 ```sh
@@ -43,6 +42,8 @@ bash ./installer.sh
 - Ajuster les chemins de dossiers définis dans server/configurator.py et s'assurer que tous les dossiers existent sur le serveur.
 - Exécuter configurator.py avec python3.
 - Ajuster les scripts d'exécution .sh pour qu'ils pointent sur l'emplacement exact de l'exécutable python3 et qu'ils utilisent un workload manager distinct de Slurm si nécessaire.
+- Lancer le serveur Web avec la tâche runserver sur le fichier manage.py situé dans le dossier server/web/.
+- Lancer les workers situés dans le dossier server/workers/.
 
 ## Licence
 Polytechnique Montréal
