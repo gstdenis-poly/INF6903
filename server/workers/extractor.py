@@ -67,7 +67,7 @@ def monitor_is_relevant(recording, frame_idx, monitor):
 # Extract monitor's image from frame and return count of monitors for frame
 def extract_frame_monitors(recording, frame_folder, frame_idx, frame):
     monitors_count = 0
-    for i, m in recording.monitors.all():
+    for i, m in enumerate(recording.monitors.all()):
         if not monitor_is_relevant(recording, frame_idx, m):
             continue
 
