@@ -13,7 +13,7 @@ class Recording(models.Model):
     account = models.ForeignKey(Account, related_name = 'recordings', on_delete = models.CASCADE)
     title = models.CharField(default = None, blank = True, null = True, max_length = 200)
     rec_start = models.PositiveBigIntegerField(default = None, null = True)
-    frame_rate = models.IntegerField(default = 15, null = True)
+    frame_rate = models.IntegerField(default = 15)
     frames_count = models.IntegerField(default = None, null = True)
     frames_images_count = models.IntegerField(default = None, null = True)
     mouse_events_count = models.IntegerField(default = None, null = True)
