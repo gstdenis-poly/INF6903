@@ -8,7 +8,7 @@ import os
 import numpy as np
 from scipy.spatial.distance import cosine
 import shutil
-from tokenizer import get_account_type
+from web.models import Account
 
 # Return a dict of vectors per token according to given cluster file.
 def get_cluster_vectors(cluster_file_path):
@@ -37,6 +37,14 @@ def get_clusters_centroid(cluster1_file_path, cluster2_file_path):
         cluster2_centroid += [float(cluster2_vectors[token])]
 
     return np.array(cluster1_centroid), np.array(cluster2_centroid)
+
+# Get account's type of given account's name
+def get_account_type(acc_name):
+    try:
+        account = Account.objects.get(username = acc_name)
+        return account.type
+    except Account.DoesNotExist:
+        return None
 
 # Save temporary cluster files to database and return True if at
 # least one cluster file was saved to database
