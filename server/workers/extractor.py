@@ -72,7 +72,7 @@ def extract_frame_monitors(recording, frame_folder, frame_idx, frame):
             continue
 
         frame_path = frame_folder + '_' + str(i + 1) + '_' + str(frame_idx) + '.png'
-        cv2.imwrite(frame_path, frame[m.y:(m.y + m.h), m.x:(m.x + m.w)])
+        cv2.imwrite(frame_path, frame[m.y:(m.y + m.height), m.x:(m.x + m.width)])
         # Save .final file to inform worker that image file is fully created
         open(os.path.splitext(frame_path)[0] + '.final', 'w').close()
         monitors_count += 1 # Increment number of extracted frame's monitors
