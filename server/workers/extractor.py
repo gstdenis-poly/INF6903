@@ -219,8 +219,9 @@ def extract():
             continue
 
         recording_id = file_name_parts[0]
-        account = Account.objects.get(username = recording_id.split('-')[0])
-        if account == None:
+        try:
+            account = Account.objects.get(username = recording_id.split('-')[0])
+        except Account.DoesNotExist:
             continue
 
         recording = Recording(id = recording_id, account = account)

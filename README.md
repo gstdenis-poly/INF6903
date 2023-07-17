@@ -36,6 +36,7 @@ bash ./installer.sh
 ```
 - (Optionnel: au besoin) Remplacer "from collections" par "from collections.abc" partout dans le site-packages attrdict de l'installation de Python3.
 - (Optionnel: au besoin) Réinstaller libbz2-dev avec sudo apt-get install.
+- (Optionnel: au besoin) Remplacer "from sqlite3 import dbapi2 as Database" par "from pysqlite3 import dbapi2 as Database" dans le fichier base.py du répertoire site-packages/django/db/backends/sqlite3/ situé sous le dossier lib de l'installation de Python3.
 - Clôner le répertoire [UIED_custom] à la racine du répertoire (INF6903).
 - Créer un dossier models/ à la racine du répertoire (INF6903) puis y placer le fichier de modèle que le CNN de UIED doit utiliser.
 - Ajuster les chemins de modèles définis dans config/CONFIG.py à la racine de UIED_custom afin de pointer sur les fichiers de modèles du dossier models/.
