@@ -92,11 +92,11 @@ def edit_account(request, account_id):
                     account.logo = db_logo_img_name
                 account.save()
                 
-                return render(request, 'logged_in/edit_account.html', {'account' : account})
+                return render(request, 'logged_in/edit_account.html/' + account_id, {'account' : account})
             else:
-                return render(request, 'logged_in/edit_account.html', {'account' : account}) 
+                return render(request, 'logged_in/edit_account.html/' + account_id, {'account' : account}) 
         else:
-            return render(request, 'logged_in/view_account.html', {'account' : account})
+            return render(request, 'logged_in/view_account.html/' + account_id, {'account' : account})
     else:
         return render(request, 'logged_out/index.html')
 
