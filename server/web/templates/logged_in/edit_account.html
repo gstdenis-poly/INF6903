@@ -1,0 +1,19 @@
+<h1>Edit account</h1>
+<form action="/edit_account/" method="post">
+    {% csrf_token %}
+    <label for="username">Username: </label>{{ account.username }}<br><br>
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" value="{{ account.email }}"><br><br>
+    <label for="password1">Password:</label>
+    <input type="password" id="password1" name="password1" value="{{ account.password }}"><br><br>
+    <label for="password2">Password confirmation:</label>
+    <input type="password" id="password2" name="password2" value="{{ account.password }}"><br><br>
+    <label for="type">Account type:</label>{{ account.type.capitalize() }}<br><br>
+    <label for="company">Company:</label>
+    <input type="text" id="company" name="company" value="{{ account.company }}"><br><br>
+    <label for="summary">Summary:</label>
+    <textarea id="summary" name="summary" rows="4" cols="50">{{ account.summary }}</textarea><br><br>
+    <label for="logo">Logo:</label>
+    <input type="file" id="logo" name="logo"><br><br>
+    <input type="submit" value="Submit">
+</form>

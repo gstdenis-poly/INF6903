@@ -1,0 +1,9 @@
+<h1>Upload recording</h1>
+<form action="/upload_recording/" method="post">
+    {% csrf_token %}
+    <label for="rec_title">Title:</label>
+    <input type="text" id="rec_title" name="rec_title"><br><br>
+    <label for="rec_file">Recording .zip file:</label>
+    <input type="file" id="rec_file" name="rec_file"><br><br>
+    <input type="submit" value="Submit">
+</form>
