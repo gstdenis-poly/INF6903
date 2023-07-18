@@ -1,4 +1,4 @@
-from web.models import Account
+from web.models import Account, Recording
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.hashers import make_password
 from django.http import HttpResponse
@@ -114,15 +114,15 @@ def upload_recording(request):
             return render(request, 'logged_in/upload_recording.html')
         else:
             for file in request.FILES:
-                upload_file_path = uploads_folder + file.name
+                upload_file_path = uploads_folder + request.user.username + '-' + file.name
                 with open(upload_file_path, 'wb+') as upload_file:
                     for c in file.chunks():
                         upload_file.write(c)
             
-                upload_folder_name = uploads_folder + os.path.splitext(file.name)[0]
-                shutil.unpack_archive(upload_file_path, upload_folder_name, 'zip')
+                upload_folder_path = uploads_folder + os.path.splitext(upload_file_path)[0]
+                shutil.unpack_archive(upload_file_path, upload_folder_path, 'zip')
                 os.remove(upload_file_path) # Remove .zip file after uncompressing it
-                open(upload_folder_name + '.final', 'w').close() # .final file for worker notif
+                open(upload_folder_path + '.final', 'w').close() # .final file for worker notif
 
             return render(request, 'logged_in/upload_recording.html')
     else:
