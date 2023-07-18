@@ -1,5 +1,5 @@
 <h1>Edit account</h1>
-<form action="/edit_account/" method="post">
+<form action="/edit_account/" method="post" enctype="multipart/form-data">
     {% csrf_token %}
     <label for="username">Username: </label>{{ account.username }}<br><br>
     <label for="email">Email:</label>
