@@ -71,7 +71,7 @@ def view_account(request, account_id):
 
 def edit_account(request, account_id):
     if request.user.is_authenticated:
-        if account_id == account.username:
+        if account_id == request.user.username:
             account = Account.objects.get(username = account_id)
             if 'username' in request.POST:
                 account.email = request.POST['email']
