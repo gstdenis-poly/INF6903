@@ -61,17 +61,17 @@ def unregister(request):
 
     return render(request, 'logged_out/log_in.html')
 
-def view_account(request, user_id):
+def view_account(request, account_id):
     if request.user.is_authenticated:
-        account = Account.objects.get(username = request.user.username)
+        account = Account.objects.get(username = account_id)
         return render(request, 'logged_in/view_account.html', {'account' : account})
     else:
         return render(request, 'logged_out/index.html')
 
-def edit_account(request, user_id):
-    account = Account.objects.get(username = request.user.username)
+def edit_account(request, account_id):
     if request.user.is_authenticated:
-        if user_id == account.username:
+        if account_id == account.username:
+            account = Account.objects.get(username = account_id)
             if 'username' in request.POST:
                 account.email = request.POST['email']
                 account.password = make_password(request.POST['password1'])
