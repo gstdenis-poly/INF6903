@@ -38,7 +38,7 @@ def register(request):
     else:
         account = Account(username = request.POST['username'],
                           email = request.POST['email'],
-                          password = make_password(request.POST['password1']),
+                          password = make_password(request.POST['password2']),
                           type = request.POST['type'],
                           company = request.POST['company'],
                           summary = request.POST['summary'])
@@ -77,8 +77,8 @@ def edit_account(request, account_id):
                 return render(request, 'logged_in/edit_account.html', {'account' : account}) 
             else:
                 account.email = request.POST['email']
-                if request.POST['password1'] != None:
-                    account.password = make_password(request.POST['password1'])
+                if request.POST['password2'] != '':
+                    account.password = make_password(request.POST['password2'])
                 account.company = request.POST['company']
                 account.summary = request.POST['summary']
                 if 'logo' in request.FILES:
