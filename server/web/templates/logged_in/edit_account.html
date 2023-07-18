@@ -15,5 +15,9 @@
     <textarea id="summary" name="summary" rows="4" cols="50">{{ account.summary }}</textarea><br><br>
     <label for="logo">Logo:</label>
     <input type="file" id="logo" name="logo"><br><br>
+    {% if account.logo != None %}
+        {% load static %}
+        <img src="{% static account.logo %}"/><br><br>
+    {% endif %}
     <input type="submit" value="Submit">
 </form>
