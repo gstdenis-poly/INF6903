@@ -41,9 +41,9 @@ def register(request):
                           type = request.POST['type'],
                           company = request.POST['company'],
                           summary = request.POST['summary'])
-        print(request.FILES)
-        logo_img = request.FILES['logo']
-        if logo_img != None:
+        if 'logo' in request.FILES:
+            logo_img = request.FILES['logo']
+            print(logo_img)
             logo_img_ext = os.path.splitext(request.FILES['logo'].name)[-1]
             db_logo_img_path = logos_folder + account.username + logo_img_ext
             with open(db_logo_img_path, 'wb+') as db_logo_img:
