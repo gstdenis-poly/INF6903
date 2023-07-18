@@ -3,16 +3,16 @@
     {% csrf_token %}
     <label for="username">Username: </label>{{ account.username }}<br><br>
     <label for="email">Email:</label>
-    <input type="email" id="email" name="email" value="{{ account.email }}"><br><br>
+    <input type="email" id="email" name="email" value="{{ account.email|default_if_none:'' }}"><br><br>
     <label for="password1">Password:</label>
     <input type="password" id="password1" name="password1"><br><br>
     <label for="password2">Password confirmation:</label>
     <input type="password" id="password2" name="password2"><br><br>
     <label for="type">Account type: </label>{{ account.type }}<br><br>
     <label for="company">Company:</label>
-    <input type="text" id="company" name="company" value="{{ account.company }}"><br><br>
+    <input type="text" id="company" name="company" value="{{ account.company|default_if_none:'' }}"><br><br>
     <label for="summary">Summary:</label>
-    <textarea id="summary" name="summary" rows="4" cols="50">{{ account.summary }}</textarea><br><br>
+    <textarea id="summary" name="summary" rows="4" cols="50">{{ account.summary|default_if_none:'' }}</textarea><br><br>
     <label for="logo">Logo:</label>
     <input type="file" id="logo" name="logo"><br><br>
     {% if account.logo != None %}

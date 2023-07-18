@@ -16,7 +16,7 @@ def index(request):
         return render(request, 'logged_out/index.html')
 
 def log_in(request):
-    if 'username' not in request.POST:
+    if not request.POST:
         return render(request, 'logged_out/log_in.html')
     else:
         username = request.POST['username']
@@ -33,7 +33,7 @@ def log_out(request):
     return redirect('index')
 
 def register(request):
-    if 'username' not in request.POST:
+    if not request.POST:
         return render(request, 'logged_out/register.html')
     else:
         account = Account(username = request.POST['username'],
@@ -73,7 +73,9 @@ def edit_account(request, account_id):
     if request.user.is_authenticated:
         if account_id == request.user.username:
             account = Account.objects.get(username = account_id)
-            if 'username' in request.POST:
+            if not request.POST:
+                return render(request, 'logged_in/edit_account.html', {'account' : account}) 
+            else:
                 account.email = request.POST['email']
                 if request.POST['password1'] != None:
                     account.password = make_password(request.POST['password1'])
@@ -93,8 +95,6 @@ def edit_account(request, account_id):
                 account.save()
                 
                 return render(request, 'logged_in/edit_account.html', {'account' : account})
-            else:
-                return render(request, 'logged_in/edit_account.html', {'account' : account}) 
         else:
             return render(request, 'logged_in/view_account.html', {'account' : account})
     else:
@@ -110,7 +110,9 @@ def edit_account(request, account_id):
 
 def upload_recording(request):
     if request.user.is_authenticated:
-        if request.FILES:
+        if not request.FILES:
+            return render(request, 'logged_in/upload_recording.html')
+        else:
             for file in request.FILES:
                 upload_file_path = uploads_folder + file.name
                 with open(upload_file_path, 'wb+') as upload_file:
@@ -122,8 +124,6 @@ def upload_recording(request):
                 os.remove(upload_file_path) # Remove .zip file after uncompressing it
                 open(upload_folder_name + '.final', 'w').close() # .final file for worker notif
 
-            return render(request, 'logged_in/upload_recording.html')
-        else:
             return render(request, 'logged_in/upload_recording.html')
     else:
         return render(request, 'logged_out/index.html')
