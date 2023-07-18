@@ -75,7 +75,8 @@ def edit_account(request, account_id):
             account = Account.objects.get(username = account_id)
             if 'username' in request.POST:
                 account.email = request.POST['email']
-                account.password = make_password(request.POST['password1'])
+                if request.POST['password1'] != None:
+                    account.password = make_password(request.POST['password1'])
                 account.company = request.POST['company']
                 account.summary = request.POST['summary']
                 if 'logo' in request.FILES:
