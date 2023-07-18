@@ -80,6 +80,8 @@ def edit_account(request, user_id):
                     logo_img = request.FILES['logo']
                     logo_img_ext = os.path.splitext(logo_img.name)[-1]
                     db_logo_img_path = logos_folder + account.username + logo_img_ext
+                    if os.path.isfile(db_logo_img_path):
+                        os.remove(db_logo_img_path)
                     with open(db_logo_img_path, 'wb+') as db_logo_img:
                         for c in logo_img.chunks():
                             db_logo_img.write(c)
