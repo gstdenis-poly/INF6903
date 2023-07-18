@@ -45,11 +45,12 @@ def register(request):
         if 'logo' in request.FILES:
             logo_img = request.FILES['logo']
             logo_img_ext = os.path.splitext(request.FILES['logo'].name)[-1]
-            db_logo_img_path = logos_folder + account.username + logo_img_ext
+            db_logo_img_name = account.username + logo_img_ext
+            db_logo_img_path = logos_folder + db_logo_img_name
             with open(db_logo_img_path, 'wb+') as db_logo_img:
                 for c in logo_img.chunks():
                     db_logo_img.write(c)
-            account.logo = db_logo_img_path
+            account.logo = db_logo_img_name
         account.save()
 
         return render(request, 'logged_out/register.html')
@@ -80,13 +81,14 @@ def edit_account(request, account_id):
                 if 'logo' in request.FILES:
                     logo_img = request.FILES['logo']
                     logo_img_ext = os.path.splitext(logo_img.name)[-1]
-                    db_logo_img_path = logos_folder + account.username + logo_img_ext
+                    db_logo_img_name = account.username + logo_img_ext
+                    db_logo_img_path = logos_folder + db_logo_img_name
                     if os.path.isfile(db_logo_img_path):
                         os.remove(db_logo_img_path)
                     with open(db_logo_img_path, 'wb+') as db_logo_img:
                         for c in logo_img.chunks():
                             db_logo_img.write(c)
-                    account.logo = db_logo_img_path
+                    account.logo = db_logo_img_name
                 account.save()
                 
                 return render(request, 'logged_in/edit_account.html', {'account' : account})

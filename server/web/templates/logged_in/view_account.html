@@ -6,5 +6,5 @@
     <li><b>Company: </b>{{ account.company }}</li>
     <li><b>Summary: </b>{{ account.summary }}</li>
     {% load static %}
-    <li><b>Logo: </b><img src="{% static account.logo %}"/></li>
+    <li><b>Logo: </b><img src="{% static 'logos/' + account.logo %}"/></li>
 </ul>
