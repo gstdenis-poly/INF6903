@@ -121,7 +121,7 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [
-    '/home/gstdenis/projects/def-gabilode/gstdenis/database/',
+    '/home/gstdenis/projects/def-gabilode/gstdenis/database/logos/',
 ]
 
 
