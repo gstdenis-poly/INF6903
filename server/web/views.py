@@ -10,7 +10,8 @@ from workers.configurator import logos_folder, uploads_folder
 # Create your views here.
 def index(request):
     if request.user.is_authenticated:
-        return render(request, 'logged_in/index.html')
+        account = Account.objects.get(username = request.user.username)
+        return render(request, 'logged_in/index.html', {'account': account})
     else:
         return render(request, 'logged_out/index.html')
 
