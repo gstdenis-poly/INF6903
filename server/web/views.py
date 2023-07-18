@@ -46,7 +46,7 @@ def register(request):
             logo_img_ext = os.path.splitext(request.FILES['logo'].name)[-1]
             db_logo_img_path = logos_folder + account.username + logo_img_ext
             with open(db_logo_img_path, 'wb+') as db_logo_img:
-                for c in logo_img.chunk():
+                for c in logo_img.chunks():
                     db_logo_img.write(c)
             account.logo = db_logo_img_path
         account.save()
@@ -81,7 +81,7 @@ def edit_account(request, user_id):
                     logo_img_ext = os.path.splitext(logo_img.name)[-1]
                     db_logo_img_path = logos_folder + account.username + logo_img_ext
                     with open(db_logo_img_path, 'wb+') as db_logo_img:
-                        for c in logo_img.chunk():
+                        for c in logo_img.chunks():
                             db_logo_img.write(c)
                     account.logo = db_logo_img_path
                 account.save()
@@ -108,7 +108,7 @@ def upload_recording(request):
             for file in request.FILES:
                 upload_file_path = uploads_folder + file.name
                 with open(upload_file_path, 'wb+') as upload_file:
-                    for c in file.chunk():
+                    for c in file.chunks():
                         upload_file.write(c)
             
                 upload_folder_name = uploads_folder + os.path.splitext(file.name)[0]
