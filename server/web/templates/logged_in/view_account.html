@@ -5,6 +5,6 @@
     <li><b>Type: </b>{{ account.type }}</li>
     <li><b>Company: </b>{{ account.company }}</li>
     <li><b>Summary: </b>{{ account.summary }}</li>
-    {% load static %}
+    {% load staticfiles %}
     <li><b>Logo: </b><img src="{% static 'logos/' + account.logo %}"/></li>
 </ul>

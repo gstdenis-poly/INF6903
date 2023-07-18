@@ -1,3 +1,5 @@
+from django.conf import settings
+from django.conf.urls.static import static
 from django.urls import path
 
 from . import views
@@ -17,4 +19,4 @@ urlpatterns = [
     #path('create_request/', views.create_request, name='create_request'),
     #path('delete_request/<int:request_id>/', views.delete_request, name='delete_request'),
     #path('view_solution/<int:solution_id>/', views.view_solution, name='view_solution'),
-]
+] + static(settings.STATIC_URL, document_root = settings.STATIC_ROOT)
