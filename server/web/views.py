@@ -41,6 +41,7 @@ def register(request):
                           type = request.POST['type'],
                           company = request.POST['company'],
                           summary = request.POST['summary'])
+        print(request.FILES)
         logo_img = request.FILES['logo']
         if logo_img != None:
             logo_img_ext = os.path.splitext(request.FILES['logo'].name)[-1]
