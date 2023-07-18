@@ -94,7 +94,7 @@ def edit_account(request, account_id):
                     account.logo = db_logo_img_name
                 account.save()
                 
-                return redirect('view_account/' + account_id + '/')
+                return redirect('/view_account/' + account_id + '/')
         else:
             return render(request, 'logged_in/view_account.html', {'account' : account})
     else:
