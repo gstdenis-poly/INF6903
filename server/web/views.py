@@ -119,7 +119,7 @@ def upload_recording(request):
                     for c in request.FILES[file].chunks():
                         upload_file.write(c)
             
-                upload_folder_path = uploads_folder + os.path.splitext(upload_file_path)[0]
+                upload_folder_path = os.path.splitext(upload_file_path)[0]
                 shutil.unpack_archive(upload_file_path, upload_folder_path, 'zip')
                 os.remove(upload_file_path) # Remove .zip file after uncompressing it
                 open(upload_folder_path + '.final', 'w').close() # .final file for worker notif
