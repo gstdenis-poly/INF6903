@@ -114,9 +114,9 @@ def upload_recording(request):
             return render(request, 'logged_in/upload_recording.html')
         else:
             for file in request.FILES:
-                upload_file_path = uploads_folder + request.user.username + '-' + file.name
+                upload_file_path = uploads_folder + request.user.username + '-' + file
                 with open(upload_file_path, 'wb+') as upload_file:
-                    for c in file.chunks():
+                    for c in request.FILES[file].chunks():
                         upload_file.write(c)
             
                 upload_folder_path = uploads_folder + os.path.splitext(upload_file_path)[0]
