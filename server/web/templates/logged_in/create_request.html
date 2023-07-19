@@ -3,8 +3,8 @@
 <form action="/create_request/" method="post">
     {% csrf_token %}
     {% for recording in recordings %}
-        <input type="checkbox" id="{{ recording.id }}" name="{{ recording.id }}" value="{{ recording.id }}">
-        <label for="{{ recording.id }}">{{ recording.title|default_if_none:recording.id }}</label><br>
+        <input type="checkbox" id="video{{ forloop.counter }}" name="video{{ forloop.counter }}" value="{{ recording.id }}">
+        <label for="video{{ forloop.counter }}">{{ recording.title|default_if_none:recording.id }}</label><br>
     {% endfor %}
     <input type="submit" value="Submit">
 </form>

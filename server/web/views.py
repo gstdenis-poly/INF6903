@@ -1,4 +1,4 @@
-from web.models import Account, Recording
+from web.models import Account, Recording, Request
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.hashers import make_password
 from django.http import HttpResponse
@@ -149,15 +149,20 @@ def edit_request(request, request_id):
 def create_request(request):
     if request.user.is_authenticated:
         account = Account.objects.get(username = request.user.username)
-        if not request.POST:
+        if account.type == 'provider':
+            return redirect('index')
+        elif not request.POST:
             return render(request, 'logged_in/create_request.html', {
                 'recordings': account.recordings.all()
                 })
         else:
+            recordings = []
             for key in request.POST:
-                value = request.POST[key]
-                print(key + ' | ' + value)
-
+                if 'video' in key:
+                    recordings += [Recording.objects.get(id = request.POST[key])]
+            Request(recordings = recordings).save()       
+            
+            return redirect('index')
     else:
         return redirect('index')
 
