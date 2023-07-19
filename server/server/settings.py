@@ -128,7 +128,7 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = [
     DATABASE_DIR + 'recordings/',
     DATABASE_DIR + 'logos/',
-    CLIENT_DIR,
+    CLIENT_DIR
 ]
 
 
