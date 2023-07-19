@@ -1,6 +1,15 @@
 <h1>View request</h1>
+{% load static %}
 {% for recording in recordings %}
     <h2>{{ recording.title|default_if_none:recording.id }}</h2>
-    {% load static %}
     <video style="width:100%" controls src="{% static recording.id %}.mp4" type="video/mp4"></video>
+{% endfor %}
+{% for candidate in solutions %}
+    <h3>Solution #{{ forloop.counter }}: {{ candidate }}</h3>
+    <div>
+        {% for recording in solutions[candidate] %}
+            <a href="/view_recording/{{ recording.id }}/">{{ recording.title|default_if_none:recording.id }}</a>
+            <video style="width:100%" controls src="{% static recording.id %}.mp4" type="video/mp4"></video>
+        {% endfor %}
+    </div>
 {% endfor %}

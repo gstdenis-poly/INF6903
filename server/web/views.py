@@ -135,7 +135,7 @@ def view_recording(request, recording_id):
         recording = Recording.objects.get(id = recording_id)
 
         solutions = recording.get_relevant_solutions()
-        cmp_key = functools.cmp_to_key(recording.cmp_solutions_score)
+        cmp_key = functools.cmp_to_key(Recording.cmp_solutions_score)
         solutions.sort(key = cmp_key) # Sort solutions by ergonomic score
 
         return render(request, 'logged_in/view_recording.html', {
@@ -183,9 +183,15 @@ def create_request(request):
 def view_request(request, request_id):
     if request.user.is_authenticated:
         req = Request.objects.get(id = request_id)
+
+        solutions = req.get_relevant_solutions()
+        cmp_key = functools.cmp_to_key(Request.cmp_solutions_score)
+        solutions = dict(sorted(solutions.items(), key = cmp_key)) # Sort solutions by ergonomic score
+
         return render(request, 'logged_in/view_request.html', {
             'req': req,
-            'recordings': req.recordings.all()
+            'recordings': req.recordings.all(),
+            'solutions' : solutions
             })
     else:
         return redirect('index')
@@ -206,7 +212,7 @@ def edit_request(request, request_id):
             for key in request.POST:
                 if 'video' in key:
                     req.recordings.add(Recording.objects.get(id = request.POST[key]))
-            req.save() 
+            req.save()
 
             return redirect('/view_request/' + str(request_id) + '/')
     else:

@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from django.db import models
+import functools
 import os
 from server.settings import VAL_CLUSTERS_DIR
 from statistics import mean, stdev
@@ -108,3 +109,37 @@ class KeyboardEvent(models.Model):
 class Request(models.Model):
     account = models.ForeignKey(Account, related_name = 'requests', on_delete = models.CASCADE)
     recordings = models.ManyToManyField(Recording, related_name = 'requests')
+    
+    # Return relevant solutions for request according to relevant solutions of each of
+    # its recordings. A request's solution is relevant if it contains at least one relevant
+    # recording's solution.
+    def get_relevant_solutions(self):
+        solutions = {}
+        for recording in self.recordings:
+            solutions = recording.get_relevant_solutions()
+            for solution in solutions:
+                candidate_id = solution.account.username
+                if candidate_id in solutions:
+                    solutions[candidate_id] += [solution]
+                else:
+                    solutions[candidate_id] = [solution]
+
+        return solutions
+
+    # Compare ergonomic score of two given request's solutions. The ergonomic score of a
+    # request's solution is considered better if the total of the reversed ranks of its
+    # recordings' scores is higher than the total of the reversed ranks of the compared
+    # request's solution's recordings' scores.  
+    def cmp_solutions_score(self, s1, s2):
+        solutions = s1 + s2
+        cmp_key = functools.cmp_to_key(Recording.cmp_solutions_score, reversed = True)
+        solutions.sort(key = cmp_key)
+
+        s1_score, s2_score = 0, 0
+        for i, solution in enumerate(solutions):
+            if solution.account.username == s1[0].account.username:
+                s1_score += i
+            else:
+                s2_score += i
+
+        return 1 if s1_score > s2_score else 0 if s1_score == s2_score else -1
