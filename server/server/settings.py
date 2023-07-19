@@ -18,6 +18,7 @@ DATABASE_DIR = '/home/gstdenis/projects/def-gabilode/gstdenis/database/'
 LOGOS_DIR = DATABASE_DIR + 'logos/'
 UPLOADS_DIR = '/home/gstdenis/scratch/uploads/'
 VAL_CLUSTERS_DIR = DATABASE_DIR + 'validations/clusters/'
+CLIENT_DIR = DATABASE_DIR + '../INF6903/client/'
 
 
 # Quick-start development settings - unsuitable for production
@@ -127,6 +128,7 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = [
     DATABASE_DIR + 'recordings/',
     DATABASE_DIR + 'logos/',
+    CLIENT_DIR,
 ]
 
 

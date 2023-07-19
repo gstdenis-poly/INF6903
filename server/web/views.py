@@ -102,13 +102,11 @@ def edit_account(request, account_id):
     else:
         return redirect('index')
 
-"""def download_client(request):
+def download_client(request):
     if request.user.is_authenticated:
-        # TODO
+        return render(request, 'logged_in/download_client.html')
     else:
-        # TODO
-
-    return HttpResponse('Download client')"""
+        return redirect('index')
 
 def upload_recording(request):
     if request.user.is_authenticated:
