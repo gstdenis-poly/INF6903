@@ -3,6 +3,6 @@
 {% load static %}
 <video style="width:100%" controls src="{% static recording.id %}.mp4" type="video/mp4"></video>
 {% for solution in solutions %}
-    <h3>{{ solution.title|default_if_none:solution.id }}</h2>
+    <h3>Solution #{{ forloop.counter }}: {{ solution.title|default_if_none:solution.id }}</h2>
     <video style="width:100%" controls src="{% static solution.id %}.mp4" type="video/mp4"></video>
 {% endfor %}
