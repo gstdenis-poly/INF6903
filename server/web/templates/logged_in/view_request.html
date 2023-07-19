@@ -5,7 +5,7 @@
     <video style="width:100%" controls src="{% static recording.id %}.mp4" type="video/mp4"></video>
 {% endfor %}
 {% for candidate, solution in solutions %}
-    <h3>Solution #{{ forloop.counter }}: {{ candidate }}</h3>
+    <h3>Solution #{{ forloop.counter }}: <a href="/view_account/{{ candidate }}">{{ candidate }}</a></h3>
     <div>
         {% for recording in solution %}
             <a href="/view_recording/{{ recording.id }}/">{{ recording.title|default_if_none:recording.id }}</a>
