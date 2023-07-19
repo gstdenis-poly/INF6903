@@ -2,7 +2,7 @@
 <h2>Select request's recordings</h2>
 <form action="/create_request/" method="post">
     {% csrf_token %}
-    {% for recording in account.recordings %}
+    {% for recording in account.recordings.all() %}
         <input type="checkbox" id="{{ recording.id }}" name="{{ recording.id }}" value="{{ recording.id }}">
         <label for="{{ recording.id }}">{{ recording.title|default_if_none:recording.id }}</label><br>
     {% endfor %}
