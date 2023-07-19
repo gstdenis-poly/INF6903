@@ -43,5 +43,5 @@ class KeyboardEvent(models.Model):
     key = models.CharField(max_length = 20)
     
 class Request(models.Model):
+    account = models.ForeignKey(Account, related_name = 'requests', on_delete = models.CASCADE)
     recordings = models.ManyToManyField(Recording)
-    candidates = models.ManyToManyField(Account)

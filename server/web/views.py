@@ -156,7 +156,8 @@ def create_request(request):
                 'recordings': account.recordings.all()
                 })
         else:
-            req = Request()
+            req = Request(account = account)
+            req.save()
             for key in request.POST:
                 if 'video' in key:
                     req.recordings.add(Recording.objects.get(id = request.POST[key]))
