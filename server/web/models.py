@@ -1,8 +1,8 @@
 from django.contrib.auth.models import User
 from django.db import models
 import os
+from server.settings import DATABASE_DIR
 from statistics import mean, stdev
-from workers.configurator import val_clusters_folder
 
 # Create your models here.
 class Account(User):
@@ -33,7 +33,7 @@ class Recording(models.Model):
     #   - Its score is higher than 0.0.
     #   - Its score is higher or equal to the average score + 1x the standard deviation.
     def get_relevant_solutions(self):
-        results_file_path = val_clusters_folder + self.id + '.txt'
+        results_file_path = DATABASE_DIR + 'validations/clusters/' + self.id + '.txt'
         if not os.path.isfile(results_file_path):
             return []
 
