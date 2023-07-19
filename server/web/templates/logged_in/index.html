@@ -1,6 +1,6 @@
 {% load static %}
 <link rel="stylesheet" href="{% static 'css/style.css' %}">
-<script src="{% static js/main.js %}"></script>
+<script src="{% static 'js/main.js' %}"></script>
 <h1>Welcome</h1>
 {% for recording in recordings %}
     <h2><a href="/view_recording/{{ recording.id }}/">{{ recording.title|default_if_none:recording.id }}</a></h2>
