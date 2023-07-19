@@ -173,7 +173,8 @@ def get_relevant_solutions(recording, results_file_path):
     results_score = [float(l.split('|')[1]) for l in results_file_lines]
     results_scores_avg = mean(results_score)
     results_scores_sd = stdev(results_score) if len(results_score) > 1 else 0.0
-    results_score_count_max = len(Account.objects.get(type != recording.account.type))
+    opposite_acc_type = 'provider' if recording.account.type == 'requester' else 'requester'
+    results_score_count_max = len(Account.objects.get(type = opposite_acc_type))
 
     solutions = []
     for i, line in enumerate(results_file_lines):
