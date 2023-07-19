@@ -14,6 +14,7 @@ from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+DATABASE_DIR = '/home/gstdenis/projects/def-gabilode/gstdenis/database/'
 
 
 # Quick-start development settings - unsuitable for production
@@ -121,7 +122,8 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [
-    '/home/gstdenis/projects/def-gabilode/gstdenis/database/logos/',
+    DATABASE_DIR + 'recordings/',
+    DATABASE_DIR + 'logos/',
 ]
 
 

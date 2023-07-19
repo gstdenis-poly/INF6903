@@ -1,2 +1,5 @@
 <h1>Welcome</h1>
-<p>You can <a href="/view_account/{{ account.username }}">view account</a> or <a href="/edit_account/{{ account.username }}">edit account</a> or <a href="/upload_recording">upload recording</a> or <a href="/log_out">log out</a></p>
+{% for recording in account.recordings %}
+    <h2>{{ recording.title|default_if_none:recording.id }}</h2>
+    <video style="width:100%" controls src="{{ recording.id + '.mp4' }}" type="video/mp4"></video>
+{% endfor %}

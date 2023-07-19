@@ -67,7 +67,7 @@ def view_account(request, account_id):
         account = Account.objects.get(username = account_id)
         return render(request, 'logged_in/view_account.html', {'account' : account})
     else:
-        return render(request, 'logged_out/index.html')
+        return redirect('index')
 
 def edit_account(request, account_id):
     if request.user.is_authenticated:
@@ -96,9 +96,9 @@ def edit_account(request, account_id):
                 
                 return redirect('/view_account/' + account_id + '/')
         else:
-            return render(request, 'logged_in/view_account.html', {'account' : account})
+            return redirect('/view_account/' + account_id + '/')
     else:
-        return render(request, 'logged_out/index.html')
+        return redirect('index')
 
 """def download_client(request):
     if request.user.is_authenticated:
@@ -126,7 +126,7 @@ def upload_recording(request):
 
             return render(request, 'logged_in/upload_recording.html')
     else:
-        return render(request, 'logged_out/index.html')
+        return redirect('index')
 
 """def view_request(request, request_id):
     if request.user.is_authenticated:
@@ -142,17 +142,22 @@ def edit_request(request, request_id):
     else:
         # TODO
 
-    return HttpResponse('Edit request %s.' % request_id)
+    return HttpResponse('Edit request %s.' % request_id)"""
 
 def create_request(request):
     if request.user.is_authenticated:
-        # TODO
+        if not request.POST:
+            return render(request, 'logged_in/create_request.html')
+        else:
+            account = Account.objects.get(username = request.user.username)
+            for key in request.POST:
+                value = request.POST[key]
+                print(key + ' | ' + value)
+
     else:
-        # TODO
+        return redirect('index')
 
-    return HttpResponse('Create request.')
-
-def delete_request(request, request_id):
+"""def delete_request(request, request_id):
     if request.user.is_authenticated:
         # TODO
     else:

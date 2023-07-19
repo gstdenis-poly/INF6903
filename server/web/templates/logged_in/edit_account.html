@@ -14,7 +14,7 @@
     <label for="summary">Summary:</label>
     <textarea id="summary" name="summary" rows="4" cols="50">{{ account.summary|default_if_none:'' }}</textarea><br><br>
     <label for="logo">Logo:</label>
-    <input type="file" id="logo" name="logo"><br><br>
+    <input type="file" id="logo" name="logo" accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*"><br><br>
     {% if account.logo != None %}
         {% load static %}
         <img src="{% static account.logo %}"/><br><br>
