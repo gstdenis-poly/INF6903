@@ -165,7 +165,7 @@ def edit_request(request, request_id):
     if request.user.is_authenticated:
         req = Request.objects.get(id = request_id)
         if request.user.username != req.account.username:
-            return redirect('/view_request/' + request_id + '/')
+            return redirect('/view_request/' + str(request_id) + '/')
         elif not request.POST:
             return render(request, 'logged_in/edit_request.html', {
                 'req': req,
@@ -179,7 +179,7 @@ def edit_request(request, request_id):
                     req.recordings.add(Recording.objects.get(id = request.POST[key]))
             req.save() 
 
-            return redirect('/view_request/' + request_id + '/')
+            return redirect('/view_request/' + str(request_id) + '/')
     else:
         return redirect('index')
 
