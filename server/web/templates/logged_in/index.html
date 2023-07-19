@@ -4,7 +4,7 @@
     {% load static %}
     <video style="width:100%" controls src="{% static recording.id %}.mp4" type="video/mp4"></video>
     <ul>
-        {% for req in recording.requests %}
+        {% for req in recording.requests.all() %}
             <li><a href="/view_request/{{ req.id }}/">{{ req.id }}</a></li>
         {% endfor %}
     </ul>
