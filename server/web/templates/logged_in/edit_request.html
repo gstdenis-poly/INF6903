@@ -1,0 +1,14 @@
+<h1>Edit request</h1>
+<h2>Select request's recordings</h2>
+<form action="/edit_request/" method="post">
+    {% csrf_token %}
+    {% for recording in acc_recordings %}
+        {% if recording in req_recordings %}
+            <input type="checkbox" id="video{{ forloop.counter }}" name="video{{ forloop.counter }}" value="{{ recording.id }}" checked>
+        {% else %}
+            <input type="checkbox" id="video{{ forloop.counter }}" name="video{{ forloop.counter }}" value="{{ recording.id }}">
+        {% endif %}
+        <label for="video{{ forloop.counter }}">{{ recording.title|default_if_none:recording.id }}</label><br>
+    {% endfor %}
+    <input type="submit" value="Submit">
+</form>

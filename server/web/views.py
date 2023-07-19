@@ -130,22 +130,6 @@ def upload_recording(request):
     else:
         return redirect('index')
 
-"""def view_request(request, request_id):
-    if request.user.is_authenticated:
-        # TODO
-    else:
-        # TODO
-
-    return HttpResponse('View request %s.' % request_id)
-
-def edit_request(request, request_id):
-    if request.user.is_authenticated:
-        # TODO
-    else:
-        # TODO
-
-    return HttpResponse('Edit request %s.' % request_id)"""
-
 def create_request(request):
     if request.user.is_authenticated:
         account = Account.objects.get(username = request.user.username)
@@ -166,16 +150,45 @@ def create_request(request):
             return redirect('index')
     else:
         return redirect('index')
-
-"""def delete_request(request, request_id):
+    
+def view_request(request, request_id):
     if request.user.is_authenticated:
-        # TODO
+        req = Request.objects.get(id = request_id)
+        return render(request, 'logged_in/view_request.html', {
+            'recordings': req.recordings.all()
+            })
     else:
-        # TODO
+        return redirect('index')
 
-    return HttpResponse('Delete request %s.' % request_id)
+def edit_request(request, request_id):
+    if request.user.is_authenticated:
+        req = Request.objects.get(id = request_id)
+        if request.user.username != req.account.username:
+            return redirect('/view_request/' + request_id + '/')
+        elif not request.POST:
+            return render(request, 'logged_in/edit_request.html', {
+                'req_recordings': req.recordings.all(),
+                'acc_recordings': req.account.recordings.all()
+                })
+        else:
+            req.recordings.clear()
+            for key in request.POST:
+                if 'video' in key:
+                    req.recordings.add(Recording.objects.get(id = request.POST[key]))
+            req.save() 
 
-def view_solution(request, solution_id):
+            return redirect('/view_request/' + request_id + '/')
+    else:
+        return redirect('index')
+
+def delete_request(request, request_id):
+    if request.user.is_authenticated:
+        req = Request.objects.get(id = request_id)
+        req.delete()
+    
+    return redirect('index')
+
+"""def view_solution(request, solution_id):
     if request.user.is_authenticated:
         # TODO
     else:

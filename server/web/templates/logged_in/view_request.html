@@ -1,11 +1,6 @@
-<h1>Welcome</h1>
+<h1>View request</h1>
 {% for recording in recordings %}
     <h2>{{ recording.title|default_if_none:recording.id }}</h2>
     {% load static %}
     <video style="width:100%" controls src="{% static recording.id %}.mp4" type="video/mp4"></video>
-    <ul>
-        {% for req in recording.requests %}
-            <li><a href="/view_request/{{ req.id }}/">{{ req.id }}</a></li>
-        {% endfor %}
-    </ul>
 {% endfor %}
