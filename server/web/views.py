@@ -1,11 +1,10 @@
 from web.models import Account, Recording, Request
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.hashers import make_password
-from django.http import HttpResponse
 from django.shortcuts import redirect, render
 import os
 import shutil
-from workers.configurator import logos_folder, uploads_folder
+from workers.configurator import logos_folder, uploads_folder, val_clusters_folder
 
 # Create your views here.
 def index(request):
@@ -127,6 +126,31 @@ def upload_recording(request):
                 open(upload_folder_path + '.final', 'w').close() # .final file for worker notif
 
             return render(request, 'logged_in/upload_recording.html')
+    else:
+        return redirect('index')
+
+def view_recording(request, recording_id):
+    if request.user.is_authenticated:
+        recording = Recording.objects.get(id = recording_id)
+
+        return render(request, 'logged_in/view_recording.html', {
+            'recording': recording
+            })
+    else:
+        return redirect('index')
+    
+def edit_recording(request, recording_id):
+    if request.user.is_authenticated:
+        recording = Recording.objects.get(id = recording_id)
+        if request.user.username != recording.account.username:
+            return redirect('/view_recording/' + recording_id + '/')
+        elif not request.POST:
+            return render(request, 'logged_in/edit_recording.html', {'recording': recording})
+        else:
+            recording.title = request.POST['title']
+            recording.save()
+
+            return redirect('/view_recording/' + recording_id + '/')
     else:
         return redirect('index')
 

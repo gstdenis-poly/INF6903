@@ -1,6 +1,6 @@
 <h1>Welcome</h1>
 {% for recording in recordings %}
-    <h2>{{ recording.title|default_if_none:recording.id }}</h2>
+    <h2><a href="/view_recording/{{ recording.id }}/">{{ recording.title|default_if_none:recording.id }}</a></h2>
     {% load static %}
     <video style="width:100%" controls src="{% static recording.id %}.mp4" type="video/mp4"></video>
     <ul>

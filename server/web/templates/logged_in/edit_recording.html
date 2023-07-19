@@ -1,0 +1,10 @@
+<h1>Edit recording</h1>
+<form action="/edit_recording/{{ recording.id }}/" method="post">
+    {% csrf_token %}
+    <label for="id">Id: </label>{{ recording.id }}<br><br>
+    <label for="title">Title:</label>
+    <input type="text" id="title" name="title" value="{{ recording.title|default_if_none:'' }}">
+    <input type="submit" value="Submit">
+</form>
+{% load static %}
+<video style="width:100%" controls src="{% static recording.id %}.mp4" type="video/mp4"></video>
