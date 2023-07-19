@@ -1,4 +1,5 @@
 <h1>Download client</h1>
 <form method="post" action="/download_client/">
+    {% csrf_token %}
     <button type="submit">Download</button>
 </form>
