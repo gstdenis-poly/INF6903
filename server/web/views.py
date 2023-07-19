@@ -186,7 +186,7 @@ def view_request(request, request_id):
 
         solutions = req.get_relevant_solutions()
         cmp_key = functools.cmp_to_key(Request.cmp_solutions_score)
-        solutions = dict(sorted(solutions.items(), key = cmp_key)) # Sort solutions by ergonomic score
+        solutions = sorted(solutions.items(), key = cmp_key) # Sort solutions by ergonomic score
 
         return render(request, 'logged_in/view_request.html', {
             'req': req,
