@@ -155,6 +155,7 @@ def view_request(request, request_id):
     if request.user.is_authenticated:
         req = Request.objects.get(id = request_id)
         return render(request, 'logged_in/view_request.html', {
+            'req': req,
             'recordings': req.recordings.all()
             })
     else:
@@ -167,6 +168,7 @@ def edit_request(request, request_id):
             return redirect('/view_request/' + request_id + '/')
         elif not request.POST:
             return render(request, 'logged_in/edit_request.html', {
+                'req': req,
                 'req_recordings': req.recordings.all(),
                 'acc_recordings': req.account.recordings.all()
                 })

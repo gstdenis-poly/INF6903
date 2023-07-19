@@ -1,6 +1,6 @@
 <h1>Edit request</h1>
 <h2>Select request's recordings</h2>
-<form action="/edit_request/" method="post">
+<form action="/edit_request/{{ req.id }}/" method="post">
     {% csrf_token %}
     {% for recording in acc_recordings %}
         {% if recording in req_recordings %}
