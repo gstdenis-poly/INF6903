@@ -11,7 +11,9 @@ from workers.configurator import logos_folder, uploads_folder
 def index(request):
     if request.user.is_authenticated:
         account = Account.objects.get(username = request.user.username)
-        return render(request, 'logged_in/index.html', {'account': account})
+        return render(request, 'logged_in/index.html', {
+            'recordings': account.recordings.all()
+            })
     else:
         return render(request, 'logged_out/index.html')
 
@@ -147,7 +149,9 @@ def edit_request(request, request_id):
 def create_request(request):
     if request.user.is_authenticated:
         if not request.POST:
-            return render(request, 'logged_in/create_request.html')
+            return render(request, 'logged_in/create_request.html', {
+                'recordings': account.recordings.all()
+                })
         else:
             account = Account.objects.get(username = request.user.username)
             for key in request.POST:

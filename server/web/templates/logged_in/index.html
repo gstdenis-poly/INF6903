@@ -1,5 +1,5 @@
 <h1>Welcome</h1>
-{% for recording in account.recordings.all() %}
+{% for recording in recordings %}
     <h2>{{ recording.title|default_if_none:recording.id }}</h2>
     <video style="width:100%" controls src="{{ recording.id }}{{ '.mp4' }}" type="video/mp4"></video>
 {% endfor %}
