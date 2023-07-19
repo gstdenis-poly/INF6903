@@ -132,9 +132,20 @@ def upload_recording(request):
 def view_recording(request, recording_id):
     if request.user.is_authenticated:
         recording = Recording.objects.get(id = recording_id)
+        results_file_path = val_clusters_folder + recording_id + '.txt'
+
+        solutions = []
+        if os.path.isfile(results_file_path):
+            results_file = open(results_file_path, 'r')
+            results_file_lines = results_file.read().splitlines()
+            results_file.close()
+
+            for line in results_file_lines:
+                print(line)
+                solutions += [Recording.objects.get(id = line.split('|')[0])]
 
         return render(request, 'logged_in/view_recording.html', {
-            'recording': recording
+            'recording': recording, 'solutions': solutions,
             })
     else:
         return redirect('index')
