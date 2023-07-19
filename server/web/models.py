@@ -44,4 +44,4 @@ class KeyboardEvent(models.Model):
     
 class Request(models.Model):
     account = models.ForeignKey(Account, related_name = 'requests', on_delete = models.CASCADE)
-    recordings = models.ManyToManyField(Recording)
+    recordings = models.ManyToManyField(Recording, related_name = 'requests')
