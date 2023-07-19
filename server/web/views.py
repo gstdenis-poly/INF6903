@@ -1,11 +1,12 @@
 from web.models import Account, Recording, Request
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.hashers import make_password
+from django.http import HttpResponse, Http404
 from django.shortcuts import redirect, render
 import functools
 import os
 import shutil
-from server.settings import LOGOS_DIR, UPLOADS_DIR
+from server.settings import CLIENT_DIR, LOGOS_DIR, UPLOADS_DIR
 
 # Create your views here.
 def index(request):
@@ -104,7 +105,16 @@ def edit_account(request, account_id):
 
 def download_client(request):
     if request.user.is_authenticated:
-        return render(request, 'logged_in/download_client.html')
+        if not request.POST:
+            return render(request, 'logged_in/download_client.html')
+        else:
+            client_exe_path = os.path.join(CLIENT_DIR, 'recorder')
+            if os.path.exists(client_exe_path):
+                with open(client_exe_path, 'rb') as client_exe:
+                    response = HttpResponse(client_exe.read(), content_type = "application/exe")
+                    response['Content-Disposition'] = 'inline; filename=' + os.path.basename(client_exe_path)
+                    return response
+            raise Http404
     else:
         return redirect('index')
 
