@@ -224,11 +224,3 @@ def delete_request(request, request_id):
         req.delete()
     
     return redirect('index')
-
-"""def view_solution(request, solution_id):
-    if request.user.is_authenticated:
-        # TODO
-    else:
-        # TODO
-
-    return HttpResponse('Solution %s.' % solution_id)"""
