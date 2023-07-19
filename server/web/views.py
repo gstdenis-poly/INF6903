@@ -105,7 +105,11 @@ def edit_account(request, account_id):
 
 def download_client(request):
     if request.user.is_authenticated:
-        return render(request, 'logged_in/download_client.html')
+        client_zip_name = 'recorder.zip'
+        client_zip_path = CLIENT_DIR + client_zip_name
+        response = HttpResponse(open(client_zip_path, 'rb'), content_type = 'application/zip')
+        response['Content-Disposition'] = 'attachment; filename=' + client_zip_name
+        return response
     else:
         return redirect('index')
 
