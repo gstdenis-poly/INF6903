@@ -116,8 +116,7 @@ class Request(models.Model):
     def get_relevant_solutions(self):
         solutions = {}
         for recording in self.recordings.all():
-            solutions = recording.get_relevant_solutions()
-            for solution in solutions:
+            for solution in recording.get_relevant_solutions():
                 candidate_id = solution.account.username
                 if candidate_id in solutions:
                     solutions[candidate_id] += [solution]
@@ -131,13 +130,13 @@ class Request(models.Model):
     # recordings' scores is higher than the total of the reversed ranks of the compared
     # request's solution's recordings' scores.  
     def cmp_solutions_score(self, s1, s2):
-        solutions = s1 + s2
+        solutions = s1[1] + s2[1]
         cmp_key = functools.cmp_to_key(Recording.cmp_solutions_score, reversed = True)
         solutions.sort(key = cmp_key)
 
         s1_score, s2_score = 0, 0
         for i, solution in enumerate(solutions):
-            if solution.account.username == s1[0].account.username:
+            if solution.account.username == s1[0]:
                 s1_score += i
             else:
                 s2_score += i
