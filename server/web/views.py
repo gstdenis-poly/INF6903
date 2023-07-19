@@ -105,16 +105,7 @@ def edit_account(request, account_id):
 
 def download_client(request):
     if request.user.is_authenticated:
-        if not request.POST:
-            return render(request, 'logged_in/download_client.html')
-        else:
-            client_exe_path = os.path.join(CLIENT_DIR, 'recorder')
-            if os.path.exists(client_exe_path):
-                with open(client_exe_path, 'rb') as client_exe:
-                    response = HttpResponse(client_exe.read(), content_type = "application/exe")
-                    response['Content-Disposition'] = 'inline; filename=' + os.path.basename(client_exe_path)
-                    return response
-            raise Http404
+        return render(request, 'logged_in/download_client.html')
     else:
         return redirect('index')
 

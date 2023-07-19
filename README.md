@@ -27,7 +27,7 @@ cd client
 bash ./installer.sh
 ```
 - Générer l'exécutable client avec la commande pyinstaller recorder.py --onefile -F --icon logo.ico.
-- Téléverser l'exécutable sur le serveur pour permettre son téléchargement via l'application Web.
+- Compresser dans un fichier recorder.zip les fichiers et répertoires générés par pyinstaller puis téléverser le .zip sur le serveur pour permettre son téléchargement via l'application Web.
 - Démarrer le tunnel SSH suivant: sshpass -p SSH_PASS ssh -L 8000:localhost:8000 SSH_ADDRESS.
 ### Serveur
 - Exécuter le script d'installation du serveur:
