@@ -85,6 +85,7 @@ class Recording(models.Model):
             elif s2_criteria > s1_criteria:
                 s2_score += 1
         
+        print(s1.id + ': ' + s1_score + ' | ' + s2.id + ': ' + s2_score)
         return 1 if s1_score > s2_score else 0 if s1_score == s2_score else -1
 
 class Monitor(models.Model):
@@ -141,4 +142,5 @@ class Request(models.Model):
             else:
                 s2_score += i
 
+        print(s1[0] + ': ' + s1_score + ' | ' + s2[0] + ': ' + s2_score)
         return 1 if s1_score > s2_score else 0 if s1_score == s2_score else -1
