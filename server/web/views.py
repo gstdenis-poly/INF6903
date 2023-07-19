@@ -6,7 +6,7 @@ import functools
 import os
 import shutil
 from statistics import mean, stdev
-from workers.configurator import logos_folder, uploads_folder, val_clusters_folder
+from workers.configurator import logos_folder, uploads_folder
 
 # Create your views here.
 def index(request):
@@ -131,74 +131,13 @@ def upload_recording(request):
     else:
         return redirect('index')
 
-# Get all ergonomic comparison criterias of given recording
-def get_recording_criterias(recording):
-    criterias = []
-
-    criterias += [recording.mouse_events_count]
-    criterias += [recording.keyboard_events_count]
-    criterias += [recording.mouse_events_distance]
-    criterias += [recording.text_elements_count / recording.frames_images_count]
-    criterias += [recording.text_sizes_count / recording.frames_images_count]
-    criterias += [recording.text_sentiment_score / recording.frames_images_count]
-    criterias += [recording.frames_count / recording.frame_rate * 1000000000] # Duration in nanoseconds
-
-    return criterias
-
-# Compare ergonomic criterias of two given providers' solutions
-def cmp_solutions_score(s1, s2):
-    s1_criterias = get_recording_criterias(s1)
-    s2_criterias = get_recording_criterias(s2)
-
-    s1_score, s2_score = 0, 0
-    for s1_criteria, s2_criteria in zip(s1_criterias, s2_criterias):
-        if s1_criteria > s2_criteria:
-            s1_score += 1
-        elif s2_criteria > s1_criteria:
-            s2_score += 1
-    
-    return 1 if s1_score > s2_score else 0 if s1_score == s2_score else -1
-
-# Return relevant solutions for given recording according to given results file.
-# Solutions is relevant if:
-#   - Its rank in results file is better than the count of accounts of different
-#     type than the account of given recording.
-#   - Its score is higher than 0.0.
-#   - Its score is higher or equal to the average score + 1x the standard deviation.
-def get_relevant_solutions(recording, results_file_path):
-    results_file = open(results_file_path, 'r')
-    results_file_lines = results_file.read().splitlines()
-    results_file.close()
-
-    results_score = [float(l.split('|')[1]) for l in results_file_lines]
-    results_scores_avg = mean(results_score)
-    results_scores_sd = stdev(results_score) if len(results_score) > 1 else 0.0
-    opposite_acc_type = 'provider' if recording.account.type == 'requester' else 'requester'
-    results_score_count_max = len(Account.objects.all().filter(type = opposite_acc_type))
-
-    solutions = []
-    for i, line in enumerate(results_file_lines):
-        line_infos = line.split('|')
-        score = float(line_infos[1])
-
-        if i == results_score_count_max or \
-           score == 0.0 or score < (results_scores_avg + results_scores_sd):
-            break
-
-        solutions += [Recording.objects.get(id = line_infos[0])]
-
-    return solutions
-
 def view_recording(request, recording_id):
     if request.user.is_authenticated:
         recording = Recording.objects.get(id = recording_id)
-        results_file_path = val_clusters_folder + recording_id + '.txt'
 
-        solutions = []
-        if os.path.isfile(results_file_path):
-            solutions = get_relevant_solutions(recording, results_file_path)
-            cmp_key = functools.cmp_to_key(cmp_solutions_score)
-            solutions.sort(key = cmp_key) # Sort solutions by ergonomic score
+        solutions = recording.get_relevant_solutions()
+        cmp_key = functools.cmp_to_key(recording.cmp_solutions_score)
+        solutions.sort(key = cmp_key) # Sort solutions by ergonomic score
 
         return render(request, 'logged_in/view_recording.html', {
             'recording': recording, 'solutions': solutions,
