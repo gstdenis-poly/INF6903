@@ -156,11 +156,11 @@ def create_request(request):
                 'recordings': account.recordings.all()
                 })
         else:
-            request = Request()
+            req = Request()
             for key in request.POST:
                 if 'video' in key:
-                    request.recordings.add(Recording.objects.get(id = request.POST[key]))
-            request.save()    
+                    req.recordings.add(Recording.objects.get(id = request.POST[key]))
+            req.save()    
             
             return redirect('index')
     else:
