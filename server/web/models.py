@@ -115,7 +115,7 @@ class Request(models.Model):
     # recording's solution.
     def get_relevant_solutions(self):
         solutions = {}
-        for recording in self.recordings:
+        for recording in self.recordings.all():
             solutions = recording.get_relevant_solutions()
             for solution in solutions:
                 candidate_id = solution.account.username
