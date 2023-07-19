@@ -15,7 +15,9 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 DATABASE_DIR = '/home/gstdenis/projects/def-gabilode/gstdenis/database/'
+LOGOS_DIR = DATABASE_DIR + 'logos/'
 UPLOADS_DIR = '/home/gstdenis/scratch/uploads/'
+VAL_CLUSTERS_DIR = DATABASE_DIR + 'validations/clusters/'
 
 
 # Quick-start development settings - unsuitable for production
