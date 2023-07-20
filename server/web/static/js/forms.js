@@ -40,8 +40,7 @@
         thisForm.querySelector('.loading').classList.remove('d-block');
         console.log(data)
         if (data.trim() == 'OK') {
-            window.scrollTo(0, 0)
-            location.reload();
+            location.href = '';
         } else {
           throw new Error(data ? data : 'Form submission failed and no error message returned from: ' + action); 
         }
