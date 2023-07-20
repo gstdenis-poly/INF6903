@@ -1540,7 +1540,7 @@ section {
 }
 
 /*--------------------------------------------------------------
-# Login & Register
+# Forms
 --------------------------------------------------------------*/
 .register .info {
   width: 100%;
@@ -1593,6 +1593,7 @@ section {
   background: #fff;
 }
 
+.hero .upload-recording-form .form-group,
 .login .login-form .form-group,
 .register .register-form .form-group {
   padding-bottom: 8px;
@@ -1613,7 +1614,7 @@ section {
   margin-top: 25px;
 }
 
-.register .register-form .sent-message {
+.register .register-form .success-message {
   display: none;
   color: #fff;
   background: #18d26e;
@@ -1630,6 +1631,7 @@ section {
   padding: 15px;
 }
 
+.hero .upload-recording-form .loading:before,
 .login .login-form .loading:before,
 .register .register-form .loading:before {
   content: "";
@@ -1641,6 +1643,21 @@ section {
   border: 3px solid #18d26e;
   border-top-color: #eee;
   animation: animate-loading 1s linear infinite;
+}
+
+.hero .upload-recording-form .error-message,
+.hero .upload-recording-form .success-message,
+.hero .upload-recording-form .loading {
+  display: none;
+  padding-top: 10px;
+}
+
+.hero .upload-recording-form .error-message {
+  color: #ed3c0d;
+}
+
+.hero .upload-recording-form .success-message {
+  color: #18d26e;
 }
 
 .login .login-form input,
@@ -1664,6 +1681,7 @@ section {
   padding: 10px 12px;
 }
 
+.hero .upload-recording-form button[type=submit],
 .login .login-form button[type=submit],
 .register .register-form button[type=submit] {
   font-family: "Poppins", sans-serif;
@@ -1677,15 +1695,19 @@ section {
   border-radius: 4px;
 }
 
+.hero .upload-recording-form button[type=submit]:hover,
 .login .login-form button[type=submit]:hover,
 .register .register-form button[type=submit]:hover {
   background: #3194db;
 }
 
+.hero .upload-recording-form .input-file,
 .register .register-form .input-file {
   display: none;
 }
 
+.hero .upload-recording-form select,
+.hero .upload-recording-form .input-file-label,
 .register .register-form select,
 .register .register-form .input-file-label {
   cursor: grab;
