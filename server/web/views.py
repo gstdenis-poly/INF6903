@@ -1,6 +1,7 @@
 from web.models import Account, Recording, Request
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.hashers import make_password
+from django.contrib.auth.models import User
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 import functools
@@ -39,24 +40,33 @@ def register(request):
     if not request.POST:
         return redirect('index')
     else:
-        account = Account(username = request.POST['username'],
-                          email = request.POST['email'],
-                          password = make_password(request.POST['password2']),
-                          type = request.POST['type'],
-                          company = request.POST['company'],
-                          summary = request.POST['summary'])
-        if 'logo' in request.FILES:
-            logo_img = request.FILES['logo']
-            logo_img_ext = os.path.splitext(request.FILES['logo'].name)[-1]
-            db_logo_img_name = account.username + logo_img_ext
-            db_logo_img_path = LOGOS_DIR + db_logo_img_name
-            with open(db_logo_img_path, 'wb+') as db_logo_img:
-                for c in logo_img.chunks():
-                    db_logo_img.write(c)
-            account.logo = db_logo_img_name
-        account.save()
+        username = request.POST['username']
+        email = request.POST['email']
+        try:
+            user = User.objects.get(username = username)
+            return HttpResponse('Username already used', status = 400)
+        except User.DoesNotExist:
+            try:
+                user = User.objects.get(email = email)
+                return HttpResponse('Email already used', status = 400)
+            except User.DoesNotExist:
+                account = Account(username = username, email = email,
+                                  password = make_password(request.POST['password2']),
+                                  type = request.POST['type'],
+                                  company = request.POST['company'],
+                                  summary = request.POST['summary'])
+                if 'logo' in request.FILES:
+                    logo_img = request.FILES['logo']
+                    logo_img_ext = os.path.splitext(request.FILES['logo'].name)[-1]
+                    db_logo_img_name = account.username + logo_img_ext
+                    db_logo_img_path = LOGOS_DIR + db_logo_img_name
+                    with open(db_logo_img_path, 'wb+') as db_logo_img:
+                        for c in logo_img.chunks():
+                            db_logo_img.write(c)
+                    account.logo = db_logo_img_name
+                account.save()
 
-        return render(request, 'logged_out/register.html')
+        return HttpResponse('OK', status = 200)
 
 def unregister(request):
     if request.user.is_authenticated:
