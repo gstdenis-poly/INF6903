@@ -28,7 +28,7 @@ def log_in(request):
         if user is not None:
             return HttpResponse('Login successful')
         else:
-            response = HttpResponse('Wrong credentials', status = 401)
+            return HttpResponse('Wrong credentials', status = 401)
     
 def log_out(request):
     logout(request)
