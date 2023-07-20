@@ -41,6 +41,7 @@ def register(request):
         return redirect('index')
     else:
         username = request.POST['username']
+        password = request.POST['password2']
         email = request.POST['email']
         try:
             user = User.objects.get(username = username)
@@ -65,7 +66,10 @@ def register(request):
                             db_logo_img.write(c)
                     account.logo = db_logo_img_name
                 account.save()
-
+                
+                user = authenticate(request, username = username, password = password)
+                login(request, user)
+        
         return HttpResponse('OK', status = 200)
 
 def unregister(request):
