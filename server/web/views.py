@@ -26,7 +26,7 @@ def log_in(request):
         password = request.POST['password']
         user = authenticate(request, username = username, password = password)
         if user is not None:
-            return HttpResponse('Login successful', status = 200)
+            return HttpResponse('OK')
         else:
             return HttpResponse('Wrong credentials', status = 401)
     
