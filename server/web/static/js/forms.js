@@ -38,6 +38,7 @@
       })
       .then(data => {
         thisForm.querySelector('.loading').classList.remove('d-block');
+        console.log(data)
         if (data.trim() == 'OK') {
             location.reload();
         } else {
