@@ -1,7 +1,7 @@
 from web.models import Account, Recording, Request
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.hashers import make_password
-from django.http import HttpResponse, Http404
+from django.http import HttpResponse
 from django.shortcuts import redirect, render
 import functools
 import os
@@ -20,16 +20,15 @@ def index(request):
 
 def log_in(request):
     if not request.POST:
-        return render(request, 'logged_out/log_in.html')
+        return redirect('index')
     else:
         username = request.POST['username']
         password = request.POST['password']
         user = authenticate(request, username = username, password = password)
         if user is not None:
-            login(request, user)
-            return redirect('index')
+            return HttpResponse('Login successful')
         else:
-            return render(request, 'logged_out/log_in.html')
+            response = HttpResponse('Wrong credentials', status = 401)
     
 def log_out(request):
     logout(request)
@@ -37,7 +36,7 @@ def log_out(request):
 
 def register(request):
     if not request.POST:
-        return render(request, 'logged_out/register.html')
+        return redirect('index')
     else:
         account = Account(username = request.POST['username'],
                           email = request.POST['email'],

@@ -166,6 +166,10 @@
                                         <input type="password" name="password" class="form-control" id="password" placeholder="Password" required>
                                     </div>
                                     <div class="text-center col-md-1"><button type="submit">Submit</button></div>
+                                    <div class="my-3 col-12">
+                                        <div class="loading">Loading</div>
+                                        <div class="error-message"></div>
+                                    </div>
                                 </div>
                             </form>
 
@@ -220,6 +224,10 @@
                                     <div class="form-group col-12">
                                         <textarea class="form-control" name="summary" rows="5" placeholder="Summary"></textarea>
                                     </div>
+                                    <div class="my-3 col-12">
+                                        <div class="loading">Loading</div>
+                                        <div class="error-message"></div>
+                                    </div>
                                     <div class="text-center col-12"><button type="submit">Submit</button></div>
                                 </div>
                             </form>
@@ -263,7 +271,9 @@
         <script src="{% static 'vendor/glightbox/js/glightbox.min.js' %}"></script>
         <script src="{% static 'vendor/isotope-layout/isotope.pkgd.min.js' %}"></script>
         <script src="{% static 'vendor/swiper/swiper-bundle.min.js' %}"></script>
-        <script src="{% static 'vendor/php-email-form/validate.js' %}"></script>
+        
+        <!-- Forms submission JS file -->
+        <script src="{% static 'js/forms.js' %}"></script>
 
         <!-- Template Main JS File -->
         <script src="{% static 'js/main.js' %}"></script>
