@@ -1622,6 +1622,7 @@ section {
   font-weight: 600;
 }
 
+.login .login-form .loading,
 .register .register-form .loading {
   display: none;
   background: #fff;
@@ -1629,6 +1630,7 @@ section {
   padding: 15px;
 }
 
+.login .login-form .loading:before,
 .register .register-form .loading:before {
   content: "";
   display: inline-block;
