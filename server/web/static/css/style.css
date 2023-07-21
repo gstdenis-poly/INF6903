@@ -1203,6 +1203,9 @@ section {
   right: 15px;
 }
 
+#portfolio .btn-create-request,
+#portfolio .btn-delete-request,
+#portfolio .btn-view-request,
 #portfolio .btn-download-client,
 #portfolio .btn-upload-recordings {
   font-family: "Poppins", sans-serif;
