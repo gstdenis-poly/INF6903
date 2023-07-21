@@ -94,7 +94,7 @@ def edit_account(request, account_id):
         if account_id == request.user.username:
             account = Account.objects.get(username = account_id)
             if not request.POST:
-                return render(request, 'logged_in/edit_account.html', {'account' : account}) 
+                return redirect('index') 
             else:
                 account.email = request.POST['email']
                 if request.POST['password2'] != '':
@@ -114,7 +114,7 @@ def edit_account(request, account_id):
                     account.logo = db_logo_img_name
                 account.save()
                 
-                return redirect('/view_account/' + account_id + '/')
+                return HttpResponse('OK')
         else:
             return redirect('/view_account/' + account_id + '/')
     else:

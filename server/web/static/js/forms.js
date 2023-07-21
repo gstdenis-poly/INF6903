@@ -18,12 +18,28 @@
           displayError(thisForm, 'The form action property is not set!');
           return;
         }
+
         thisForm.querySelector('.loading').classList.add('d-block');
         thisForm.querySelector('.error-message').classList.remove('d-block');
   
         let formData = new FormData( thisForm );
         form_submit(thisForm, action, formData);
       });
+
+      // Password confirmation validation
+      e.addEventListener('input', function(event) {
+        event.preventDefault();
+  
+        let thisForm = this;
+
+        inputPwd1 = thisForm.querySelector('#password1');
+        inputPwd2 = thisForm.querySelector('#password2');
+        if (inputPwd2 === null)
+          return;
+        else {
+          inputPwd2.setCustomValidity(inputPwd2.value != inputPwd1.value ? "Passwords do not match." : "");
+        }
+      })
     });
   
     function form_submit(thisForm, action, formData) {
