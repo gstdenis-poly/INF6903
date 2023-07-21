@@ -70,6 +70,9 @@
       e.addEventListener('change', function(event) {
         event.preventDefault();
     
+        console.log(event);
+        console.log(this);
+
         let files_name = [];
         for (i in this.files)
           files_name.push(this.files[i].name);
