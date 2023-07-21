@@ -16,7 +16,8 @@
     let btnFilterRequest = document.querySelectorAll('.filter-request');
     btnFilterRequest.forEach( function(e) {
         e.addEventListener('click', function(event) {
-            request_id = event.target.getAttribute('data-filter').replace('.filter-request', '');
+            console.log(event.target.getAttribute('data-filter'));
+            //request_id = event.target.getAttribute('data-filter').replace('.filter-request', '');
             let btnsManageRequest = document.querySelectorAll('.btn-view-request, ' +
                                                               '.btn-delete-request');
             for (const btn of btnsManageRequest) {
