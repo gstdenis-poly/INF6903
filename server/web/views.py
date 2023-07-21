@@ -33,7 +33,9 @@ def log_in(request):
             return HttpResponse('Wrong credentials', status = 401)
     
 def log_out(request):
-    logout(request)
+    if request.user.is_authenticated:
+        logout(request)
+
     return redirect('index')
 
 def register(request):
@@ -70,7 +72,7 @@ def register(request):
                 user = authenticate(request, username = username, password = password)
                 login(request, user)
         
-        return HttpResponse('OK', status = 200)
+        return HttpResponse('OK')
 
 def unregister(request):
     if request.user.is_authenticated:
@@ -127,23 +129,20 @@ def download_client(request):
     else:
         return redirect('index')
 
-def upload_recording(request):
-    if request.user.is_authenticated:
-        if not request.FILES:
-            return render(request, 'logged_in/upload_recording.html')
-        else:
-            for file in request.FILES.values():
-                upload_file_path = UPLOADS_DIR + request.user.username + '-' + file.name
-                with open(upload_file_path, 'wb+') as upload_file:
-                    for c in file.chunks():
-                        upload_file.write(c)
-            
-                upload_folder_path = os.path.splitext(upload_file_path)[0]
-                shutil.unpack_archive(upload_file_path, upload_folder_path, 'zip')
-                os.remove(upload_file_path) # Remove .zip file after uncompressing it
-                open(upload_folder_path + '.final', 'w').close() # .final file for worker notif
-
-            return render(request, 'logged_in/upload_recording.html')
+def upload_recordings(request):
+    if request.user.is_authenticated or not request.FILES:
+        for file in request.FILES.values():
+            upload_file_path = UPLOADS_DIR + request.user.username + '-' + file.name
+            with open(upload_file_path, 'wb+') as upload_file:
+                for c in file.chunks():
+                    upload_file.write(c)
+        
+            upload_folder_path = os.path.splitext(upload_file_path)[0]
+            shutil.unpack_archive(upload_file_path, upload_folder_path, 'zip')
+            os.remove(upload_file_path) # Remove .zip file after uncompressing it
+            open(upload_folder_path + '.final', 'w').close() # .final file for worker notif
+        
+        return HttpResponse('OK')
     else:
         return redirect('index')
 

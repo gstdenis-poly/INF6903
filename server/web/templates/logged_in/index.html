@@ -46,6 +46,7 @@
                     <ul>
                         <li><a class="nav-link scrollto" href="#">Home</a></li>
                         <li><a class="nav-link scrollto" href="/download_client/">Download client</a></li>
+                        <li><a class="nav-link scrollto" href="#upload-recordings">Upload recordings</a></li>
                         <li><a class="nav-link scrollto" href="#help">Help</a></li>
                         <li><a class="nav-link scrollto" href="#edit-account">Edit account</a></li>
                         <li><a class="btnlogin scrollto" href="/log_out/">Logout</a></li>
@@ -57,23 +58,14 @@
         </header><!-- End Header -->
 
         <!-- ======= Hero Section ======= -->
-        <section id="hero" class="hero d-flex align-items-center" style="height: 20vh;">
+        <section style="height: 18vh" id="hero" class="d-flex align-items-center">
             <div class="container position-relative" data-aos="fade-up" data-aos-delay="100">
-                <form action="/upload_recording/" method="post" role="form" class="upload-recording-form" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    <div class="row gy-2 gx-md-2">
-                        <div class="form-group col-md-3">
-                            <label for="rec_files" class="form-control input-file-label">Select recording(s) to upload</label>
-                            <input type="file" class="form-control input-file" name="rec_files" id="rec_files" accept=".zip" multiple>
-                        </div>
-                        <div class="col-md-2"><button type="submit">Submit</button></div>
-                        <div class="col-md-5">
-                            <div class="loading">Loading</div>
-                            <div class="error-message"></div>
-                            <div class="success-message">Your recording(s) have been uploaded! They should appear in your dashboard in less than 1 hour.</div>
-                        </div>
+                <div class="row">
+                    <div class="col-xl-12 col-lg-12">
+                        <h1 style="font-size: 20px; line-height: normal;">Projet de maîtrise en ingénierie III</h1>
+                        <h2 style="font-size: 15px;">Soumissionnaire intelligent de solutions logicielles pour application de processus d’affaires</h2>
                     </div>
-                </form>
+                </div>
             </div>
         </section><!-- End Hero -->
 
@@ -132,8 +124,43 @@
                 </div>
             </section><!-- End Uploads Section -->
 
+            <!-- ======= Upload recording Section ======= -->
+            <section id="upload-recordings" class="upload-recordings section-bg">
+                <div class="container" data-aos="fade-up">
+
+                    <div class="section-title">
+                        <h2>Upload recordings</h2>
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col-lg-12 mt-5 mt-lg-0">
+
+                            <form action="/upload_recordings/" method="post" role="form" class="upload-recordings-form">
+                                {% csrf_token %}
+                                <div class="row gy-2 gx-md-2">
+                                    <div class="form-group col-md-11">
+                                        <label for="rec_files" class="form-control input-file-label">Select recordings to upload</label>
+                                        <input type="file" class="form-control input-file" name="rec_files" id="rec_files" accept=".zip" multiple>
+                                    </div>
+                                    <div class="text-center col-md-1"><button type="submit">Submit</button></div>
+                                    <div class="my-3 col-12">
+                                        <div class="loading">Loading</div>
+                                        <div class="error-message"></div>
+                                        <div class="success-message">Your recording(s) have been uploaded! They should appear in your dashboard in less than 1 hour.</div>
+                                    </div>
+                                </div>
+                            </form>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            </section><!-- Upload recording Section -->
+
             <!-- ======= Help Section ======= -->
-            <section id="faq" class="faq section-bg">
+            <section id="faq" class="faq">
                 <div class="container" data-aos="fade-up">
   
                     <div class="section-title">
@@ -168,7 +195,7 @@
             </section><!-- End Help Section -->
 
             <!-- ======= Edit account Section ======= -->
-            <section id="edit-account" class="edit-account">
+            <section id="edit-account" class="edit-account section-bg">
                 <div class="container" data-aos="fade-up">
 
                     <div class="section-title">
