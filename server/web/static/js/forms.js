@@ -25,7 +25,7 @@
         form_submit(thisForm, action, formData);
       });
 
-      e.target.querySelector('.input-file').addEventListener('change', function(event) {
+      this.querySelector('.input-file').addEventListener('change', function(event) {
         files_name = []
         for (file in event.target.files)
           files_name.push(file.name)
