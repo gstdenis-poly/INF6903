@@ -235,11 +235,11 @@
                                         <label for="logo" class="form-control input-file-label">Select logo image</label>
                                         <input type="file" class="form-control input-file" name="logo" id="logo" accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
                                     </div>
-                                    <div class="form-group col-{% if account.logo == None %}12{% else %}6{% endif %}">
+                                    <div class="form-group col-{% if account.logo == None %}12{% else %}9{% endif %}">
                                         <textarea class="form-control" name="summary" rows="5" placeholder="Summary">{{ account.summary }}</textarea>
                                     </div>
                                     {% if account.logo != None %}
-                                    <div class="form-group col-6">
+                                    <div class="form-group col-3">
                                         <img style="width: 100%" src="{% static account.logo %}"/>
                                     </div>
                                     {% endif %}

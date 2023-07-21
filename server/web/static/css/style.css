@@ -1681,6 +1681,10 @@ section {
   padding: 10px 12px;
 }
 
+.edit-account .edit-account-form textarea {
+  height: 100%;
+}
+
 .edit-account .edit-account-form button[type=submit],
 .upload-recordings .upload-recordings-form button[type=submit],
 .login .login-form button[type=submit],
