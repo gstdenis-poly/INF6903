@@ -54,8 +54,12 @@ def register(request):
                 user = User.objects.get(email = email)
                 return HttpResponse('Email already used', status = 400)
             except User.DoesNotExist:
+                pwd1, pwd2 = request.POST['password1'], request.POST['password2']
+                if pwd1 != pwd2:
+                    return HttpResponse('Passwords must be identical', status = 400)
+
                 account = Account(username = username, email = email,
-                                  password = make_password(request.POST['password2']),
+                                  password = make_password(pwd2),
                                   type = request.POST['type'],
                                   company = request.POST['company'],
                                   summary = request.POST['summary'])
@@ -96,9 +100,13 @@ def edit_account(request, account_id):
             if not request.POST:
                 return redirect('index') 
             else:
+                pwd2 = request.POST['password2']
+                if pwd2 != '':
+                    if pwd2 != request.POST['password1']:
+                        return HttpResponse('Passwords must be identical', status = 400)
+                    account.password = make_password(pwd2)
+
                 account.email = request.POST['email']
-                if request.POST['password2'] != '':
-                    account.password = make_password(request.POST['password2'])
                 account.company = request.POST['company']
                 account.summary = request.POST['summary']
                 if 'logo' in request.FILES:
