@@ -140,7 +140,7 @@
                                 {% csrf_token %}
                                 <div class="row gy-2 gx-md-2">
                                     <div class="form-group col-md-11">
-                                        <label for="rec_files" class="form-control input-file-label">Select recordings to upload</label>
+                                        <label for="rec_files" class="form-control input-file-label">Select recording(s) to upload</label>
                                         <input type="file" class="form-control input-file" name="rec_files" id="rec_files" accept=".zip" required multiple>
                                     </div>
                                     <div class="text-center col-md-1"><button type="submit">Submit</button></div>
@@ -210,10 +210,10 @@
                                 {% csrf_token %}
                                 <div class="row gy-2 gx-md-2">
                                     <div class="col-md-6 form-group">
-                                        <input type="text" name="username" class="form-control" id="username" placeholder="Username" disabled>
+                                        <input type="text" name="username" class="form-control" id="username" placeholder="Username" value="{{ account.username }}" disabled>
                                     </div>
                                     <div class="col-md-6 form-group">
-                                        <input type="email" class="form-control" name="email" id="email" placeholder="Email" required>
+                                        <input type="email" class="form-control" name="email" id="email" placeholder="Email" value="{{ account.email }}" required>
                                     </div>
                                     <div class="col-md-6 form-group">
                                         <input type="password" name="password1" class="form-control" id="password1" placeholder="Password" required>
@@ -222,13 +222,13 @@
                                         <input type="password" class="form-control" name="password2" id="password2" placeholder="Password confirmation" required>
                                     </div>
                                     <div class="col-md-6 form-group">
-                                        <input type="text" name="company" class="form-control" id="company" placeholder="Company" required>
+                                        <input type="text" name="company" class="form-control" id="company" placeholder="Company" value="{{ account.company }}" required>
                                     </div>
                                     <div class="col-md-3 form-group">
                                         <select class="form-control" name="type" id="type" disabled>
-                                            <option value="" class="select-placeholder" disabled selected>Type of account</option>
-                                            <option value="provider">Provider</option>
-                                            <option value="requester">Requester</option>
+                                            <option value="" class="select-placeholder" disabled>Type of account</option>
+                                            <option value="provider" {% if account.type == 'provider' %}selected{% endif %}>Provider</option>
+                                            <option value="requester" {% if account.type == 'requester' %}selected{% endif %}>Requester</option>
                                         </select>
                                     </div>
                                     <div class="form-group col-md-3">
@@ -236,7 +236,7 @@
                                         <input type="file" class="form-control input-file" name="logo" id="logo" accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
                                     </div>
                                     <div class="form-group col-12">
-                                        <textarea class="form-control" name="summary" rows="5" placeholder="Summary"></textarea>
+                                        <textarea class="form-control" name="summary" rows="5" placeholder="Summary">{{ account.summary }}</textarea>
                                         {% if account.logo != None %}
                                         <img src="{% static account.logo %}"/>
                                         {% endif %}

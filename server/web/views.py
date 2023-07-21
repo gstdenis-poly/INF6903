@@ -14,6 +14,7 @@ def index(request):
     if request.user.is_authenticated:
         account = Account.objects.get(username = request.user.username)
         return render(request, 'logged_in/index.html', {
+            'account': account,
             'recordings': account.recordings.all()
             })
     else:
