@@ -73,8 +73,8 @@
         let thisForm = this;
   
         let files_name = [];
-        for (file in e.files)
-          files_name.push(file.name);
+        for (i in e.files)
+          files_name.push(e.files[i].name);
 
         thisForm.querySelector('.input-file-label').val(files_name.join(', '));
       });
