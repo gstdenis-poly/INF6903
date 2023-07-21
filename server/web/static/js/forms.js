@@ -73,7 +73,7 @@
         let targetInput = event.target;
 
         let files_name = [];
-        for (i in targetInput.files)
+        for (let i = 0; i < targetInput.files.length; i++)
           files_name.push(targetInput.files[i].name);
 
         this.previousElementSibling.val(files_name.join(', '));
