@@ -42,9 +42,8 @@
       .then(data => {
         thisForm.querySelector('.loading').classList.remove('d-block');
         if (data.trim() == 'OK') {
-          successMessage = thisForm.querySelector('.success-message');
-          console.log(successMessage);
-          if (successMessage == undefined)
+          let successMessage = thisForm.querySelector('.success-message');
+          if (successMessage === null)
             location.href = '';
           else {
             successMessage.classList.add('d-block');
@@ -73,7 +72,7 @@
   
         let thisForm = this;
   
-        files_name = [];
+        let files_name = [];
         for (file in e.files)
           files_name.push(file.name);
 
