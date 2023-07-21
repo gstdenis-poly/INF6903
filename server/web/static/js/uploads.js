@@ -8,7 +8,8 @@
                                                               '.btn-delete-request');
             for (const btn of btnsManageRequest) {
                 btn.classList.add('btn-request-hidden');
-                btn.href = '/' + btn.href.split('/')[1] + '/'
+                let newHref = '/' + btn.getAttribute('href').split('/')[1] + '/'
+                btn.setAttribute('href', newHref);
             }
         });
     });
@@ -21,7 +22,8 @@
                                                               '.btn-delete-request');
             for (const btn of btnsManageRequest) {
                 btn.classList.remove('btn-request-hidden');
-                btn.href = '/' + btn.href.split('/')[1] + '/' + request_id + '/'
+                let newHref = '/' + btn.getAttribute('href').split('/')[1] + '/' + request_id + '/'
+                btn.setAttribute('href', newHref);
             }
         });
     });
