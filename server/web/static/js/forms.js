@@ -76,7 +76,7 @@
         for (let i = 0; i < targetInput.files.length; i++)
           files_name.push(targetInput.files[i].name);
 
-        this.previousElementSibling.val(files_name.join(', '));
+        this.previousElementSibling.innerHTML = files_name.join(', ');
       });
     });
 
