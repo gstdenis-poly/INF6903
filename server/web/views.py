@@ -101,7 +101,8 @@ def edit_account(request, account_id):
                 return redirect('index') 
             else:
                 pwd1, pwd2 = request.POST['password1'], request.POST['password2']
-                if not (pwd1 == '' and pwd2 == ''):
+                password_changed = not (pwd1 == '' and pwd2 == '')
+                if password_changed:
                     if pwd1 != pwd2:
                         return HttpResponse('Passwords must be identical', status = 400)
                     account.password = make_password(pwd2)
@@ -121,6 +122,10 @@ def edit_account(request, account_id):
                             db_logo_img.write(c)
                     account.logo = db_logo_img_name
                 account.save()
+
+                if password_changed:
+                    user = authenticate(request, username = account_id, password = pwd2)
+                    login(request, user)
                 
                 return HttpResponse('OK')
         else:
