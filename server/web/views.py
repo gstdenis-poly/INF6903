@@ -100,9 +100,9 @@ def edit_account(request, account_id):
             if not request.POST:
                 return redirect('index') 
             else:
-                pwd2 = request.POST['password2']
-                if pwd2 != '':
-                    if pwd2 != request.POST['password1']:
+                pwd1, pwd2 = request.POST['password1'], request.POST['password2']
+                if not (pwd1 == '' and pwd2 == ''):
+                    if pwd1 != pwd2:
                         return HttpResponse('Passwords must be identical', status = 400)
                     account.password = make_password(pwd2)
 
