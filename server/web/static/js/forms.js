@@ -42,7 +42,8 @@
       .then(data => {
         thisForm.querySelector('.loading').classList.remove('d-block');
         if (data.trim() == 'OK') {
-          successMessage = thisForm.querySelector('.success-message')
+          successMessage = thisForm.querySelector('.success-message');
+          console.log(successMessage);
           if (successMessage == undefined)
             location.href = '';
           else {
