@@ -1601,7 +1601,7 @@ section {
 }
 
 .edit-account .edit-account-form .error-message,
-.hero .upload-recordings-form .error-message,
+.upload-recordings .upload-recordings-form .error-message,
 .login .login-form .error-message,
 .register .register-form .error-message {
   display: none;
@@ -1613,14 +1613,14 @@ section {
 }
 
 .edit-account .edit-account-form .error-message br+br,
-.hero .upload-recordings-form .error-message br+br,
+.upload-recordings .upload-recordings-form .error-message br+br,
 .login .login-form .error-message br+br,
 .register .register-form .error-message br+br {
   margin-top: 25px;
 }
 
 .edit-account .edit-account-form .success-message,
-.hero .upload-recordings-form .success-message,
+.upload-recordings .upload-recordings-form .success-message,
 .register .register-form .success-message {
   display: none;
   color: #fff;
@@ -1631,7 +1631,7 @@ section {
 }
 
 .edit-account .edit-account-form .loading,
-.hero .upload-recordings-form .loading,
+.upload-recordings .upload-recordings-form .loading,
 .login .login-form .loading,
 .register .register-form .loading {
   display: none;
@@ -1641,7 +1641,7 @@ section {
 }
 
 .edit-account .edit-account-form .loading:before,
-.hero .upload-recordings-form .loading:before,
+.upload-recordings .upload-recordings-form .loading:before,
 .login .login-form .loading:before,
 .register .register-form .loading:before {
   content: "";
@@ -1682,7 +1682,7 @@ section {
 }
 
 .edit-account .edit-account-form button[type=submit],
-.hero .upload-recordings-form button[type=submit],
+.upload-recordings .upload-recordings-form button[type=submit],
 .login .login-form button[type=submit],
 .register .register-form button[type=submit] {
   font-family: "Poppins", sans-serif;
@@ -1697,21 +1697,21 @@ section {
 }
 
 .edit-account .edit-account-form button[type=submit]:hover,
-.hero .upload-recordings-form button[type=submit]:hover,
+.upload-recordings .upload-recordings-form button[type=submit]:hover,
 .login .login-form button[type=submit]:hover,
 .register .register-form button[type=submit]:hover {
   background: #3194db;
 }
 
 .edit-account .edit-account-form .input-file,
-.hero .upload-recordings-form .input-file,
+.upload-recordings .upload-recordings-form .input-file,
 .register .register-form .input-file {
   display: none;
 }
 
 .edit-account .edit-account-form .input-file-label,
-.hero .upload-recordings-form select,
-.hero .upload-recordings-form .input-file-label,
+.upload-recordings .upload-recordings-form select,
+.upload-recordings .upload-recordings-form .input-file-label,
 .register .register-form select,
 .register .register-form .input-file-label {
   cursor: grab;
