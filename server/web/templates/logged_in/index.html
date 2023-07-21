@@ -116,7 +116,7 @@
                             {% endfor %}
 
                             {% for recording in recordings %}
-                                <div class="col-lg-4 col-md-6 portfolio-item{% for request in recording.requests.all %} filter-request{{ forloop.counter }}{% endfor %}">
+                                <div class="col-lg-4 col-md-6 portfolio-item{% for request in recording.requests.all %} filter-request{{ request.id }}{% endfor %}">
                                     <div class="portfolio-wrap">
                                         <video width="100%" src="{% static recording.id %}.mp4" type="video/mp4"></video>
                                         <div class="portfolio-info">
