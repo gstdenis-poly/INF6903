@@ -43,7 +43,7 @@
         thisForm.querySelector('.loading').classList.remove('d-block');
         if (data.trim() == 'OK') {
           successMessage = thisForm.querySelector('.success-message')
-          if (successMessage == null)
+          if (successMessage == undefined)
             location.href = '';
           else {
             successMessage.classList.add('d-block');
