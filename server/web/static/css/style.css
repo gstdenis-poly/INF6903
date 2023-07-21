@@ -1223,6 +1223,12 @@ section {
   background: #3194db;
 }
 
+#portfolio .request-cell {
+  background-color: #2487ce;
+  height: 100%;
+  width: 100%;
+}
+
 /*--------------------------------------------------------------
 # Portfolio Details
 --------------------------------------------------------------*/
