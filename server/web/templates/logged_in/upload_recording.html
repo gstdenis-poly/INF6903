@@ -1,7 +1,0 @@
-<h1>Upload recording</h1>
-<form action="/upload_recording/" method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    <label for="rec_file">Recording .zip file:</label>
-    <input type="file" id="rec_files" name="rec_files" accept=".zip" multiple><br><br>
-    <input type="submit" value="Submit">
-</form>
