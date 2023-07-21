@@ -70,12 +70,11 @@
       e.addEventListener('change', function(event) {
         event.preventDefault();
     
-        console.log(event);
-        console.log(this);
+        let targetInput = event.target;
 
         let files_name = [];
-        for (i in this.files)
-          files_name.push(this.files[i].name);
+        for (i in targetInput.files)
+          files_name.push(targetInput.files[i].name);
 
         this.previousElementSibling.val(files_name.join(', '));
       });
