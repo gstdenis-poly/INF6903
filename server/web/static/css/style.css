@@ -1458,29 +1458,29 @@ section {
 }
 
 /*--------------------------------------------------------------
-# Frequently Asked Questions
+# Help
 --------------------------------------------------------------*/
-.faq .faq-list {
+.help .help-list {
   padding: 0 100px;
 }
 
-.faq .faq-list ul {
+.help .help-list ul {
   padding: 0;
   list-style: none;
 }
 
-.faq .faq-list li+li {
+.help .help-list li+li {
   margin-top: 15px;
 }
 
-.faq .faq-list li {
+.help .help-list li {
   padding: 20px;
   background: #fff;
   border-radius: 4px;
   position: relative;
 }
 
-.faq .faq-list a {
+.help .help-list a {
   display: block;
   position: relative;
   font-family: "Poppins", sans-serif;
@@ -1492,7 +1492,7 @@ section {
   cursor: pointer;
 }
 
-.faq .faq-list .icon-help {
+.help .help-list .icon-help {
   font-size: 24px;
   position: absolute;
   right: 0;
@@ -1500,41 +1500,41 @@ section {
   color: #87c1ea;
 }
 
-.faq .faq-list .icon-show,
-.faq .faq-list .icon-close {
+.help .help-list .icon-show,
+.help .help-list .icon-close {
   font-size: 24px;
   position: absolute;
   right: 0;
   top: 0;
 }
 
-.faq .faq-list p {
+.help .help-list p {
   margin-bottom: 0;
   padding: 10px 0 0 0;
 }
 
-.faq .faq-list .icon-show {
+.help .help-list .icon-show {
   display: none;
 }
 
-.faq .faq-list a.collapsed {
+.help .help-list a.collapsed {
   color: #343a40;
 }
 
-.faq .faq-list a.collapsed:hover {
+.help .help-list a.collapsed:hover {
   color: #2487ce;
 }
 
-.faq .faq-list a.collapsed .icon-show {
+.help .help-list a.collapsed .icon-show {
   display: inline-block;
 }
 
-.faq .faq-list a.collapsed .icon-close {
+.help .help-list a.collapsed .icon-close {
   display: none;
 }
 
 @media (max-width: 1200px) {
-  .faq .faq-list {
+  .help .help-list {
     padding: 0;
   }
 }
