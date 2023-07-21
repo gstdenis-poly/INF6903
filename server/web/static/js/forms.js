@@ -24,14 +24,6 @@
         let formData = new FormData( thisForm );
         form_submit(thisForm, action, formData);
       });
-
-      this.querySelector('.input-file').addEventListener('change', function(event) {
-        files_name = []
-        for (file in event.target.files)
-          files_name.push(file.name)
-        
-        event.target.previousSibling.innerHTML = files_name.join(', ')
-      });
     });
   
     function form_submit(thisForm, action, formData) {
@@ -73,12 +65,19 @@
     }
   
     // Display selected files in input file
-    $('.input-file').change(function() {
-      files_name = []
-      for (file in this.files)
-        files_name.push(file.name)
-      
-      $(this).prev('.input-file-label').val(files_name.join(', '))
+    let inputFiles = document.querySelectorAll('.input-file');
+    inputFiles.forEach( function(e) {
+      e.addEventListener('change', function(event) {
+        event.preventDefault();
+  
+        let thisForm = this;
+  
+        files_name = [];
+        for (file in e.files)
+          files_name.push(file.name);
+
+        thisForm.querySelector('.input-file-label').val(files_name.join(', '));
+      });
     });
 
   })();
