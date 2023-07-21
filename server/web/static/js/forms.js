@@ -48,7 +48,7 @@
             location.href = '';
           else {
             successMessage.classList.add('d-block');
-            location.reload();
+            thisForm.reset();
           }
         } else {
           throw new Error(data ? data : 'Form submission failed and no error message returned from: ' + action); 
