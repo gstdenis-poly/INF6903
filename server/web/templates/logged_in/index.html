@@ -102,19 +102,6 @@
                         {% endif %}
 
                         <div class="row portfolio-container" data-aos="fade-up" data-aos-delay="300">
-    
-                            {% for request in requests %}
-                                <div class="col-lg-4 col-md-6 portfolio-item filter-request{{ request.id }}">
-                                    <div class="portfolio-wrap">
-                                        <img src="assets/img/portfolio/portfolio-1.jpg" class="img-fluid" alt="">
-                                        <div class="portfolio-info">
-                                            <h4>{{ request.id }}</h4>
-                                            <p>Request details</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            {% endfor %}
-
                             {% for recording in recordings %}
                                 <div class="col-lg-4 col-md-6 portfolio-item{% for request in recording.requests.all %} filter-request{{ request.id }}{% endfor %}">
                                     <div class="portfolio-wrap">
@@ -124,13 +111,18 @@
                                             <p>Recording</p>
                                             <div class="portfolio-links">
                                                 <a href="#" title="Select"><i class="bx bx-pointer"></i></a>
-                                                <a href="{% static recording.id %}.mp4" data-gallery="portfolioGallery" class="portfolio-lightbox" title="Play"><i class="bx bx-play"></i></a>
+                                                <a href="{% static recording.id %}.mp4" data-gallery="portfolioGallery" class="portfolio-lightbox"><i class="bx bx-play"></i></a>
                                                 <a href="/view_recording/{{ recording.id }}" title="Details"><i class="bx bx-plus"></i></a>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             {% endfor %}
+                        </div>
+                        <div class="text-center">
+                            <a href="/create_request/" class="btn-create-request">Create request from selection</a>
+                            <a href="/delete_request/" class="btn-delete-request">Delete request</a>
+                            <a href="/view_request/" class="btn-delete-request">View request details</a>
                         </div>
                     {% endif %}
                 </div>
