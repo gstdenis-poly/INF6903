@@ -92,9 +92,9 @@
                             <div class="row" data-aos="fade-up" data-aos-delay="150">
                                 <div class="col-lg-12 d-flex justify-content-center">
                                     <ul id="portfolio-flters">
-                                        <li data-filter="*" class="filter-active">All recordings</li>
+                                        <li data-filter="*" class="filter-recordings filter-active">All recordings</li>
                                         {% for request in requests %}
-                                            <li data-filter=".filter-request{{ request.id }}">Request #{{ forloop.counter }}</li>
+                                            <li class="filter-request" data-filter=".filter-request{{ request.id }}">Request #{{ forloop.counter }}</li>
                                         {% endfor %}
                                     </ul>
                                 </div>
@@ -113,7 +113,6 @@
                                                 <a href="#" title="Select"><i class="bx bx-pointer"></i></a>
                                                 <a href="{% static recording.id %}.mp4" data-gallery="portfolioGallery" class="portfolio-lightbox"><i class="bx bx-play"></i></a>
                                                 <a href="/view_recording/{{ recording.id }}" title="Details"><i class="bx bx-plus"></i></a>
-                                                <a href="#" title="Candidates"><i class="bx bx-face"></i></a>
                                             </div>
                                         </div>
                                     </div>
@@ -121,9 +120,9 @@
                             {% endfor %}
                         </div>
                         <div class="text-center">
-                            <a href="/create_request/" class="btn-create-request">Create request from selection</a>
-                            <a href="/delete_request/" class="btn-delete-request">Delete request</a>
-                            <a href="/view_request/" class="btn-view-request">View request details</a>
+                            <a href="/create_request/" class="btn-create-request btn-request-hidden">Create request from selection</a>
+                            <a href="/view_request/" class="btn-view-request btn-request-hidden">View request details</a>
+                            <a href="/delete_request/" class="btn-delete-request btn-request-hidden">Delete request</a>
                         </div>
                     {% endif %}
                 </div>

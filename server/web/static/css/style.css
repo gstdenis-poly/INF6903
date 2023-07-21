@@ -1221,9 +1221,18 @@ section {
   background: #2487ce;
 }
 
+#portfolio .btn-create-request,
+#portfolio .btn-delete-request,
+#portfolio .btn-view-request,
 #portfolio .btn-download-client:hover,
 #portfolio .btn-upload-recordings:hover {
   background: #3194db;
+}
+
+#portfolio .btn-create-request,
+#portfolio .btn-delete-request,
+#portfolio .btn-view-request {
+  display: none;
 }
 
 /*--------------------------------------------------------------
