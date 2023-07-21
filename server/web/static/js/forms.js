@@ -69,14 +69,12 @@
     inputFiles.forEach( function(e) {
       e.addEventListener('change', function(event) {
         event.preventDefault();
-  
-        let thisForm = this;
-  
+    
         let files_name = [];
-        for (i in e.files)
-          files_name.push(e.files[i].name);
+        for (i in this.files)
+          files_name.push(this.files[i].name);
 
-        thisForm.querySelector('.input-file-label').val(files_name.join(', '));
+        this.previousElementSibling.val(files_name.join(', '));
       });
     });
 
