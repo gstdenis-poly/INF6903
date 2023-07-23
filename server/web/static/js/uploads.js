@@ -79,7 +79,7 @@
     function send_request_action(action, data) {
         fetch(action, {
             method: 'POST',
-            body: Objects.assign({}, data, {'csrfmiddlewaretoken': getCsrfToken()}),
+            body: Object.assign({}, data, {'csrfmiddlewaretoken': getCsrfToken()}),
             headers: { 
                 'X-Requested-With': 'XMLHttpRequest', 
                 'X-CSRFToken': getCsrfToken()
