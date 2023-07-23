@@ -74,7 +74,8 @@ class Recording(models.Model):
         return criterias
     
     # Compare ergonomic criterias of two given solutions
-    def cmp_solutions_score(self, s1, s2):
+    @staticmethod
+    def cmp_solutions_score(s1, s2):
         s1_criterias = s1.get_ergonomic_criterias()
         s2_criterias = s2.get_ergonomic_criterias()
 
@@ -129,8 +130,9 @@ class Request(models.Model):
     # Compare ergonomic score of two given request's solutions. The ergonomic score of a
     # request's solution is considered better if the total of the reversed ranks of its
     # recordings' scores is higher than the total of the reversed ranks of the compared
-    # request's solution's recordings' scores.  
-    def cmp_solutions_score(self, s1, s2):
+    # request's solution's recordings' scores. 
+    @staticmethod 
+    def cmp_solutions_score(s1, s2):
         solutions = s1[1] + s2[1]
         cmp_key = functools.cmp_to_key(Recording.cmp_solutions_score, reversed = True)
         solutions.sort(key = cmp_key)
