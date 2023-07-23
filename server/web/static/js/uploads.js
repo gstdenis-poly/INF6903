@@ -77,6 +77,9 @@
     });
 
     function send_request_action(action, data) {
+        manageRequestLoading.classList.add('d-block');
+        manageRequestError.classList.remove('d-block');
+
         data['csrfmiddlewaretoken'] = getCsrfToken()
         fetch(action, {
             method: 'POST',
