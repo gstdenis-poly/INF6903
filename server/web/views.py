@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 import functools
+import json
 import os
 import shutil
 from server.settings import CLIENT_DIR, LOGOS_DIR, UPLOADS_DIR
@@ -193,11 +194,13 @@ def edit_recording(request, recording_id):
 def create_request(request):
     if request.user.is_authenticated:
         account = Account.objects.get(username = request.user.username)
-        print(request.POST)
-        if account.type == 'provider' or not request.POST:
+        if account.type == 'provider':
             return redirect('index')
         else:
-            print(request.POST)
+            request_body = json.loads(request.body)
+            if not request_body:
+                return redirect('index')
+
             req = Request(account = account)
             req.save()
             for recording_id in request.POST['recordings']:
