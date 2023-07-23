@@ -66,9 +66,9 @@
                 data['recordings'].push(cell.getAttribute('recording'));
         }
 
-        csrfToken = event.target.parentNode.querySelector('input');
+        let csrfToken = event.target.parentNode.querySelector('input');
         data[csrfToken.getAttribute('name')] = csrfToken.getAttribute('value');
-        
+
         send_request_action('/create_request/', data);
     });
 
@@ -76,7 +76,7 @@
         event.preventDefault();
         let request_id = event.getAttribute('request');
 
-        csrfToken = event.target.parentNode.querySelector('input');
+        let csrfToken = event.target.parentNode.querySelector('input');
         data[csrfToken.getAttribute('name')] = csrfToken.getAttribute('value');
 
         send_request_action('/delete_request/' + request_id + '/', {});
