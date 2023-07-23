@@ -28,7 +28,7 @@
         });
     });
     
-    let recordingsCell = document.querySelectorAll('.portfolio-wrap');
+    let recordingsCell = document.querySelectorAll('.portfolio-info');
     recordingsCell.forEach( function(e) {
         let btnRecordingSelect = e.querySelector('.portfolio-links .bx-pointer');
         btnRecordingSelect.addEventListener('click', function(event) {
