@@ -88,6 +88,10 @@
                                     <li><strong>Email</strong>: {{ account.email }}</li>
                                     <li><strong>Type</strong>: {{ account.type }}</li>
                                     <li><strong>Company</strong>: {{ account.company }}</li>
+                                    <li><strong>Recordings count</strong>: {{ account.recordings|length }}</li>
+                                    {% if account.type == 'requester' %}
+                                    <li><strong>Requests count</strong>: {{ account.requests|length }}</li>
+                                    {% endif %}
                                 </ul>
                             </div>
                             <div class="account-description">

@@ -20,7 +20,15 @@ def index(request):
             'requests': account.requests.all()
             })
     else:
-        return render(request, 'logged_out/index.html')
+        accounts = Account.objects.all()
+        clients = accounts.filter(type = 'requester')
+        providers = accounts.filter(type = 'provider')
+        return render(request, 'logged_out/index.html', {
+            'clients': clients,
+            'providers': providers,
+            'clients_recordings': [r for r in (c.recordings.all() for c in clients)],
+            'providers_recordings': [r for r in (c.recordings.all() for c in providers)],
+        })
 
 def log_in(request):
     if not request.POST:

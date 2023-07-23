@@ -80,28 +80,28 @@
 
                         <div class="col-lg-3 col-md-5 col-6 d-md-flex align-items-md-stretch">
                             <div class="count-box">
-                                <span data-purecounter-start="0" data-purecounter-end="65" data-purecounter-duration="2" class="purecounter"></span>
+                                <span data-purecounter-start="0" data-purecounter-end="{{ clients||length }}" data-purecounter-duration="2" class="purecounter"></span>
                                 <p>Clients</p>
                             </div>
                         </div>
 
                         <div class="col-lg-3 col-md-5 col-6 d-md-flex align-items-md-stretch">
                             <div class="count-box">
-                                <span data-purecounter-start="0" data-purecounter-end="85" data-purecounter-duration="2" class="purecounter"></span>
+                                <span data-purecounter-start="0" data-purecounter-end="{{ providers||length }}" data-purecounter-duration="2" class="purecounter"></span>
                                 <p>Providers</p>
                             </div>
                         </div>
 
                         <div class="col-lg-3 col-md-5 col-6 d-md-flex align-items-md-stretch">
                             <div class="count-box">
-                                <span data-purecounter-start="0" data-purecounter-end="30" data-purecounter-duration="2" class="purecounter"></span>
+                                <span data-purecounter-start="0" data-purecounter-end="{{ clients_recordings||length }}" data-purecounter-duration="2" class="purecounter"></span>
                                 <p>Client requests</p>
                             </div>
                         </div>
 
                         <div class="col-lg-3 col-md-5 col-6 d-md-flex align-items-md-stretch">
                             <div class="count-box">
-                                <span data-purecounter-start="0" data-purecounter-end="20" data-purecounter-duration="2" class="purecounter"></span>
+                                <span data-purecounter-start="0" data-purecounter-end="{{ providers_recordings||length }}" data-purecounter-duration="2" class="purecounter"></span>
                                 <p>Provider proposals</p>
                             </div>
                         </div>
@@ -219,7 +219,7 @@
                                     </div>
                                     <div class="form-group col-md-3">
                                         <label for="logo" class="form-control input-file-label">Select logo image</label>
-                                        <input type="file" class="form-control input-file" name="logo" id="logo" accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
+                                        <input type="file" class="form-control input-file" name="logo" id="logo" accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*" required>
                                     </div>
                                     <div class="form-group col-12">
                                         <textarea class="form-control" name="summary" rows="5" placeholder="Summary"></textarea>
