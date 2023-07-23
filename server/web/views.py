@@ -198,9 +198,8 @@ def create_request(request):
         else:
             req = Request(account = account)
             req.save()
-            for key in request.POST:
-                if 'video' in key:
-                    req.recordings.add(Recording.objects.get(id = request.POST[key]))
+            for recording_id in request.POST['recordings']:
+                req.recordings.add(Recording.objects.get(id = recording_id))
             req.save() 
             
             return HttpResponse('OK')

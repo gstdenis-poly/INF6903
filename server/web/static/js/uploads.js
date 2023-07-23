@@ -95,7 +95,7 @@
         .then(data => {
             manageRequestLoading.classList.remove('d-block');
             if (data.trim() == 'OK') {
-                location.reload();
+                location.href = '';
             } else {
                 throw new Error(data ? data : 'Form submission failed and no error message returned from: ' + action); 
             }
