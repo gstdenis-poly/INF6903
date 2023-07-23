@@ -118,7 +118,7 @@
                                             <ul id="portfolio-flters">
                                                 {% for solution in solutions %}
                                                     <li class="filter-solution" data-filter=".filter-solution{{ solution.id }}">
-                                                        {% if solution.account.type == 'provider' %}Recording{% else %}Solution{% endif %} #{{ forloop.counter }}
+                                                        {% if recording.account.type == 'provider' %}Recording{% else %}Solution{% endif %} #{{ forloop.counter }}
                                                     </li>
                                                 {% endfor %}
                                             </ul>
@@ -126,12 +126,12 @@
                                     </div>
                                     <div class="row portfolio-container" data-aos="fade-up" data-aos-delay="300">
                                         {% for solution in solutions %}
-                                            <div class="col-lg-4 col-md-12 portfolio-item filter-solution{{ solution.id }}" recording="{{ solution.id }}">
+                                            <div class="col-lg-6 col-md-12 portfolio-item filter-solution{{ solution.id }}" recording="{{ solution.id }}">
                                                 <div class="portfolio-wrap">
                                                     <video width="100%" src="{% static solution.id %}.mp4" type="video/mp4"></video>
                                                     <div class="portfolio-info">
                                                         <h4>{{ solution.title|default_if_none:solution.id }}</h4>
-                                                        <p>Recording</p>
+                                                        <p>{% if recording.account.type == 'provider' %}Recording{% else %}Solution{% endif %}</p>
                                                         <div class="portfolio-links">
                                                             <a href="{% static solution.id %}.mp4" data-gallery="portfolioGallery" class="portfolio-lightbox"><i class="bx bx-play"></i></a>
                                                             <a href="/view_recording/{{ solution.id }}" title="Details"><i class="bx bx-plus"></i></a>
