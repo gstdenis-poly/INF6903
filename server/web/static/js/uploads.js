@@ -61,7 +61,7 @@
         let data = { 'recordings': [] }
         for (const cell of recordingsCell) {
             if (cell.getAttribute('selected') === 'true')
-                data['recordings'].add(cell.getAttribute('recording'));
+                data['recordings'].push(cell.getAttribute('recording'));
         }
 
         send_request_action('/create_request/', data, location.reload);

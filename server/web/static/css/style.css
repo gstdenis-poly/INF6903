@@ -1634,7 +1634,7 @@ section {
   padding-bottom: 8px;
 }
 
-#portfolio .error-message,
+.portfolio .error-message,
 .edit-account .edit-account-form .error-message,
 .upload-recordings .upload-recordings-form .error-message,
 .login .login-form .error-message,
@@ -1647,7 +1647,7 @@ section {
   font-weight: 600;
 }
 
-#portfolio .error-message br+br,
+.portfolio .error-message br+br,
 .edit-account .edit-account-form .error-message br+br,
 .upload-recordings .upload-recordings-form .error-message br+br,
 .login .login-form .error-message br+br,
@@ -1666,7 +1666,7 @@ section {
   font-weight: 600;
 }
 
-#portfolio .loading,
+.portfolio .loading,
 .edit-account .edit-account-form .loading,
 .upload-recordings .upload-recordings-form .loading,
 .login .login-form .loading,
@@ -1677,7 +1677,7 @@ section {
   padding: 15px;
 }
 
-#portfolio .loading,
+.portfolio .loading,
 .edit-account .edit-account-form .loading:before,
 .upload-recordings .upload-recordings-form .loading:before,
 .login .login-form .loading:before,
