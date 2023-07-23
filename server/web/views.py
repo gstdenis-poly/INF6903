@@ -253,7 +253,13 @@ def edit_request(request, request_id):
 
 def delete_request(request, request_id):
     if request.user.is_authenticated:
-        req = Request.objects.get(id = request_id)
-        req.delete()
-    
-    return redirect('index')
+        account = Account.objects.get(username = request.user.username)
+        if account.type == 'provider':
+            return redirect('index')
+        else:
+            req = Request.objects.get(id = request_id)
+            req.delete()
+            
+            return HttpResponse('OK')
+    else:
+        return redirect('index')
