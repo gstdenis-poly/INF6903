@@ -193,6 +193,7 @@ def edit_recording(request, recording_id):
 def create_request(request):
     if request.user.is_authenticated:
         account = Account.objects.get(username = request.user.username)
+        print(request.POST)
         if account.type == 'provider' or not request.POST:
             return redirect('index')
         else:
