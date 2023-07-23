@@ -28,12 +28,12 @@
         });
     });
     
-    let recordingInfos = document.querySelectorAll('.portfolio-info');
-    recordingInfos.forEach( function(e) {
+    let recordingsCell = document.querySelectorAll('.portfolio-wrap');
+    recordingsCell.forEach( function(e) {
         let btnRecordingSelect = e.querySelector('.portfolio-links .bx-pointer');
         btnRecordingSelect.addEventListener('click', function(event) {
             let isSelected = (e.style.opacity === '1');
-            e.style.opacity = isSelected ? '0' : '1';
+            e.style.opacity = isSelected ? '' : '1';
             e.style.background = isSelected ? '' : 'rgba(36, 135, 206, 0.6)';
         });
     });
