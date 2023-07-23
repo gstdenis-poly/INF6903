@@ -5,7 +5,7 @@
     let btnFilterRequest = document.querySelectorAll('.filter-request');
     let btnsManageRequest = document.querySelectorAll('.btn-view-request, ' +
                                                       '.btn-delete-request');
-    let btnCreateRequest = document.querySelectorAll('.btn-create-request');
+    let btnCreateRequest = document.querySelector('.btn-create-request');
     let recordingsCell = document.querySelectorAll('.portfolio-info');
 
     btnFilterRecordings.forEach( function(e) {
