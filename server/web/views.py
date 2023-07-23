@@ -81,13 +81,6 @@ def register(request):
         
         return HttpResponse('OK')
 
-def unregister(request):
-    if request.user.is_authenticated:
-        account = Account.objects.get(username = request.user.username)
-        account.delete()
-
-    return render(request, 'logged_out/log_in.html')
-
 def view_account(request, account_id):
     if request.user.is_authenticated:
         account = Account.objects.get(username = account_id)
@@ -171,7 +164,9 @@ def view_recording(request, recording_id):
         solutions.sort(key = cmp_key) # Sort solutions by ergonomic score
 
         return render(request, 'logged_in/view_recording.html', {
-            'recording': recording, 'solutions': solutions,
+            'recording': recording, 
+            'solutions': solutions,
+            'user' : request.user
             })
     else:
         return redirect('index')
