@@ -71,7 +71,7 @@
 
     btnDeleteRequest.addEventListener( 'click', function(event) {
         event.preventDefault();
-        let request_id = event.getAttribute('request');
+        let request_id = event.target.getAttribute('request');
 
         send_request_action('/delete_request/' + request_id + '/', {});
     });
