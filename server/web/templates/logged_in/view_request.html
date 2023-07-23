@@ -120,12 +120,12 @@
                                     <div class="row portfolio-container" data-aos="fade-up" data-aos-delay="300">
                                         {% for candidate, solution in solutions %}
                                             {% for rec in solution %}
-                                                <div class="col-lg-6 col-md-12 portfolio-item filter-solution{{ forloop.counter }}" recording="{{ rec.id }}">
+                                                <div class="col-lg-6 col-md-12 portfolio-item filter-solution{{ forloop.parentloop.counter }}" recording="{{ rec.id }}">
                                                     <div class="portfolio-wrap">
                                                         <video width="100%" src="{% static rec.id %}.mp4" type="video/mp4"></video>
                                                         <div class="portfolio-info">
                                                             <h4>{{ rec.title|default_if_none:rec.id }}</h4>
-                                                            <p>Solution #{{ forloop.counter }}</p>
+                                                            <p>Solution #{{ forloop.parentloop.counter }}</p>
                                                             <div class="portfolio-links">
                                                                 <a href="{% static rec.id %}.mp4" data-gallery="portfolioGallery" class="portfolio-lightbox"><i class="bx bx-play"></i></a>
                                                                 <a href="/view_account/{{ candidate }}" title="Provider Details"><i class="bx bx-face"></i></a>
