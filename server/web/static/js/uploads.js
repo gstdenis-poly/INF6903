@@ -55,7 +55,7 @@
         });
     });
 
-    btnCreateRequest.addEventListener( function(event) {
+    btnCreateRequest.addEventListener( 'click', function(event) {
         event.preventDefault();
 
         data = { 'recordings': [] }
@@ -67,7 +67,7 @@
         send_request_action('/create_request/', data, location.reload);
     });
 
-    btnDeleteRequest.addEventListener( function(event) {
+    btnDeleteRequest.addEventListener( 'click', function(event) {
         event.preventDefault();
         request_id = event.getAttribute('request');
         send_request_action('/delete_request/' + request_id + '/', {}, location.reload);
