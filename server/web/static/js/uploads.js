@@ -7,6 +7,7 @@
                                                       '.btn-delete-request');
     let btnCreateRequest = document.querySelector('.btn-create-request');
     let btnDeleteRequest = document.querySelector('.btn-delete-request');
+    let btnViewRequest = document.querySelector('.btn-view-request');
     let recordingsCell = document.querySelectorAll('.portfolio-item');
     let manageRequestLoading = document.querySelector('.portfolio .loading');
     let manageRequestError = document.querySelector('.portfolio .error-message');
@@ -67,6 +68,13 @@
         }
 
         send_request_action('/create_request/', data);
+    });
+
+    btnViewRequest.addEventListener( 'click', function(event) {
+        event.preventDefault();
+        let request_id = event.target.getAttribute('request');
+        
+        location.href = '/view_request/' + request_id + '/'
     });
 
     btnDeleteRequest.addEventListener( 'click', function(event) {
