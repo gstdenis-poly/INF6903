@@ -8,6 +8,8 @@
     let btnCreateRequest = document.querySelector('.btn-create-request');
     let btnDeleteRequest = document.querySelector('.btn-delete-request');
     let recordingsCell = document.querySelectorAll('.portfolio-item');
+    let manageRequestLoading = document.querySelectorAll('.portfolio .loading');
+    let manageRequestError = document.querySelectorAll('.portfolio .error-message');
 
     btnFilterRecordings.forEach( function(e) {
         e.addEventListener('click', function(event) {
@@ -64,16 +66,16 @@
                 data['recordings'].push(cell.getAttribute('recording'));
         }
 
-        send_request_action('/create_request/', data, location.reload);
+        send_request_action('/create_request/', event, data);
     });
 
     btnDeleteRequest.addEventListener( 'click', function(event) {
         event.preventDefault();
         let request_id = event.getAttribute('request');
-        send_request_action('/delete_request/' + request_id + '/', {}, location.reload);
+        send_request_action('/delete_request/' + request_id + '/', event, {});
     });
 
-    function send_request_action(action, data, successCallback) {
+    function send_request_action(action, event, data) {
         fetch(action, {
             method: 'POST',
             body: data,
@@ -87,22 +89,22 @@
             }
         })
         .then(data => {
-            thisForm.querySelector('.loading').classList.remove('d-block');
+            manageRequestLoading.classList.remove('d-block');
             if (data.trim() == 'OK') {
-                successCallback();
+                location.reload();
             } else {
                 throw new Error(data ? data : 'Form submission failed and no error message returned from: ' + action); 
             }
         })
         .catch((error) => {
-            displayError(thisForm, error);
+            displayError(error);
         });
       }
     
-    function displayError(thisForm, error) {
-        thisForm.querySelector('.loading').classList.remove('d-block');
-        thisForm.querySelector('.error-message').innerHTML = error;
-        thisForm.querySelector('.error-message').classList.add('d-block');
+    function displayError(error) {
+        manageRequestLoading.classList.remove('d-block');
+        manageRequestError.innerHTML = error;
+        manageRequestError.classList.add('d-block');
     }
 })();
   
