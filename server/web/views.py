@@ -202,7 +202,7 @@ def create_request(request):
             
             print(request.body)
             request_body_unicode = request.body.decode('utf-8')
-            print(str(request_body_unicode))
+            print(json.dumps(request_body_unicode))
             request_body_json = json.loads(request_body_unicode)
             print(request_body_json)
 

@@ -77,10 +77,9 @@
     });
 
     function send_request_action(action, data) {
-        data['csrfmiddlewaretoken'] = getCsrfToken()
         fetch(action, {
             method: 'POST',
-            body: data,
+            body: Object.assign({}, data, {'csrfmiddlewaretoken': getCsrfToken()}),
             headers: { 
                 'X-Requested-With': 'XMLHttpRequest', 
                 'X-CSRFToken': getCsrfToken()
