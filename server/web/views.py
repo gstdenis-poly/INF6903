@@ -200,8 +200,7 @@ def create_request(request):
             if not request.body:
                 return redirect('index')
             
-            print(request.body.decode('utf-8'))
-            request_body_json = json.loads(request.body.decode('utf-8'))
+            request_body_json = json.load(request.body.decode('utf-8'))
 
             req = Request(account = account)
             req.save()
