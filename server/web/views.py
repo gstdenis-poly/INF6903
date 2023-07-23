@@ -197,14 +197,14 @@ def create_request(request):
         if account.type == 'provider':
             return redirect('index')
         else:
-            print(request.body)
-            request_body = json.loads(request.body)
-            if not request_body:
+            if not request.body:
                 return redirect('index')
+            
+            request_body_json = json.loads(request.body.decode('utf-8'))
 
             req = Request(account = account)
             req.save()
-            for recording_id in request.POST['recordings']:
+            for recording_id in request_body_json['recordings']:
                 req.recordings.add(Recording.objects.get(id = recording_id))
             req.save() 
             
