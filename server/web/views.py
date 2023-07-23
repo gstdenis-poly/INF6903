@@ -165,8 +165,7 @@ def view_recording(request, recording_id):
 
         return render(request, 'logged_in/view_recording.html', {
             'recording': recording, 
-            'solutions': solutions,
-            'user' : request.user
+            'solutions': solutions
             })
     else:
         return redirect('index')
