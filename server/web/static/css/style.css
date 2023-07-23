@@ -1236,6 +1236,7 @@ section {
 /*--------------------------------------------------------------
 # Portfolio Details
 --------------------------------------------------------------*/
+.account-details,
 .portfolio-details {
   padding-top: 40px;
 }
@@ -1261,11 +1262,13 @@ section {
   background-color: #2487ce;
 }
 
+.account-details .account-info,
 .portfolio-details .portfolio-info {
   padding: 30px;
   box-shadow: 0px 0 30px rgba(18, 66, 101, 0.08);
 }
 
+.account-details .account-info h3,
 .portfolio-details .portfolio-info h3 {
   font-size: 22px;
   font-weight: 700;
@@ -1274,26 +1277,31 @@ section {
   border-bottom: 1px solid #eee;
 }
 
+.account-details .account-info ul,
 .portfolio-details .portfolio-info ul {
   list-style: none;
   padding: 0;
   font-size: 15px;
 }
 
+.account-details .account-info ul li+li,
 .portfolio-details .portfolio-info ul li+li {
   margin-top: 10px;
 }
 
+.account-details .account-description,
 .portfolio-details .portfolio-description {
   padding-top: 30px;
 }
 
+.account-details .account-description h2,
 .portfolio-details .portfolio-description h2 {
   font-size: 26px;
   font-weight: 700;
   margin-bottom: 20px;
 }
 
+.account-details .account-description p,
 .portfolio-details .portfolio-description p {
   padding: 0;
 }
