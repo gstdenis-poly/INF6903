@@ -35,6 +35,7 @@
             let isSelected = (e.style.opacity === '1');
             e.style.opacity = isSelected ? '' : '1';
             e.style.background = isSelected ? '' : 'rgba(36, 135, 206, 0.6)';
+            btnCreateRequest.setAttribute('selected', !isSelected);
 
             if (!isSelected)
                 btnCreateRequest.classList.remove('btn-request-hidden');
@@ -52,6 +53,10 @@
                     btnCreateRequest.classList.add('btn-request-hidden');
             }
         });
+    });
+
+    btnCreateRequest.addEventListener( function(event) {
+        console.log(event);
     });
   })();
   
