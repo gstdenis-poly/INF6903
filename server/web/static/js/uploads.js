@@ -32,9 +32,9 @@
     recordingInfos.forEach( function(e) {
         let btnRecordingSelect = e.querySelector('.portfolio-links .bx-pointer');
         btnRecordingSelect.addEventListener('click', function(event) {
-            isSelected = (e.target.style.opacity === '1');
-            e.target.style.opacity = isSelected ? '0' : '1';
-            e.target.style.background = isSelected ? '' : 'rgba(36, 135, 206, 0.6)';
+            isSelected = (e.style.opacity === '1');
+            e.style.opacity = isSelected ? '0' : '1';
+            e.style.background = isSelected ? '' : 'rgba(36, 135, 206, 0.6)';
         });
     });
   })();
