@@ -58,7 +58,7 @@
     btnCreateRequest.addEventListener( 'click', function(event) {
         event.preventDefault();
 
-        data = { 'recordings': [] }
+        let data = { 'recordings': [] }
         for (const cell of recordingsCell) {
             if (cell.getAttribute('selected') === 'true')
                 data['recordings'].add(cell.getAttribute('recording'));
@@ -69,7 +69,7 @@
 
     btnDeleteRequest.addEventListener( 'click', function(event) {
         event.preventDefault();
-        request_id = event.getAttribute('request');
+        let request_id = event.getAttribute('request');
         send_request_action('/delete_request/' + request_id + '/', {}, location.reload);
     });
 
