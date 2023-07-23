@@ -1663,7 +1663,6 @@ section {
 }
 
 .portfolio .loading,
-.portfolio .loading:before,
 .edit-account .edit-account-form .loading,
 .upload-recordings .upload-recordings-form .loading,
 .login .login-form .loading,
@@ -1674,7 +1673,6 @@ section {
   padding: 15px;
 }
 
-.portfolio .loading,
 .portfolio .loading:before,
 .edit-account .edit-account-form .loading:before,
 .upload-recordings .upload-recordings-form .loading:before,
