@@ -191,6 +191,7 @@ def edit_recording(request, recording_id):
         return redirect('index')
 
 def create_request(request):
+    print(request.POST) 
     if request.user.is_authenticated:
         account = Account.objects.get(username = request.user.username)
         if account.type == 'provider' or not request.POST:
@@ -201,8 +202,7 @@ def create_request(request):
             for key in request.POST:
                 if 'video' in key:
                     req.recordings.add(Recording.objects.get(id = request.POST[key]))
-            req.save()"""
-            print(request.POST)  
+            req.save()""" 
             
             return redirect('index')
     else:
