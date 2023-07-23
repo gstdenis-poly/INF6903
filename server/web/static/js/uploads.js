@@ -66,16 +66,23 @@
                 data['recordings'].push(cell.getAttribute('recording'));
         }
 
-        send_request_action('/create_request/', event, data);
+        csrfToken = event.target.parentNode.querySelector('input');
+        data[csrfToken.getAttribute('name')] = csrfToken.getAttribute('value');
+        
+        send_request_action('/create_request/', data);
     });
 
     btnDeleteRequest.addEventListener( 'click', function(event) {
         event.preventDefault();
         let request_id = event.getAttribute('request');
-        send_request_action('/delete_request/' + request_id + '/', event, {});
+
+        csrfToken = event.target.parentNode.querySelector('input');
+        data[csrfToken.getAttribute('name')] = csrfToken.getAttribute('value');
+
+        send_request_action('/delete_request/' + request_id + '/', {});
     });
 
-    function send_request_action(action, event, data) {
+    function send_request_action(action, data) {
         fetch(action, {
             method: 'POST',
             body: data,
