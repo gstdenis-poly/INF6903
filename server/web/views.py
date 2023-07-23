@@ -175,21 +175,6 @@ def view_recording(request, recording_id):
             })
     else:
         return redirect('index')
-    
-def edit_recording(request, recording_id):
-    if request.user.is_authenticated:
-        recording = Recording.objects.get(id = recording_id)
-        if request.user.username != recording.account.username:
-            return redirect('/view_recording/' + recording_id + '/')
-        elif not request.POST:
-            return render(request, 'logged_in/edit_recording.html', {'recording': recording})
-        else:
-            recording.title = request.POST['title']
-            recording.save()
-
-            return redirect('/view_recording/' + recording_id + '/')
-    else:
-        return redirect('index')
 
 def create_request(request):
     if request.user.is_authenticated:
@@ -226,28 +211,6 @@ def view_request(request, request_id):
             'recordings': req.recordings.all(),
             'solutions' : solutions
             })
-    else:
-        return redirect('index')
-
-def edit_request(request, request_id):
-    if request.user.is_authenticated:
-        req = Request.objects.get(id = request_id)
-        if request.user.username != req.account.username:
-            return redirect('/view_request/' + str(request_id) + '/')
-        elif not request.POST:
-            return render(request, 'logged_in/edit_request.html', {
-                'req': req,
-                'req_recordings': req.recordings.all(),
-                'acc_recordings': req.account.recordings.all()
-                })
-        else:
-            req.recordings.clear()
-            for key in request.POST:
-                if 'video' in key:
-                    req.recordings.add(Recording.objects.get(id = request.POST[key]))
-            req.save()
-
-            return redirect('/view_request/' + str(request_id) + '/')
     else:
         return redirect('index')
 
