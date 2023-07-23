@@ -77,7 +77,6 @@
     });
 
     function send_request_action(action, data) {
-        console.log(Object.assign({}, data, {'csrfmiddlewaretoken': getCsrfToken()}));
         fetch(action, {
             method: 'POST',
             body: Object.assign({}, data, {'csrfmiddlewaretoken': getCsrfToken()}),
