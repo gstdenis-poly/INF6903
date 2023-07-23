@@ -1051,11 +1051,13 @@ section {
 /*--------------------------------------------------------------
 # Portfolio
 --------------------------------------------------------------*/
-.portfolio .portfolio-item {
+.portfolio .portfolio-item,
+.portfolio-details .portfolio-item {
   margin-bottom: 30px;
 }
 
-.portfolio #portfolio-flters {
+.portfolio #portfolio-flters,
+.portfolio-details #portfolio-flters {
   padding: 0;
   margin: 0 auto 35px auto;
   list-style: none;
@@ -1064,7 +1066,8 @@ section {
   padding: 2px 15px;
 }
 
-.portfolio #portfolio-flters li {
+.portfolio #portfolio-flters li,
+.portfolio-details #portfolio-flters li {
   cursor: pointer;
   display: inline-block;
   padding: 10px 15px 8px 15px;
@@ -1077,23 +1080,29 @@ section {
   transition: all 0.3s ease-in-out;
 }
 
+
 .portfolio #portfolio-flters li:hover,
-.portfolio #portfolio-flters li.filter-active {
+.portfolio #portfolio-flters li.filter-active,
+.portfolio-details #portfolio-flters li:hover,
+.portfolio-details #portfolio-flters li.filter-active {
   color: #2487ce;
 }
 
-.portfolio #portfolio-flters li:last-child {
+.portfolio #portfolio-flters li:last-child,
+.portfolio-details #portfolio-flters li:last-child {
   margin-right: 0;
 }
 
-.portfolio .portfolio-wrap {
+.portfolio .portfolio-wrap,
+.portfolio-details .portfolio-wrap {
   transition: 0.3s;
   position: relative;
   overflow: hidden;
   z-index: 1;
 }
 
-.portfolio .portfolio-wrap::before {
+.portfolio .portfolio-wrap::before,
+.portfolio-details .portfolio-wrap::before {
   content: "";
   background: rgba(36, 135, 206, 0.6);
   position: absolute;
@@ -1106,7 +1115,8 @@ section {
   opacity: 0;
 }
 
-.portfolio .portfolio-wrap .portfolio-info {
+.portfolio .portfolio-wrap .portfolio-info,
+.portfolio-details .portfolio-wrap .portfolio-info {
   opacity: 0;
   position: absolute;
   top: 0;
@@ -1122,7 +1132,8 @@ section {
   align-items: center;
 }
 
-.portfolio .portfolio-wrap .portfolio-info::before {
+.portfolio .portfolio-wrap .portfolio-info::before,
+.portfolio-details .portfolio-wrap .portfolio-info::before {
   display: block;
   content: "";
   width: 48px;
@@ -1136,7 +1147,8 @@ section {
   z-index: 9994;
 }
 
-.portfolio .portfolio-wrap .portfolio-info::after {
+.portfolio .portfolio-wrap .portfolio-info::after,
+.portfolio-details .portfolio-wrap .portfolio-info::after {
   display: block;
   content: "";
   width: 48px;
@@ -1150,13 +1162,15 @@ section {
   z-index: 9994;
 }
 
-.portfolio .portfolio-wrap .portfolio-info h4 {
+.portfolio .portfolio-wrap .portfolio-info h4,
+.portfolio-details .portfolio-wrap .portfolio-info h4 {
   font-size: 20px;
   color: #fff;
   font-weight: 600;
 }
 
-.portfolio .portfolio-wrap .portfolio-info p {
+.portfolio .portfolio-wrap .portfolio-info p,
+.portfolio-details .portfolio-wrap .portfolio-info p {
   color: #ffffff;
   font-size: 14px;
   text-transform: uppercase;
@@ -1164,12 +1178,14 @@ section {
   margin: 0;
 }
 
-.portfolio .portfolio-wrap .portfolio-links {
+.portfolio .portfolio-wrap .portfolio-links,
+.portfolio-details .portfolio-wrap .portfolio-links {
   text-align: center;
   z-index: 4;
 }
 
-.portfolio .portfolio-wrap .portfolio-links a {
+.portfolio .portfolio-wrap .portfolio-links a,
+.portfolio-details .portfolio-wrap .portfolio-links a {
   color: rgba(255, 255, 255, 0.6);
   margin: 0 2px;
   font-size: 28px;
@@ -1177,11 +1193,13 @@ section {
   transition: 0.3s;
 }
 
-.portfolio .portfolio-wrap .portfolio-links a:hover {
+.portfolio .portfolio-wrap .portfolio-links a:hover,
+.portfolio-details .portfolio-wrap .portfolio-links a:hover {
   color: #fff;
 }
 
-.portfolio .portfolio-wrap:hover::before {
+.portfolio .portfolio-wrap:hover::before,
+.portfolio-details .portfolio-wrap:hover::before {
   top: 0;
   left: 0;
   right: 0;
@@ -1189,16 +1207,19 @@ section {
   opacity: 1;
 }
 
-.portfolio .portfolio-wrap:hover .portfolio-info {
+.portfolio .portfolio-wrap:hover .portfolio-info,
+.portfolio-details .portfolio-wrap:hover .portfolio-info {
   opacity: 1;
 }
 
-.portfolio .portfolio-wrap:hover .portfolio-info::before {
+.portfolio .portfolio-wrap:hover .portfolio-info::before,
+.portfolio-details .portfolio-wrap:hover .portfolio-info::before {
   top: 15px;
   left: 15px;
 }
 
-.portfolio .portfolio-wrap:hover .portfolio-info::after {
+.portfolio .portfolio-wrap:hover .portfolio-info::after,
+.portfolio-details .portfolio-wrap:hover .portfolio-info::after {
   bottom: 15px;
   right: 15px;
 }
