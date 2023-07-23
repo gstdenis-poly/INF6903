@@ -47,11 +47,14 @@ class Recording(models.Model):
         results_scores_sd = stdev(results_score) if len(results_score) > 1 else 0.0
         opposite_acc_type = 'provider' if self.account.type == 'requester' else 'requester'
         results_score_count_max = len(Account.objects.all().filter(type = opposite_acc_type))
+        print('Scores avg: ' + results_scores_avg + ' | Scores stdev: ' + results_scores_sd)
 
         solutions = []
         for i, line in enumerate(results_file_lines):
             line_infos = line.split('|')
             score = float(line_infos[1])
+
+            print(line_infos[0] + ': ' + line_infos[1])
 
             #if i == results_score_count_max or \
             #score == 0.0 or score < (results_scores_avg + results_scores_sd):
