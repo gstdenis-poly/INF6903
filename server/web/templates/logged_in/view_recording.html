@@ -40,7 +40,7 @@
         <header id="header" class="fixed-top">
             <div class="container d-flex align-items-center justify-content-between">
 
-                <h1 class="logo"><a href="">INF6903</a></h1>
+                <h1 class="logo"><a href="/">INF6903</a></h1>
 
                 <nav id="navbar" class="navbar">
                     <ul>
@@ -66,7 +66,7 @@
                     <div class="d-flex justify-content-between align-items-center">
                         <h2>Recording Details</h2>
                         <ol>
-                            <li><a href="">Home</a></li>
+                            <li><a href="/">Home</a></li>
                             <li>Recording Details</li>
                         </ol>
                     </div>
@@ -128,7 +128,7 @@
                                         {% for solution in solutions %}
                                             <div class="col-lg-4 col-md-12 portfolio-item filter-solution{{ solution.id }}" recording="{{ solution.id }}">
                                                 <div class="portfolio-wrap">
-                                                    <video width="100%" src="{% static recording.id %}.mp4" type="video/mp4"></video>
+                                                    <video width="100%" src="{% static solution.id %}.mp4" type="video/mp4"></video>
                                                     <div class="portfolio-info">
                                                         <h4>{{ solution.title|default_if_none:solution.id }}</h4>
                                                         <p>Recording</p>
@@ -185,9 +185,6 @@
         
         <!-- Forms submission JS file -->
         <script src="{% static 'js/forms.js' %}"></script>
-
-        <!-- Dynamic behaviors for uploads display -->
-        <script src="{% static 'js/uploads.js' %}"></script>
 
         <!-- Template Main JS File -->
         <script src="{% static 'js/main.js' %}"></script>

@@ -53,9 +53,9 @@ class Recording(models.Model):
             line_infos = line.split('|')
             score = float(line_infos[1])
 
-            if i == results_score_count_max or \
-            score == 0.0 or score < (results_scores_avg + results_scores_sd):
-                break
+            #if i == results_score_count_max or \
+            #score == 0.0 or score < (results_scores_avg + results_scores_sd):
+            #    break
 
             solutions += [Recording.objects.get(id = line_infos[0])]
 
