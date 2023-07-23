@@ -197,6 +197,7 @@ def create_request(request):
         if account.type == 'provider':
             return redirect('index')
         else:
+            print(request.body)
             request_body = json.loads(request.body)
             if not request_body:
                 return redirect('index')
