@@ -196,6 +196,7 @@ def create_request(request):
         if account.type == 'provider' or not request.POST:
             return redirect('index')
         else:
+            print(request.POST)
             req = Request(account = account)
             req.save()
             for recording_id in request.POST['recordings']:
