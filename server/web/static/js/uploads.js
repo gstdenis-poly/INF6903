@@ -8,8 +8,8 @@
     let btnCreateRequest = document.querySelector('.btn-create-request');
     let btnDeleteRequest = document.querySelector('.btn-delete-request');
     let recordingsCell = document.querySelectorAll('.portfolio-item');
-    let manageRequestLoading = document.querySelectorAll('.portfolio .loading');
-    let manageRequestError = document.querySelectorAll('.portfolio .error-message');
+    let manageRequestLoading = document.querySelector('.portfolio .loading');
+    let manageRequestError = document.querySelector('.portfolio .error-message');
 
     btnFilterRecordings.forEach( function(e) {
         e.addEventListener('click', function(event) {
