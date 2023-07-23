@@ -84,7 +84,7 @@
                             <div class="portfolio-info">
                                 <h3>Request information</h3>
                                 <ul>
-                                    <li><strong>Id</strong>: {{ request.id }}</li>
+                                    <li><strong>Id</strong>: {{ req.id }}</li>
                                 </ul>
                             </div>
                             <div class="portfolio-description">
@@ -128,7 +128,7 @@
                                                             <p>Solution #{{ forloop.counter }}</p>
                                                             <div class="portfolio-links">
                                                                 <a href="{% static rec.id %}.mp4" data-gallery="portfolioGallery" class="portfolio-lightbox"><i class="bx bx-play"></i></a>
-                                                                <a href="/view_account/{{ candidate }}" title="Owner Details"><i class="bx bx-face"></i></a>
+                                                                <a href="/view_account/{{ candidate }}" title="Provider Details"><i class="bx bx-face"></i></a>
                                                             </div>
                                                         </div>
                                                     </div>
