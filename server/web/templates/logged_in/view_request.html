@@ -1,15 +1,189 @@
-<h1>View request</h1>
-{% load static %}
-{% for recording in recordings %}
-    <h2>{{ recording.title|default_if_none:recording.id }}</h2>
-    <video style="width:100%" controls src="{% static recording.id %}.mp4" type="video/mp4"></video>
-{% endfor %}
-{% for candidate, solution in solutions %}
-    <h3>Solution #{{ forloop.counter }}: <a href="/view_account/{{ candidate }}">{{ candidate }}</a></h3>
-    <div>
-        {% for recording in solution %}
-            <a href="/view_recording/{{ recording.id }}/">{{ recording.title|default_if_none:recording.id }}</a>
-            <video style="width:100%" controls src="{% static recording.id %}.mp4" type="video/mp4"></video>
-        {% endfor %}
-    </div>
-{% endfor %}
+<!DOCTYPE html>
+<html lang="en">
+    {% load static %}
+
+    <head>
+        <meta charset="utf-8">
+        <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+        <title>INF6903: Projet de ma&icirc;trise en ing&eacute;nierie III</title>
+        <meta content="" name="description">
+        <meta content="" name="keywords">
+
+        <!-- Google Fonts -->
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+        <!-- Vendor CSS Files -->
+        <link href="{% static 'vendor/aos/aos.css' %}" rel="stylesheet">
+        <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+        <link href="{% static 'vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+        <link href="{% static 'vendor/boxicons/css/boxicons.min.css' %}" rel="stylesheet">
+        <link href="{% static 'vendor/glightbox/css/glightbox.min.css' %}" rel="stylesheet">
+        <link href="{% static 'vendor/remixicon/remixicon.css' %}" rel="stylesheet">
+        <link href="{% static 'vendor/swiper/swiper-bundle.min.css' %}" rel="stylesheet">
+
+        <!-- Template Main CSS File -->
+        <link href="{% static 'css/style.css' %}" rel="stylesheet">
+
+        <!-- =======================================================
+        * Template Name: OnePage
+        * Updated: May 30 2023 with Bootstrap v5.3.0
+        * Template URL: https://bootstrapmade.com/onepage-multipurpose-bootstrap-template/
+        * Author: BootstrapMade.com
+        * License: https://bootstrapmade.com/license/
+        ======================================================== -->
+    </head>
+
+    <body>
+
+        <!-- ======= Header ======= -->
+        <header id="header" class="fixed-top">
+            <div class="container d-flex align-items-center justify-content-between">
+
+                <h1 class="logo"><a href="/">INF6903</a></h1>
+
+                <nav id="navbar" class="navbar">
+                    <ul>
+                        <li><a class="nav-link scrollto active" href="#portfolio">Uploads</a></li>
+                        <li><a class="nav-link" href="/download_client/">Download client</a></li>
+                        <li><a class="nav-link scrollto" href="#upload-recordings">Upload recordings</a></li>
+                        <li><a class="nav-link scrollto" href="#help">Help</a></li>
+                        <li><a class="nav-link scrollto" href="#edit-account">Edit account</a></li>
+                        <li><a class="btnlogin" href="/log_out/">Logout</a></li>
+                    </ul>
+                    <i class="bi bi-list mobile-nav-toggle"></i>
+                </nav><!-- .navbar -->
+
+            </div>
+        </header><!-- End Header -->
+
+        <main id="main">
+
+            <!-- ======= Breadcrumbs ======= -->
+            <section id="breadcrumbs" class="breadcrumbs">
+                <div class="container">
+
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h2>Request Details</h2>
+                        <ol>
+                            <li><a href="/">Home</a></li>
+                            <li>Request Details</li>
+                        </ol>
+                    </div>
+
+                </div>
+            </section><!-- End Breadcrumbs -->
+
+            <!-- ======= Recording Details Section ======= -->
+            <section id="portfolio-details" class="portfolio portfolio-details">
+                <div class="container">
+
+                    <div class="row gy-4">
+
+                        <div class="col-lg-4">
+                            <div class="portfolio-info">
+                                <h3>Request information</h3>
+                                <ul>
+                                    <li><strong>Id</strong>: {{ request.id }}</li>
+                                </ul>
+                            </div>
+                            <div class="portfolio-description">
+                                <h2>Videos</h2>
+                                {% for recording in recordings %}
+                                    <a href="{% static recording.id %}.mp4" data-gallery="portfolioGallery" class="portfolio-lightbox">
+                                        <video title="{{ recording.title|default_if_none:recording.id }}" width="100%" src="{% static recording.id %}.mp4" type="video/mp4"></video>
+                                    </a>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <div class="col-lg-8">
+                            <div class="portfolio-details-slider swiper">
+                                <div class="section-title">
+                                    <h3>Providers solutions</h3>
+                                    {% if not solutions %}
+                                        <p>No provider's solution in answer for this request.</p>
+                                    {% endif %}
+                                </div>
+                            
+                                {% if solutions %}
+                                    <div class="row" data-aos="fade-up" data-aos-delay="150">
+                                        <div class="col-lg-12 d-flex justify-content-center">
+                                            <ul id="portfolio-flters">
+                                                <li data-filter="*" class="filter-recordings filter-active">All solutions</li>
+                                                {% for candidate, solution in solutions %}
+                                                    <li class="filter-solution" data-filter=".filter-solution{{ forloop.counter }}">Solution #{{ forloop.counter }}</li>
+                                                {% endfor %}
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="row portfolio-container" data-aos="fade-up" data-aos-delay="300">
+                                        {% for candidate, solution in solutions %}
+                                            {% for rec in solution %}
+                                                <div class="col-lg-6 col-md-12 portfolio-item filter-solution{{ forloop.counter }}" recording="{{ rec.id }}">
+                                                    <div class="portfolio-wrap">
+                                                        <video width="100%" src="{% static rec.id %}.mp4" type="video/mp4"></video>
+                                                        <div class="portfolio-info">
+                                                            <h4>{{ rec.title|default_if_none:rec.id }}</h4>
+                                                            <p>Solution #{{ forloop.counter }}</p>
+                                                            <div class="portfolio-links">
+                                                                <a href="{% static rec.id %}.mp4" data-gallery="portfolioGallery" class="portfolio-lightbox"><i class="bx bx-play"></i></a>
+                                                                <a href="/view_account/{{ candidate }}" title="Owner Details"><i class="bx bx-face"></i></a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            {% endfor %}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </section><!-- End Recording Details Section -->
+
+        </main><!-- End #main -->
+
+        <!-- ======= Footer ======= -->
+        <footer id="footer">
+
+            <div class="container d-md-flex py-4">
+
+                <div class="me-md-auto text-center text-md-start">
+                    <div class="copyright">
+                        &copy; Copyright <strong><span>Polytechnique Montr&eacute;al</span></strong>. All Rights Reserved
+                    </div>
+                    <div class="credits">
+                        <!-- All the links in the footer should remain intact. -->
+                        <!-- You can delete the links only if you purchased the pro version. -->
+                        <!-- Licensing information: https://bootstrapmade.com/license/ -->
+                        <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/onepage-multipurpose-bootstrap-template/ -->
+                        Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
+                    </div>
+                </div>
+            </div>
+        </footer><!-- End Footer -->
+
+        <div id="preloader"></div>
+        <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+        <!-- Vendor JS Files -->
+        <script src="{% static 'vendor/purecounter/purecounter_vanilla.js' %}"></script>
+        <script src="{% static 'vendor/aos/aos.js' %}"></script>
+        <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+        <script src="{% static 'vendor/glightbox/js/glightbox.min.js' %}"></script>
+        <script src="{% static 'vendor/isotope-layout/isotope.pkgd.min.js' %}"></script>
+        <script src="{% static 'vendor/swiper/swiper-bundle.min.js' %}"></script>
+        
+        <!-- Forms submission JS file -->
+        <script src="{% static 'js/forms.js' %}"></script>
+
+        <!-- Template Main JS File -->
+        <script src="{% static 'js/main.js' %}"></script>
+
+    </body>
+
+</html>
