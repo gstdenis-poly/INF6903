@@ -119,15 +119,17 @@
                                 </div>
                             {% endfor %}
                         </div>
-                        <div class="text-center">
-                            <script>function getCsrfToken() { return '{{ csrf_token }}' };</script>
-                            <a href="#" class="btn-create-request btn-request-hidden">Create request</a>
-                            <a href="#" class="btn-view-request btn-request-hidden">View request details</a>
-                            <a href="#" class="btn-delete-request btn-request-hidden">Delete request</a>
-                        </div>
-                        <div class="my-3 col-12">
-                            <div class="loading">Loading</div>
-                            <div class="error-message"></div>
+                        <div class="row gy-2 gx-md-2"></div>
+                            <div class="text-center">
+                                <script>function getCsrfToken() { return '{{ csrf_token }}' };</script>
+                                <a href="#" class="btn-create-request btn-request-hidden">Create request</a>
+                                <a href="#" class="btn-view-request btn-request-hidden">View request details</a>
+                                <a href="#" class="btn-delete-request btn-request-hidden">Delete request</a>
+                            </div>
+                            <div class="my-3 col-12">
+                                <div class="loading">Loading</div>
+                                <div class="error-message"></div>
+                            </div>
                         </div>
                     {% endif %}
                 </div>
