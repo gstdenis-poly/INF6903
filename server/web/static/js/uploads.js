@@ -69,7 +69,7 @@
         let csrfToken = event.target.parentNode.querySelector('input');
         data[csrfToken.getAttribute('name')] = csrfToken.getAttribute('value');
 
-        send_request_action('/create_request/', data);
+        send_request_action('/create_request/', event, data);
     });
 
     btnDeleteRequest.addEventListener( 'click', function(event) {
@@ -79,10 +79,10 @@
         let csrfToken = event.target.parentNode.querySelector('input');
         data[csrfToken.getAttribute('name')] = csrfToken.getAttribute('value');
 
-        send_request_action('/delete_request/' + request_id + '/', {});
+        send_request_action('/delete_request/' + request_id + '/', event, {});
     });
 
-    function send_request_action(action, data) {
+    function send_request_action(action, event, data) {
         fetch(action, {
             method: 'POST',
             body: data,

@@ -120,7 +120,7 @@
                             {% endfor %}
                         </div>
                         <div class="text-center">
-                            {% csrf_token %}
+                            <script>function getCsrfToken() { return "{% csrf_token %}" };</script>
                             <a href="#" class="btn-create-request btn-request-hidden">Create request</a>
                             <a href="#" class="btn-view-request btn-request-hidden">View request details</a>
                             <a href="#" class="btn-delete-request btn-request-hidden">Delete request</a>
