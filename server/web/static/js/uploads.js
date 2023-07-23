@@ -77,6 +77,7 @@
     });
 
     function send_request_action(action, data) {
+        console.log(Object.assign({}, data, {'csrfmiddlewaretoken': getCsrfToken()}));
         fetch(action, {
             method: 'POST',
             body: Object.assign({}, data, {'csrfmiddlewaretoken': getCsrfToken()}),
@@ -95,7 +96,7 @@
         .then(data => {
             manageRequestLoading.classList.remove('d-block');
             if (data.trim() == 'OK') {
-                location.href = '';
+                location.reload();
             } else {
                 throw new Error(data ? data : 'Form submission failed and no error message returned from: ' + action); 
             }
