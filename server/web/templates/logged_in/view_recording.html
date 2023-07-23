@@ -118,7 +118,7 @@
                                             <ul id="portfolio-flters">
                                                 {% for solution in solutions %}
                                                     <li class="filter-solution" data-filter=".filter-solution{{ solution.id }}">
-                                                        {% if solution.account.type == 'provider' %}Recording{% else %}Solution{ endif %%} #{{ forloop.counter }}
+                                                        {% if solution.account.type == 'provider' %}Recording{% else %}Solution{% endif %} #{{ forloop.counter }}
                                                     </li>
                                                 {% endfor %}
                                             </ul>
