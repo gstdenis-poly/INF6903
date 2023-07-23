@@ -110,7 +110,9 @@
                                             <h4>{{ recording.title|default_if_none:recording.id }}</h4>
                                             <p>Recording</p>
                                             <div class="portfolio-links">
-                                                <a href="#" title="Select"><i class="bx bx-pointer"></i></a>
+                                                {% if account.type == 'requester' %}
+                                                    <a href="#" title="Select"><i class="bx bx-pointer"></i></a>
+                                                {% endif %}
                                                 <a href="{% static recording.id %}.mp4" data-gallery="portfolioGallery" class="portfolio-lightbox"><i class="bx bx-play"></i></a>
                                                 <a href="/view_recording/{{ recording.id }}" title="Details"><i class="bx bx-plus"></i></a>
                                             </div>
@@ -119,16 +121,18 @@
                                 </div>
                             {% endfor %}
                         </div>
-                        <div class="text-center">
-                            <script>function getCsrfToken() { return '{{ csrf_token }}' };</script>
-                            <a href="#" class="btn-create-request btn-request-hidden">Create request</a>
-                            <a href="#" class="btn-view-request btn-request-hidden">View request details</a>
-                            <a href="#" class="btn-delete-request btn-request-hidden">Delete request</a>
-                        </div>
-                        <div class="my-3 col-12">
-                            <div class="loading">Loading</div>
-                            <div class="error-message"></div>
-                        </div>
+                        {% if account.type == 'requester' %}
+                            <div class="text-center">
+                                <script>function getCsrfToken() { return '{{ csrf_token }}' };</script>
+                                <a href="#" class="btn-create-request btn-request-hidden">Create request</a>
+                                <a href="#" class="btn-view-request btn-request-hidden">View request details</a>
+                                <a href="#" class="btn-delete-request btn-request-hidden">Delete request</a>
+                            </div>
+                            <div class="my-3 col-12">
+                                <div class="loading">Loading</div>
+                                <div class="error-message"></div>
+                            </div>
+                        {% endif %}
                     {% endif %}
                 </div>
             </section><!-- End Uploads Section -->
