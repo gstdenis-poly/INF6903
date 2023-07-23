@@ -103,7 +103,7 @@
 
                         <div class="row portfolio-container" data-aos="fade-up" data-aos-delay="300">
                             {% for recording in recordings %}
-                                <div class="col-lg-4 col-md-6 portfolio-item{% for request in recording.requests.all %} filter-request{{ request.id }}{% endfor %}">
+                                <div class="col-lg-4 col-md-6 portfolio-item{% for request in recording.requests.all %} filter-request{{ request.id }}{% endfor %}" recording="{{ recording.id }}" selected="false">
                                     <div class="portfolio-wrap">
                                         <video width="100%" src="{% static recording.id %}.mp4" type="video/mp4"></video>
                                         <div class="portfolio-info">
@@ -120,9 +120,9 @@
                             {% endfor %}
                         </div>
                         <div class="text-center">
-                            <a href="/create_request/" class="btn-create-request btn-request-hidden">Create request</a>
-                            <a href="/view_request/" class="btn-view-request btn-request-hidden">View request details</a>
-                            <a href="/delete_request/" class="btn-delete-request btn-request-hidden">Delete request</a>
+                            <a href="#" class="btn-create-request btn-request-hidden">Create request</a>
+                            <a href="#" class="btn-view-request btn-request-hidden">View request details</a>
+                            <a href="#" class="btn-delete-request btn-request-hidden">Delete request</a>
                         </div>
                         <div class="my-3 col-12">
                             <div class="loading">Loading</div>
