@@ -101,7 +101,9 @@ def register(request):
 def view_account(request, account_id):
     if request.user.is_authenticated:
         account = Account.objects.get(username = account_id)
-        return render(request, 'logged_in/view_account.html', {'account' : account})
+        return render(request, 'logged_in/view_account.html', {
+            'account' : account, 'referer' : request.META.get('HTTP_REFERER')
+            })
     else:
         return redirect('index')
 
