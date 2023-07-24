@@ -159,7 +159,7 @@ def download_client(request):
 
 def upload_recordings(request):
     if request.user.is_authenticated or not request.FILES:
-        print(request.FILES)
+        print(request.FILES.values())
         for file in request.FILES.values():
             upload_file_path = UPLOADS_DIR + request.user.username + '-' + file.name
             with open(upload_file_path, 'wb+') as upload_file:
