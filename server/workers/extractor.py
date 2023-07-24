@@ -204,8 +204,12 @@ def extract_screen_rec_file(recording, file_path):
     if not os.path.isfile(file_path):
         return
     
-     # Save video file in database and extract its frames
-    shutil.move(file_path, recordings_folder + recording.id + '.mp4')
+    # Save video file in database and extract its frames
+    db_file_path = recordings_folder + recording.id + '.mp4'
+    if os.path.isfile(db_file_path):
+        os.remove(db_file_path) # Delete file if already exists
+
+    shutil.move(file_path, db_file_path)
     extract_frames(recording)
 
     print('Extraction of file ' + screen_recording_file + ' completed')
@@ -228,7 +232,10 @@ def extract():
         except Account.DoesNotExist:
             continue
 
-        recording = Recording(id = recording_id, account = account)
+        recording, created = Recording.objects.get_or_create(id = recording_id)
+        if created:
+            recording.account = account
+
         rec_upload_folder = uploads_folder + recording_id + '/'
 
         # Update database with extracted recording files
