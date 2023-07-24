@@ -1203,7 +1203,7 @@ section {
   right: 15px;
 }
 
-#portfolio .btn-view-account,
+#portfolio-details .btn-view-account,
 #portfolio .btn-create-request,
 #portfolio .btn-delete-request,
 #portfolio .btn-view-request,
@@ -1222,7 +1222,7 @@ section {
   background: #2487ce;
 }
 
-#portfolio .btn-view-account:hover,
+#portfolio-details .btn-view-account:hover,
 #portfolio .btn-create-request:hover,
 #portfolio .btn-delete-request:hover,
 #portfolio .btn-view-request:hover,
