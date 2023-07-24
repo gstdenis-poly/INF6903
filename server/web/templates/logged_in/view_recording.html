@@ -123,7 +123,7 @@
                                 </div>
             
                                 {% if solutions %}
-                                    <div class="row" data-aos="fade-up" data-aos-delay="150">
+                                    <div class="row">
                                         <div class="col-lg-12 d-flex justify-content-center">
                                             <ul id="portfolio-flters">
                                                 <li data-filter="*" class="filter-recordings filter-active">All {% if recording.account.type == 'provider' %}recordings{% else %}solutions{% endif %}</li>
@@ -135,7 +135,7 @@
                                             </ul>
                                         </div>
                                     </div>
-                                    <div class="row portfolio-container" data-aos="fade-up" data-aos-delay="300">
+                                    <div class="row portfolio-container">
                                         {% for solution in solutions %}
                                             <div class="col-lg-12 col-md-12 portfolio-item filter-solution{{ solution.id }}" recording="{{ solution.id }}">
                                                 <div class="portfolio-wrap">
