@@ -232,10 +232,7 @@ def extract():
         except Account.DoesNotExist:
             continue
 
-        recording, created = Recording.objects.get_or_create(id = recording_id)
-        if created:
-            recording.account = account
-
+        recording, created = Recording.objects.get_or_create(id = recording_id, account = account)
         rec_upload_folder = uploads_folder + recording_id + '/'
 
         # Update database with extracted recording files
