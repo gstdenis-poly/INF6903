@@ -21,13 +21,22 @@ def index(request):
             })
     else:
         accounts = Account.objects.all()
+
         clients = accounts.filter(type = 'requester')
-        providers = accounts.filter(type = 'provider')
+        clients_recordings = []
+        for client in clients:
+            clients_recordings += [r for r in client.recordings.all()]
+
+        providers = accounts.filter(type = 'provider')        
+        providers_recordings = []
+        for provider in providers:
+            providers_recordings += [r for r in provider.recordings.all()]
+
         return render(request, 'logged_out/index.html', {
             'clients': clients,
             'providers': providers,
-            'clients_recordings': [r for r in (c.recordings.all() for c in clients)],
-            'providers_recordings': [r for r in (c.recordings.all() for c in providers)],
+            'clients_recordings': clients_recordings,
+            'providers_recordings': providers_recordings,
         })
 
 def log_in(request):
