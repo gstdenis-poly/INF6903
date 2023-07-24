@@ -28,7 +28,7 @@ CLIENT_DIR = DATABASE_DIR + '../INF6903/client/'
 SECRET_KEY = 'django-insecure-ldajzv+j&qbb^960ge27zpf&5!$@us%5!6ka17c-4w*@c))+c#'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = []
 
