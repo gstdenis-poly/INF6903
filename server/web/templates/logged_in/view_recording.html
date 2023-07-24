@@ -104,11 +104,15 @@
                                         <h3>Clients recordings</h3>
                                         {% if not solutions %}
                                             <p>No client's recording answered your recording.</p>
+                                        {% else %}
+                                            <p>Your recording is a potential alternative solution to the following client's recordings, these are sorted by likelihood of being solved by your recording.</p>
                                         {% endif %}
                                     {% else %}
                                         <h3>Providers solutions</h3>
                                         {% if not solutions %}
                                             <p>No provider's solution in answer for this recording.</p>
+                                        {% else %}
+                                            <p>The following provider's solutions are potential alternatives to your recording, these are sorted by their level of potential as alternative solutions.</p>
                                         {% endif %}
                                     {% endif %}
                                 </div>
