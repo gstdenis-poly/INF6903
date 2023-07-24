@@ -86,9 +86,6 @@ DATABASES = {
         'USER': 'gstdenis',
         'HOST': 'cedar-pgsql-vm',
         'PORT': '5432',
-        'OPTIONS': {
-            'timeout': 20,
-        },
     }
 }
 
