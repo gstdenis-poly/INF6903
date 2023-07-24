@@ -93,8 +93,8 @@
                                 <h2>Request videos</h2>
                                 {% for recording in recordings %}
                                     <a href="{% static recording.id %}.mp4" data-gallery="portfolioGallery" class="portfolio-lightbox">
-                                        <video title="{{ recording.title|default_if_none:recording.id }}" width="100%" src="{% static recording.id %}.mp4" type="video/mp4"></video><br>
-                                    </a>
+                                        <video title="{{ recording.title|default_if_none:recording.id }}" width="100%" src="{% static recording.id %}.mp4" type="video/mp4"></video>
+                                    </a><br>
                                 {% endfor %}
                             </div>
                         </div>
