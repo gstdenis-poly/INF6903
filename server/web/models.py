@@ -137,8 +137,8 @@ class Request(models.Model):
     @staticmethod 
     def cmp_solutions_score(s1, s2):
         solutions = s1[1] + s2[1]
-        cmp_key = functools.cmp_to_key(Recording.cmp_solutions_score, reversed = True)
-        solutions.sort(key = cmp_key)
+        cmp_key = functools.cmp_to_key(Recording.cmp_solutions_score)
+        solutions.sort(key = cmp_key, reversed = True)
 
         s1_score, s2_score = 0, 0
         for i, solution in enumerate(solutions):
