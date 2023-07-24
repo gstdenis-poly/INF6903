@@ -88,9 +88,9 @@
                                     <li><strong>Email</strong>: {{ account.email }}</li>
                                     <li><strong>Type</strong>: {{ account.type }}</li>
                                     <li><strong>Company</strong>: {{ account.company }}</li>
-                                    <li><strong>Recordings count</strong>: {{ account.recordings|length }}</li>
+                                    <li><strong>Recordings count</strong>: {{ account.recordings.all|length }}</li>
                                     {% if account.type == 'requester' %}
-                                    <li><strong>Requests count</strong>: {{ account.requests|length }}</li>
+                                    <li><strong>Requests count</strong>: {{ account.requests.all|length }}</li>
                                     {% endif %}
                                 </ul>
                             </div>
