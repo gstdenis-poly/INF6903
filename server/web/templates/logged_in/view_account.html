@@ -83,7 +83,7 @@
 
                     <div class="row gy-4">
 
-                        <div class="col-lg-4">
+                        <div class="col-lg-{% if account.logo %}4{% else %}12{% endif %}">
                             <div class="account-info">
                                 <h3>Account information</h3>
                                 <ul>
@@ -103,10 +103,11 @@
                             </div>
                         </div>
 
-                        <div class="col-lg-8">
-                            <img src="{% static account.logo %}" />
-                        </div>
-
+                        {% if account.logo %}
+                            <div class="col-lg-8">
+                                <img src="{% static account.logo %}" />
+                            </div>
+                        {% endif %}
                     </div>
 
                 </div>
