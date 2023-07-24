@@ -181,7 +181,7 @@ def view_recording(request, recording_id):
         solutions = recording.get_relevant_solutions() # Filter solutions by similarity
         # Sort solutions by ergonomic score
         cmp_key = functools.cmp_to_key(Recording.cmp_solutions_score)
-        solutions.sort(key = cmp_key, reverse = True)
+        solutions.sort(key = cmp_key)
 
         return render(request, 'logged_in/view_recording.html', {
             'recording': recording, 
@@ -219,7 +219,7 @@ def view_request(request, request_id):
         solutions = req.get_relevant_solutions() # Filter solutions by similarity
         # Sort solutions by ergonomic score
         cmp_key = functools.cmp_to_key(Request.cmp_solutions_score)
-        solutions = sorted(solutions.items(), key = cmp_key, reverse = True)
+        solutions = sorted(solutions.items(), key = cmp_key)
 
         return render(request, 'logged_in/view_request.html', {
             'req': req,

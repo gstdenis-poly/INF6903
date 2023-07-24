@@ -90,7 +90,7 @@ class Recording(models.Model):
                 s2_score += 1
         
         print(s1.id + ': ' + str(s1_score) + ' | ' + s2.id + ': ' + str(s2_score))
-        return 1 if s1_score > s2_score else 0 if s1_score == s2_score else -1
+        return -1 if s1_score > s2_score else 0 if s1_score == s2_score else 1
 
 class Monitor(models.Model):
     recording = models.ForeignKey(Recording, related_name = 'monitors', on_delete = models.CASCADE)
@@ -131,14 +131,14 @@ class Request(models.Model):
         return solutions
 
     # Compare ergonomic score of two given request's solutions. The ergonomic score of a
-    # request's solution is considered better if the total of the ranks of its recordings' 
-    # scores is higher than the total of the ranks of the compared request's solution's 
-    # recordings' scores. 
+    # request's solution is considered better if the total of the reversed ranks of its
+    # recordings' scores is higher than the total of the reversed ranks of the compared
+    # request's solution's recordings' scores. 
     @staticmethod 
     def cmp_solutions_score(s1, s2):
         solutions = s1[1] + s2[1]
         cmp_key = functools.cmp_to_key(Recording.cmp_solutions_score)
-        solutions.sort(key = cmp_key)
+        solutions.sort(key = cmp_key, reverse = True)
 
         s1_score, s2_score = 0, 0
         for i, solution in enumerate(solutions):
@@ -148,4 +148,4 @@ class Request(models.Model):
                 s2_score += i
 
         print(s1[0] + ': ' + str(s1_score) + ' | ' + s2[0] + ': ' + str(s2_score))
-        return 1 if s1_score > s2_score else 0 if s1_score == s2_score else -1
+        return -1 if s1_score > s2_score else 0 if s1_score == s2_score else 1
