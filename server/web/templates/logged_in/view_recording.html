@@ -117,9 +117,9 @@
                                     <div class="row" data-aos="fade-up" data-aos-delay="150">
                                         <div class="col-lg-12 d-flex justify-content-center">
                                             <ul id="portfolio-flters">
-                                                <li data-filter="*" class="filter-recordings filter-active">All {% if recording.account.type == 'provider' %}recordings{% else %}solutions{% endif %}</li>
+                                                <li data-filter="*" class="filter-solutions filter-active">All {% if recording.account.type == 'provider' %}recordings{% else %}solutions{% endif %}</li>
                                                 {% for solution in solutions %}
-                                                    <li class="filter-solution" data-filter=".filter-solution{{ solution.id }}">
+                                                    <li class="filter-solution" data-filter=".filter-solution{{ solution.id }}" account="{{ solution.account.username }}">
                                                         {% if recording.account.type == 'provider' %}Recording{% else %}Solution{% endif %} #{{ forloop.counter }}
                                                     </li>
                                                 {% endfor %}
@@ -142,6 +142,9 @@
                                                 </div>
                                             </div>
                                         {% endfor %}
+                                    </div>
+                                    <div class="text-center">
+                                        <a href="#" class="btn-view-account btn-account-hidden">View {% if recording.account.type == 'provider' %}client{% else %}provider{% endif %} details</a>
                                     </div>
                                 {% endif %}
                             </div>
@@ -187,6 +190,9 @@
         
         <!-- Forms submission JS file -->
         <script src="{% static 'js/forms.js' %}"></script>
+
+        <!-- Dynamic behaviors for uploads details display -->
+        <script src="{% static 'js/uploads-details.js' %}"></script>
 
         <!-- Template Main JS File -->
         <script src="{% static 'js/main.js' %}"></script>

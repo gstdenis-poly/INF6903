@@ -1203,6 +1203,7 @@ section {
   right: 15px;
 }
 
+#portfolio .btn-view-account,
 #portfolio .btn-create-request,
 #portfolio .btn-delete-request,
 #portfolio .btn-view-request,
@@ -1221,14 +1222,16 @@ section {
   background: #2487ce;
 }
 
-#portfolio .btn-create-request,
-#portfolio .btn-delete-request,
-#portfolio .btn-view-request,
+#portfolio .btn-view-account:hover,
+#portfolio .btn-create-request:hover,
+#portfolio .btn-delete-request:hover,
+#portfolio .btn-view-request:hover,
 #portfolio .btn-download-client:hover,
 #portfolio .btn-upload-recordings:hover {
   background: #3194db;
 }
 
+#portfolio-details .btn-account-hidden,
 #portfolio .btn-request-hidden {
   display: none;
 }

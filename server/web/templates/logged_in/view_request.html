@@ -112,9 +112,9 @@
                                     <div class="row" data-aos="fade-up" data-aos-delay="150">
                                         <div class="col-lg-12 d-flex justify-content-center">
                                             <ul id="portfolio-flters">
-                                                <li data-filter="*" class="filter-recordings filter-active">All solutions</li>
+                                                <li data-filter="*" class="filter-solutions filter-active">All solutions</li>
                                                 {% for candidate, solution in solutions %}
-                                                    <li class="filter-solution" data-filter=".filter-solution{{ forloop.counter }}">Solution #{{ forloop.counter }}</li>
+                                                    <li class="filter-solution" data-filter=".filter-solution{{ forloop.counter }}" account="{{ candidate }}">Solution #{{ forloop.counter }}</li>
                                                 {% endfor %}
                                             </ul>
                                         </div>
@@ -137,6 +137,9 @@
                                                 </div>
                                             {% endfor %}
                                         {% endfor %}
+                                    </div>
+                                    <div class="text-center">
+                                        <a href="#" class="btn-view-account btn-account-hidden">View provider details</a>
                                     </div>
                                 {% endif %}
                             </div>
@@ -182,6 +185,9 @@
         
         <!-- Forms submission JS file -->
         <script src="{% static 'js/forms.js' %}"></script>
+
+        <!-- Dynamic behaviors for uploads details display -->
+        <script src="{% static 'js/uploads-details.js' %}"></script>
 
         <!-- Template Main JS File -->
         <script src="{% static 'js/main.js' %}"></script>
