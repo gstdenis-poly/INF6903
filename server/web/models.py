@@ -137,7 +137,7 @@ class Request(models.Model):
     # request's solution's recordings' scores. Sorting is from highest to lowest scores.
     @staticmethod 
     def cmp_solutions_score(s1, s2):
-        solutions = s1[1] + s2[1]
+        solutions = list(s1[1]) + list(s2[1])
         cmp_key = functools.cmp_to_key(Recording.cmp_solutions_score)
         solutions.sort(key = cmp_key, reverse = True)
 
