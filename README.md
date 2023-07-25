@@ -16,6 +16,9 @@
 - [PaddleOCR] - détection de texte sur image
 - [Keras] - classification par réseau de neurones
 - [Scikit-learn] - apprentissage machine en Python
+- [Django] - cadriciel Web Python pour perfectionnistes avec échéances
+- [PostgreSQL] - base de données relationnelle libre et gratuite
+- [Bootstrap] - cadriciel Web front-end libre
 
 ## Installation
 L'application utilise des technologies multiplateforme mais n'a été testée que sur Unix. Les étapes d'installation de celle-ci pour un bon fonctionnement sur environnement Windows pourraient différer des étapes ci-dessous.
@@ -37,14 +40,14 @@ bash ./installer.sh
 ```
 - (Optionnel: au besoin) Remplacer "from collections" par "from collections.abc" partout dans le site-packages attrdict de l'installation de Python3.
 - (Optionnel: au besoin) Réinstaller libbz2-dev avec sudo apt-get install.
-- (Optionnel: au besoin) Remplacer "from sqlite3 import dbapi2 as Database" par "from pysqlite3 import dbapi2 as Database" dans le fichier base.py du répertoire site-packages/django/db/backends/sqlite3/ situé sous le dossier lib de l'installation de Python3.
 - Clôner le répertoire [UIED_custom] à la racine du répertoire (INF6903).
 - Créer un dossier models/ à la racine du répertoire (INF6903) puis y placer le fichier de modèle que le CNN de UIED doit utiliser.
 - Ajuster les chemins de modèles définis dans config/CONFIG.py à la racine de UIED_custom afin de pointer sur les fichiers de modèles du dossier models/.
 - Ajuster les chemins de dossiers définis dans server/workers/configurator.py et s'assurer que tous les dossiers existent sur le serveur.
 - Exécuter configurator.py avec python3.
 - Ajuster les scripts d'exécution .sh pour qu'ils pointent sur l'emplacement exact de l'exécutable python3 et qu'ils utilisent un workload manager distinct de Slurm si nécessaire.
-- Ajuster les chemins de dossiers définis dans server/server/settings.py et s'assurer que tous les dossiers existent sur le serveur.
+- Ajuster les paramètres de connexion à la base de données ainsi que les chemins de dossiers définis dans server/server/settings.py et s'assurer que tous les dossiers existent sur le serveur.
+- Configurer la base de données avec la tâche migrate sur le fichier manage.py situé dans le dossier server/web/.
 - Lancer le serveur Web avec la tâche runserver sur le fichier manage.py situé dans le dossier server/web/.
 - Lancer les workers situés dans le dossier server/workers/.
 
@@ -62,4 +65,7 @@ INF6903 - Projet de maîtrise en ingénierie III
    [Keras]: <https://keras.io/>
    [Scikit-learn]: <https://scikit-learn.org/stable/index.html>
    [UIED_custom]: <https://github.com/gstdenis-poly/UIED_custom>
+   [Django]: <https://www.djangoproject.com/>
+   [PostgreSQL]: <https://www.postgresql.org/>
+   [Bootstrap]: <https://getbootstrap.com/>
 

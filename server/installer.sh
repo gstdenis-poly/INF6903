@@ -13,9 +13,8 @@ pip install paddlepaddle
 pip install paddlepaddle-gpu==2.4.2.post117 -f https://www.paddlepaddle.org.cn/whl/linux/mkl/avx/stable.html
 pip install paddleocr
 pip install protobuf==3.19.6
+pip install psycopg2
 pip install pyclipper
-pip install pysqlite3
-pip install pysqlite3-binary
 pip install scikit-learn==1.1.3
 pip install scipy==1.8.1
 pip install tensorflow==2.11.0
