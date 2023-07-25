@@ -125,9 +125,9 @@ class Request(models.Model):
             for solution in recording.get_relevant_solutions():
                 candidate_id = solution.account.username
                 if candidate_id in solutions:
-                    solutions[candidate_id] += [solution]
+                    solutions[candidate_id].add(solution)
                 else:
-                    solutions[candidate_id] = [solution]
+                    solutions[candidate_id] = set(solution)
 
         return solutions
 
