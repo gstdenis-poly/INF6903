@@ -1091,6 +1091,7 @@ section {
   position: relative;
   overflow: hidden;
   z-index: 1;
+  box-shadow: rgba(0, 0, 0, 0.35) 3px 6px 6px;
 }
 
 .portfolio .portfolio-wrap::before {
@@ -1104,10 +1105,6 @@ section {
   transition: all ease-in-out 0.3s;
   z-index: 2;
   opacity: 0;
-}
-
-.portfolio .portfolio-wrap video {
-  box-shadow: rgba(0, 0, 0, 0.35) 3px 6px 6px;
 }
 
 .portfolio .portfolio-wrap .portfolio-info {
