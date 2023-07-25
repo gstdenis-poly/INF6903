@@ -33,10 +33,6 @@ h6 {
   font-family: "Raleway", sans-serif;
 }
 
-video {
-  box-shadow: rgba(0, 0, 0, 0.35) 3px 6px 6px;
-}
-
 /*--------------------------------------------------------------
 # Back to top button
 --------------------------------------------------------------*/
@@ -1110,6 +1106,10 @@ section {
   opacity: 0;
 }
 
+.portfolio .portfolio-wrap video {
+  box-shadow: rgba(0, 0, 0, 0.35) 3px 6px 6px;
+}
+
 .portfolio .portfolio-wrap .portfolio-info {
   opacity: 0;
   position: absolute;
@@ -1299,6 +1299,10 @@ section {
 .account-details .account-description,
 .portfolio-details .portfolio-description {
   padding-top: 30px;
+}
+
+.portfolio-details .portfolio-description video {
+  box-shadow: rgba(0, 0, 0, 0.35) 3px 6px 6px;
 }
 
 .account-details .account-description h2,
