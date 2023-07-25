@@ -107,7 +107,7 @@
                             {% for recording in recordings %}
                                 <div class="col-lg-4 col-md-6 portfolio-item{% for request in recording.requests.all %} filter-request{{ request.id }}{% endfor %}" recording="{{ recording.id }}" selected="false">
                                     <div class="portfolio-wrap">
-                                        <video preload="auto" poster="{% static 'img/loading.gif' %}" width="100%" src="{% static recording.id %}.mp4" type="video/mp4"></video>
+                                        <video width="100%" src="{% static recording.id %}.mp4" type="video/mp4"></video>
                                         <div class="portfolio-info">
                                             <h4>{{ recording.title|default_if_none:recording.id }}</h4>
                                             <p>Recording</p>
