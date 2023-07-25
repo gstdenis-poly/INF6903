@@ -127,7 +127,7 @@ class Request(models.Model):
                 if candidate_id in solutions:
                     solutions[candidate_id].add(solution)
                 else:
-                    solutions[candidate_id] = set(solution)
+                    solutions[candidate_id] = {solution}
 
         return solutions
 
