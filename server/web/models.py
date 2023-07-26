@@ -91,7 +91,7 @@ class Recording(models.Model):
                 s1_score += 1
         
         print(s1.id + ': ' + str(s1_score) + ' | ' + s2.id + ': ' + str(s2_score))
-        return 1 if s1_score > s2_score else 0 if s1_score == s2_score else -1
+        return -1 if s1_score > s2_score else 0 if s1_score == s2_score else 1
 
 class Monitor(models.Model):
     recording = models.ForeignKey(Recording, related_name = 'monitors', on_delete = models.CASCADE)
