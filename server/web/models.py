@@ -86,9 +86,9 @@ class Recording(models.Model):
         s1_score, s2_score = 0, 0
         for s1_criteria, s2_criteria in zip(s1_criterias, s2_criterias):
             if s1_criteria > s2_criteria:
-                s1_score += 1
-            elif s2_criteria > s1_criteria:
                 s2_score += 1
+            elif s2_criteria > s1_criteria:
+                s1_score += 1
         
         print(s1.id + ': ' + str(s1_score) + ' | ' + s2.id + ': ' + str(s2_score))
         return -1 if s1_score > s2_score else 0 if s1_score == s2_score else 1
