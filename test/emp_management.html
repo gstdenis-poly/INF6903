@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Employee management</title>
+        <style>
+            body {
+                font-family:Georgia, 'Times New Roman', Times, serif;            
+                color: gray;
+                background-color:brown;
+            }
+            input {
+                width: 95%;
+            }
+        </style>
+        <script>
+            function submit() {
+                document.open("body", "replace");
+                document.write("<h2 style=\"font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif; font-size: 56px; color: red;\">Employee data saved</h2>");
+                document.close();
+            }
+        </script>
+    </head>
+    <body>
+        <table>
+            <tr>
+                <th colspan="6">Employee</th> 
+             </tr>
+            <tr>
+                <td><b>Identifier</b></td>
+                <td><b>Last name</b></td>
+                <td><b>First name</b></td>
+                <td><b>Phone number</b></td>
+                <td><b>Address</b></td>
+                <td><b>Role</b></td>
+            </tr>
+            <tr>
+                <td><input type="text"></td>
+                <td><input type="text"></td>
+                <td><input type="text"></td>
+                <td><input type="text"></td>
+                <td><input type="text"></td>
+                <td><input type="text"></td>
+            </tr>
+        </table>
+        <table>
+            <tr>
+                <th colspan="6">Vacation</th> 
+             </tr>
+            <tr>
+                <td><b>Employee</b></td>
+                <td><b>Start date</b></td>
+                <td><b>End date</b></td>
+                <td><b>Paid</b></td>
+            </tr>
+            <tr>
+                <td><input type="text"></td>
+                <td><input type="text"></td>
+                <td><input type="text"></td>
+                <td><input type="text"></td>
+            </tr>
+        </table>
+        <button onclick="submit();">Save</button>
+    </body>
+</html>

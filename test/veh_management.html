@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Vehicle management</title>
+        <style>
+            body {
+                font-family:Georgia, 'Times New Roman', Times, serif;            
+                color: gray;
+                background-color:brown;
+            }
+            input {
+                width: 95%;
+            }
+        </style>
+        <script>
+            function submit() {
+                document.open("body", "replace");
+                document.write("<h2 style=\"font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif; font-size: 56px; color: red;\">Vehicle data saved</h2>");
+                document.close();
+            }
+        </script>
+    </head>
+    <body>
+        <table>
+            <tr>
+               <th colspan="6">Parking</th> 
+            </tr>
+            <tr>
+                <td><b>Identifier</b></td>
+                <td><b>Garage</b></td>
+                <td><b>X position</b></td>
+                <td><b>Y position</b></td>
+                <td><b>X size</b></td>
+                <td><b>Y size</b></td>
+            </tr>
+            <tr>
+                <td><input type="text"></td>
+                <td><input type="text"></td>
+                <td><input type="text"></td>
+                <td><input type="text"></td>
+                <td><input type="text"></td>
+                <td><input type="text"></td>
+            </tr>
+        </table>
+        <table>
+            <tr>
+                <th colspan="6">Vehicle</th> 
+             </tr>
+            <tr>
+                <td><b>Identifier</b></td>
+                <td><b>Brand</b></td>
+                <td><b>Model</b></td>
+                <td><b>Color</b></td>
+                <td><b>Kilometers</b></td>
+                <td><b>Parking</b></td>
+            </tr>
+            <tr>
+                <td><input type="text"></td>
+                <td><input type="text"></td>
+                <td><input type="text"></td>
+                <td><input type="text"></td>
+                <td><input type="text"></td>
+                <td><input type="text"></td>
+            </tr>
+        </table>
+        <button onclick="submit();">Save</button>
+    </body>
+</html>
