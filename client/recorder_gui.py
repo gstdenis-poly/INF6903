@@ -131,7 +131,7 @@ class RecorderGui:
 
     def select_recordings_folder(self):
         recordings_folder = self.window.create_file_dialog(webview.FOLDER_DIALOG)[0]
-        self.recorder.set_recordings_folder(recordings_folder)
+        self.recorder.set_recordings_folder(recordings_folder + '/')
 
     def quit(self):
         self.window.destroy()
