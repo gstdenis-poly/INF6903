@@ -7,6 +7,8 @@
 - Interprétation des objets textuels
 - Reconnaissance d'activités
 - Reconnaissance de processus
+- Recommandations de solutions
+- Recommandations de candidats
 
 ## Technologies
 - [Python3] - implémentation des côtés client et serveur
@@ -19,6 +21,7 @@
 - [Django] - cadriciel Web Python pour perfectionnistes avec échéances
 - [PostgreSQL] - base de données relationnelle libre et gratuite
 - [Bootstrap] - cadriciel Web front-end libre
+- [pywebview] - GUI pour programme Python avec JS, HTML et CSS
 
 ## Installation
 L'application utilise des technologies multiplateforme mais n'a été testée que sur Unix. Les étapes d'installation de celle-ci pour un bon fonctionnement sur environnement Windows pourraient différer des étapes ci-dessous.
@@ -68,4 +71,5 @@ INF6903 - Projet de maîtrise en ingénierie III
    [Django]: <https://www.djangoproject.com/>
    [PostgreSQL]: <https://www.postgresql.org/>
    [Bootstrap]: <https://getbootstrap.com/>
+   [pywebview]: <https://pywebview.flowrl.com/>
 

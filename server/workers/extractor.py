@@ -180,8 +180,12 @@ def extract_rec_infos_file(recording, file_path):
         info_parts = info.split('|')
         if info_parts[0] == 'monitor':
             continue # Monitors must be saved after Recordings
-
-        setattr(recording, info_parts[0], float(info_parts[1]))
+        
+        attr_value = info_parts[1]
+        if info_parts[0] != 'title':
+            attr_value = float(attr_value)
+        setattr(recording, info_parts[0], attr_value)
+        
     recording.save()
 
     for info in rec_infos: 
