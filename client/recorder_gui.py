@@ -162,9 +162,9 @@ class RecorderGui:
             ),
             wm.Menu('About',
                 [
-                    wm.MenuAction('Read me', self.read_me),
+                    wm.MenuAction('INF6903 project', self.open_website),
                     wm.MenuSeparator(),
-                    wm.MenuAction('INF6903', self.open_website)
+                    wm.MenuAction('Read me', self.read_me)
                 ]
             )
         ]

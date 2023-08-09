@@ -140,4 +140,10 @@ class Recorder:
 
 # Program's main
 if __name__ == '__main__':
-    Recorder()
+    try: # Remove splash screen if needed
+        import pyi_splash
+        pyi_splash.close()
+    except:
+        print('pyi_splash not available')
+
+    Recorder() # Init recorder
