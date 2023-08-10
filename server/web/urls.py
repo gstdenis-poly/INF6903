@@ -14,6 +14,7 @@ urlpatterns = [
     path('download_client/', views.download_client, name='download_client'),
     path('upload_recordings/', views.upload_recordings, name='upload_recordings'),
     path('view_recording/<str:recording_id>/', views.view_recording, name='view_recording'),
+    path('edit_recording/<str:recording_id>/', views.edit_recording, name='edit_recording'),
     path('view_request/<int:request_id>/', views.view_request, name='view_request'),
     path('create_request/', views.create_request, name='create_request'),
     path('delete_request/<int:request_id>/', views.delete_request, name='delete_request'),

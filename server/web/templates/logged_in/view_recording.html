@@ -83,16 +83,20 @@
                         <div class="col-lg-4">
                             <div class="portfolio-info">
                                 <h3>Recording information</h3>
-                                <form action="/edit_recording/" method="post" role="form" class="edit-recording-form">
                                     <ul>
                                         {% if user.username == recording.account.username %}
-                                            <form action="/edit_recording/" method="post" role="form" class="edit-recording-form">
+                                            <form action="/edit_recording/{{ recording.id }}/" method="post" role="form" class="edit-recording-form">
                                                 {% csrf_token %}
                                                 <li>
                                                     <div class="col-md-12 form-group">
                                                         <strong>Title</strong>:
-                                                        <input type="text" class="form-control" name="title" id="input-title" value="{{ recording.title }}">
+                                                        <input type="text" class="form-control" name="title" id="input-title" {% if recording.title %}value{% else %}placeholder{% endif %}="{{ recording.title }}">
                                                         <button type="submit" id="edit-recording-submit">Save</button>
+                                                    </div>
+                                                    <div class="my-3 col-12">
+                                                        <div class="loading">Loading</div>
+                                                        <div class="error-message"></div>
+                                                        <div class="success-message">Recording's title saved</div>
                                                     </div>
                                                 </li>
                                             </form>                                            
@@ -102,7 +106,6 @@
                                         <li><strong>Id</strong>: {{ recording.id }}</li>
                                         <li><strong>Solutions count</strong>: {{ solutions|length }}</li>
                                     </ul>
-                                </form>
                             </div>
                             <div class="portfolio-description">
                                 <h2>Recording video</h2>

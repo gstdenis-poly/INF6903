@@ -4,7 +4,8 @@
     let forms = document.querySelectorAll('.login-form, ' + 
                                           '.register-form, ' + 
                                           '.edit-account-form, ' + 
-                                          '.upload-recordings-form');
+                                          '.upload-recordings-form' +
+                                          '.edit-recording-form');
   
     forms.forEach( function(e) {
       e.addEventListener('submit', function(event) {

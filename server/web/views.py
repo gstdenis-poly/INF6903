@@ -194,6 +194,20 @@ def view_recording(request, recording_id):
             })
     else:
         return redirect('index')
+    
+def edit_recording(request, recording_id):
+    if request.user.is_authenticated and request.POST:
+        recording = Recording.objects.get(id = recording_id)
+
+        if recording.account.account_id == request.user.username:
+            recording.title = request.POST['title']
+            recording.save()
+
+            return HttpResponse('OK')
+        else:
+            return redirect('/view_recording/' + recording_id + '/')
+    else:
+        return redirect('index')
 
 def create_request(request):
     if request.user.is_authenticated:
