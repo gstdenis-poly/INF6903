@@ -159,7 +159,11 @@ def download_client(request):
 
 def upload_recordings(request):
     if request.user.is_authenticated or not request.FILES:
-        for file in request.FILES.getlist('rec_files'):
+        rec_files = request.FILES.getlist('rec_files')
+        if len(rec_files) < 2:
+            return HttpResponse('First upload must contain at least two recordings', status = 400)
+
+        for file in rec_files:
             upload_file_path = UPLOADS_DIR + request.user.username + '-' + file.name
             with open(upload_file_path, 'wb+') as upload_file:
                 for c in file.chunks():
