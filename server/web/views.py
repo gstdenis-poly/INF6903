@@ -199,7 +199,7 @@ def edit_recording(request, recording_id):
     if request.user.is_authenticated and request.POST:
         recording = Recording.objects.get(id = recording_id)
 
-        if recording.account.account_id == request.user.username:
+        if recording.account.username == request.user.username:
             recording.title = request.POST['title']
             recording.save()
 
