@@ -89,11 +89,11 @@
                                             <form action="/edit_recording/" method="post" role="form" class="edit-recording-form">
                                                 {% csrf_token %}
                                                 <li>
-                                                    <div class="col-md-11 form-group">
+                                                    <div class="col-md-12 form-group">
                                                         <strong>Title</strong>:
                                                         <input type="text" class="form-control" name="title" id="title" value="{{ recording.title }}">
+                                                        <button type="submit">Save</button>
                                                     </div>
-                                                    <div class="text-center col-md-1"><button type="submit">Save</button></div>
                                                 </li>
                                             </form>                                            
                                         {% else %}
