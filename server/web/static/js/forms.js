@@ -50,12 +50,8 @@
           let successMessage = thisForm.querySelector('.success-message');
           if (successMessage === null)
             location.href = '';
-          else {
+          else
             successMessage.classList.add('d-block');
-            setTimeout(function() {
-              successMessage.classList.remove('d-block');
-            }, 5000);
-          }
         } else {
           throw new Error(data ? data : 'Form submission failed and no error message returned from: ' + action); 
         }
