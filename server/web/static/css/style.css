@@ -1716,6 +1716,11 @@ section {
   border-radius: 4px;
 }
 
+.portfolio-details .edit-recording-form #input-title {
+  display: inline;
+  width: 75%;
+}
+
 .portfolio-details .edit-recording-form input:focus,
 .edit-account .edit-account-form input:focus,
 .edit-account .edit-account-form textarea:focus,
@@ -1750,6 +1755,10 @@ section {
   color: #fff;
   transition: 0.4s;
   border-radius: 4px;
+}
+
+.portfolio-details .edit-recording-form #edit-recording-submit {
+  padding: 5px 15px;
 }
 
 .portfolio-details .edit-recording-form input[type=submit]:hover,
