@@ -1645,6 +1645,7 @@ section {
   padding-bottom: 8px;
 }
 
+.portfolio-details .edit-recording-form .error-message,
 .portfolio .error-message,
 .edit-account .edit-account-form .error-message,
 .upload-recordings .upload-recordings-form .error-message,
@@ -1658,6 +1659,7 @@ section {
   font-weight: 600;
 }
 
+.portfolio-details .edit-recording-form .success-message br+br,
 .portfolio .error-message br+br,
 .edit-account .edit-account-form .error-message br+br,
 .upload-recordings .upload-recordings-form .error-message br+br,
@@ -1666,6 +1668,7 @@ section {
   margin-top: 25px;
 }
 
+.portfolio-details .edit-recording-form .success-message,
 .edit-account .edit-account-form .success-message,
 .upload-recordings .upload-recordings-form .success-message,
 .register .register-form .success-message {
@@ -1677,6 +1680,7 @@ section {
   font-weight: 600;
 }
 
+.portfolio-details .edit-recording-form .loading,
 .portfolio .loading,
 .edit-account .edit-account-form .loading,
 .upload-recordings .upload-recordings-form .loading,
@@ -1688,6 +1692,7 @@ section {
   padding: 15px;
 }
 
+.portfolio-details .edit-recording-form .loading:before,
 .portfolio .loading:before,
 .edit-account .edit-account-form .loading:before,
 .upload-recordings .upload-recordings-form .loading:before,
