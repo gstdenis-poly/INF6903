@@ -22,6 +22,9 @@
 
         thisForm.querySelector('.loading').classList.add('d-block');
         thisForm.querySelector('.error-message').classList.remove('d-block');
+        let successMessage = thisForm.querySelector('.success-message');
+        if (successMessage !== null)
+          successMessage.classList.remove('d-block');
   
         let formData = new FormData( thisForm );
         form_submit(thisForm, action, formData);
