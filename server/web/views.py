@@ -188,6 +188,7 @@ def view_recording(request, recording_id):
         solutions.sort(key = cmp_key)
 
         return render(request, 'logged_in/view_recording.html', {
+            'user': request.user,
             'recording': recording, 
             'solutions': solutions
             })

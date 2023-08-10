@@ -83,11 +83,26 @@
                         <div class="col-lg-4">
                             <div class="portfolio-info">
                                 <h3>Recording information</h3>
-                                <ul>
-                                    <li><strong>Id</strong>: {{ recording.id }}</li>
-                                    <li><strong>Title</strong>: {{ recording.title }}</li>
-                                    <li><strong>Solutions count</strong>: {{ solutions|length }}</li>
-                                </ul>
+                                <form action="/edit_recording/" method="post" role="form" class="edit-recording-form">
+                                    <ul>
+                                        {% if user.username == recording.account.username %}
+                                            <li><strong>Title</strong>: {{ recording.title }}</li>
+                                        {% else %}
+                                            <form action="/edit_recording/" method="post" role="form" class="edit-recording-form">
+                                                {% csrf_token %}
+                                                <li>
+                                                    <div class="col-md-11 form-group">
+                                                        <strong>Title</strong>
+                                                        <input type="text" class="form-control" name="title" id="title" value="{{ recording.title }}">
+                                                    </div>
+                                                    <div class="text-center col-md-1"><button type="submit">Save</button></div>
+                                                </li>
+                                            </form>
+                                        {% endif %}
+                                        <li><strong>Id</strong>: {{ recording.id }}</li>
+                                        <li><strong>Solutions count</strong>: {{ solutions|length }}</li>
+                                    </ul>
+                                </form>
                             </div>
                             <div class="portfolio-description">
                                 <h2>Recording video</h2>
