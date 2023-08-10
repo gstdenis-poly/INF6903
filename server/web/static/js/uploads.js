@@ -39,7 +39,7 @@
             recordingInfos.style.opacity = isSelected ? '' : '1';
             recordingInfos.style.background = isSelected ? '' : 'rgba(36, 135, 206, 0.6)';
             e.setAttribute('selected', !isSelected);
-            event.setAttribute('title', !isSelected ? 'Select' : 'Unselect');
+            event.target.setAttribute('title', !isSelected ? 'Select' : 'Unselect');
 
             if (!isSelected)
                 btnCreateRequest.classList.remove('btn-request-hidden');
