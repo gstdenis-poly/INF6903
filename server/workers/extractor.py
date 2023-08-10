@@ -182,8 +182,11 @@ def extract_rec_infos_file(recording, file_path):
             continue # Monitors must be saved after Recordings
         
         attr_value = info_parts[1]
-        if info_parts[0] != 'title':
+        if info_parts[0] == 'title':
+            attr_value = '|'.join(info_parts[1:]) if len(info_parts) > 2 else attr_value
+        else:
             attr_value = float(attr_value)
+            
         setattr(recording, info_parts[0], attr_value)
         
     recording.save()
