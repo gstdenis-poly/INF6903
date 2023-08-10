@@ -161,7 +161,7 @@ def upload_recordings(request):
     if request.user.is_authenticated or not request.FILES:
         rec_files = request.FILES.getlist('rec_files')
         if len(rec_files) < 2:
-            return HttpResponse('First upload must contain at least two recordings', status = 400)
+            return HttpResponse(status = 400, reason = 'First upload must contain at least two recordings')
 
         for file in rec_files:
             upload_file_path = UPLOADS_DIR + request.user.username + '-' + file.name
