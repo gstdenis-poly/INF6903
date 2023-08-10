@@ -1736,7 +1736,7 @@ section {
   height: 100%;
 }
 
-.portfolio-details .edit-recording-form input[type=submit],
+.portfolio-details .edit-recording-form button[type=submit],
 .edit-account .edit-account-form button[type=submit],
 .upload-recordings .upload-recordings-form button[type=submit],
 .login .login-form button[type=submit],
