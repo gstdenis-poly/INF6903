@@ -67,15 +67,15 @@ def register(request):
         email = request.POST['email']
         try:
             user = User.objects.get(username = username)
-            return HttpResponse('Username already used', status = 400)
+            return HttpResponse('Username already used')
         except User.DoesNotExist:
             try:
                 user = User.objects.get(email = email)
-                return HttpResponse('Email already used', status = 400)
+                return HttpResponse('Email already used')
             except User.DoesNotExist:
                 pwd1, pwd2 = request.POST['password1'], request.POST['password2']
                 if pwd1 != pwd2:
-                    return HttpResponse('Passwords must be identical', status = 400)
+                    return HttpResponse('Passwords must be identical')
 
                 account = Account(username = username, email = email,
                                   password = make_password(pwd2),
@@ -118,7 +118,7 @@ def edit_account(request, account_id):
                 password_changed = not (pwd1 == '' and pwd2 == '')
                 if password_changed:
                     if pwd1 != pwd2:
-                        return HttpResponse('Passwords must be identical', status = 400)
+                        return HttpResponse('Passwords must be identical')
                     account.password = make_password(pwd2)
 
                 account.email = request.POST['email']
