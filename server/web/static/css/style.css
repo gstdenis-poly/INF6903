@@ -1723,6 +1723,7 @@ section {
 
 .portfolio-details .edit-recording-form #input-title {
   display: inline;
+  font-size: 15px;
   width: 65%;
 }
 
