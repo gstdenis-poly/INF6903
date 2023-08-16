@@ -157,6 +157,9 @@
                                                         <h4>{{ solution.title|default_if_none:solution.id }}</h4>
                                                         <p>{% if recording.account.type == 'provider' %}Recording {% else %}Solution{% endif %} #{{ forloop.counter }}</p>
                                                         <div class="portfolio-links">
+                                                            {% if recording.account.type == 'requester' %}
+                                                                <a href="#" data-gallery="portfolioGallery" class="portfolio-lightbox"><i class="bx bx-star"></i></a>
+                                                            {% endif %}
                                                             <a href="{% static solution.id %}.mp4" data-gallery="portfolioGallery" class="portfolio-lightbox"><i class="bx bx-play"></i></a>
                                                             <a href="/view_account/{{ solution.account.username }}" title="{% if recording.account.type == 'provider' %}Client{% else %}Provider{% endif %} Details"><i class="bx bx-face"></i></a>
                                                         </div>

@@ -150,3 +150,7 @@ class Request(models.Model):
 
         print(s1[0] + ': ' + str(s1_score) + ' | ' + s2[0] + ': ' + str(s2_score))
         return -1 if s1_score > s2_score else 0 if s1_score == s2_score else 1
+
+class Favorite(models.Model):
+    account = models.ForeignKey(Account, related_name = 'favorites', on_delete = models.CASCADE)
+    recording = models.ForeignKey(Recording, related_name = 'favorites', on_delete = models.CASCADE)

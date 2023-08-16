@@ -131,6 +131,7 @@
                                                             <h4>{{ rec.title|default_if_none:rec.id }}</h4>
                                                             <p>Solution #{{ forloop.parentloop.counter }} - Recording #{{ forloop.counter }}</p>
                                                             <div class="portfolio-links">
+                                                                <a href="#" data-gallery="portfolioGallery" class="portfolio-lightbox"><i class="bx bx-star"></i></a>
                                                                 <a href="{% static rec.id %}.mp4" data-gallery="portfolioGallery" class="portfolio-lightbox"><i class="bx bx-play"></i></a>
                                                                 <a href="/view_account/{{ candidate }}" title="Provider Details"><i class="bx bx-face"></i></a>
                                                             </div>
