@@ -248,6 +248,19 @@ def view_request(request, request_id):
     else:
         return redirect('index')
 
+def delete_request(request, request_id):
+    if request.user.is_authenticated:
+        account = Account.objects.get(username = request.user.username)
+        if account.type == 'provider':
+            return redirect('index')
+        else:
+            req = Request.objects.get(id = request_id)
+            req.delete()
+
+            return HttpResponse('OK')
+    else:
+        return redirect('index')
+
 def add_recording_favorite(request, recording_id):
     if request.user.is_authenticated:
         account = Account.objects.get(username = request.user.username)
