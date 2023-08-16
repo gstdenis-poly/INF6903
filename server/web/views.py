@@ -1,5 +1,4 @@
-#from web.models import Account, Recording, Request, Favorite
-from web.models import Account, Recording, Request
+from web.models import Account, Recording, Request, Favorite
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import User
@@ -288,7 +287,7 @@ def add_favorite(request):
 
             solution = Recording.objects.get(id = request_body_json['solution'])
             recording = Recording.objects.get(id = request_body_json['recording'])
-            #Favorite(solution = solution, recording = recording).save()
+            Favorite(solution = solution, recording = recording).save()
             
             return HttpResponse('OK')
     else:
@@ -308,7 +307,7 @@ def remove_favorite(request):
 
             solution = Recording.objects.get(id = request_body_json['solution'])
             recording = Recording.objects.get(id = request_body_json['recording'])
-            #Favorite(solution = solution, recording = recording).delete()
+            Favorite(solution = solution, recording = recording).delete()
             
             return HttpResponse('OK')
     else:
