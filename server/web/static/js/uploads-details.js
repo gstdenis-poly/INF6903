@@ -30,7 +30,6 @@
         e.addEventListener('click', function(event) {
             event.preventDefault();
 
-            let target = event.target.parentElement;
             send_favorite_action('/add_favorite/', event.target.parentElement, function() {
                 btnRemoveFavorite[i].setAttribute('enabled', 'true');
             });

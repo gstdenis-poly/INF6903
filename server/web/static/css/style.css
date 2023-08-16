@@ -1061,9 +1061,9 @@ section {
 
 .portfolio .portfolio-item .btn-remove-favorite {
   color: rgb(255, 200, 0);
-  font-size: 30px;
+  font-size: 50px;
   position: absolute;
-  right: 15px;
+  right: 20px;
   top: 0px;
   z-index: 2;
 }
