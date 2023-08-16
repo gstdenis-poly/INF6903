@@ -4,8 +4,8 @@
     let btnFilterSolutions = document.querySelectorAll('.filter-solutions');
     let btnFilterSolution = document.querySelectorAll('.filter-solution');
     let btnViewAccount = document.querySelector('.btn-view-account');
-    let btnAddFavorite = document.querySelector('.btn-add-favorite');
-    let btnRemoveFavorite = document.querySelector('.btn-remove-favorite');
+    let btnAddFavorite = document.querySelectorAll('.btn-add-favorite');
+    let btnRemoveFavorite = document.querySelectorAll('.btn-remove-favorite');
 
     btnFilterSolutions.forEach( function(e) {
         e.addEventListener('click', function(event) {
@@ -26,25 +26,25 @@
         });
     });
 
-    if (btnAddFavorite !== null) {
-        btnAddFavorite.addEventListener('click', function(event) {
+    btnAddFavorite.forEach( function(e) {
+        e.addEventListener('click', function(event) {
             event.preventDefault();
 
-            send_favorite_action('/add_favorite/', event.target.parentElement, function() {
+            send_favorite_action('/add_favorite/', event.target, function() {
                 btnRemoveFavorite.setAttribute('enabled', 'true');
             });
         });
-    }
+    });
 
-    if (btnRemoveFavorite !== null) {
-        btnRemoveFavorite.addEventListener('click', function(event) {
+    btnRemoveFavorite.forEach( function(e) {
+        e.addEventListener('click', function(event) {
             event.preventDefault();
 
-            send_favorite_action('/remove_favorite/', event.target.parentElement, function() {
+            send_favorite_action('/remove_favorite/', event.target, function() {
                 btnAddFavorite.setAttribute('enabled', 'true');
             });
         });
-    }
+    });
 
     function send_favorite_action(action, target, successCallback) {
         target.setAttribute('enabled', 'false');
