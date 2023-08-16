@@ -26,24 +26,23 @@
         });
     });
 
-    btnAddFavorite.forEach( function(e) {
+    btnAddFavorite.forEach( function(e, i) {
         e.addEventListener('click', function(event) {
             event.preventDefault();
 
-            let target = event.target.parentElement
-            send_favorite_action('/add_favorite/', target, function() {
-                target.closest('.btn-remove-favorite').setAttribute('enabled', 'true');
+            let target = event.target.parentElement;
+            send_favorite_action('/add_favorite/', event.target.parentElement, function() {
+                btnRemoveFavorite[i].setAttribute('enabled', 'true');
             });
         });
     });
 
-    btnRemoveFavorite.forEach( function(e) {
+    btnRemoveFavorite.forEach( function(e, i) {
         e.addEventListener('click', function(event) {
             event.preventDefault();
 
-            let target = event.target.parentElement
-            send_favorite_action('/remove_favorite/', target, function() {
-                target.closest('.btn-add-favorite').setAttribute('enabled', 'true');
+            send_favorite_action('/remove_favorite/', event.target.parentElement, function() {
+                btnAddFavorite[i].setAttribute('enabled', 'true');
             });
         });
     });
