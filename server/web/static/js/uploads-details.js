@@ -49,10 +49,10 @@
     function send_favorite_action(action, target, successCallback) {
         target.setAttribute('enabled', 'false');
 
-        data['csrfmiddlewaretoken'] = getCsrfToken()
         fetch(action, {
             method: 'POST',
             body: JSON.stringify({
+                csrfmiddlewaretoken: getCsrfToken(),
                 recording: target.getAttribute('recording'), 
                 solution: target.getAttribute('solution') 
             }),
