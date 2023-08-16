@@ -30,7 +30,7 @@
         e.addEventListener('click', function(event) {
             event.preventDefault();
 
-            send_favorite_action('/add_favorite/', event.target, function() {
+            send_favorite_action('/add_favorite/', event.target.parentElement, function() {
                 btnRemoveFavorite.setAttribute('enabled', 'true');
             });
         });
@@ -40,7 +40,7 @@
         e.addEventListener('click', function(event) {
             event.preventDefault();
 
-            send_favorite_action('/remove_favorite/', event.target, function() {
+            send_favorite_action('/remove_favorite/', event.target.parentElement, function() {
                 btnAddFavorite.setAttribute('enabled', 'true');
             });
         });
