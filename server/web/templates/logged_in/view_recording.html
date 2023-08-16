@@ -159,11 +159,12 @@
                                                         <div class="portfolio-links">
                                                             <a href="/view_account/{{ solution.account.username }}" title="{% if recording.account.type == 'provider' %}Client{% else %}Provider{% endif %} Details"><i class="bx bx-face"></i></a>
                                                             <a href="{% static solution.id %}.mp4" data-gallery="portfolioGallery"><i class="bx bx-play"></i></a>
-                                                            {% if recording.account.type == 'requester' %}
-                                                                <a href="#" data-gallery="portfolioGallery" title="Add to favorites"><i class="bx bx-star"></i></a>
-                                                            {% endif %}
                                                         </div>
                                                     </div>
+                                                    {% if recording.account.type == 'requester' %}
+                                                        <script>function getCsrfToken() { return '{{ csrf_token }}' };</script>
+                                                        <a style="position: absolute;" href="#" data-gallery="portfolioGallery" title="Add to favorites"><i class="bx bx-star"></i></a>
+                                                    {% endif %}
                                                 </div>
                                             </div>
                                         {% endfor %}

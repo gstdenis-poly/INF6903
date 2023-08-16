@@ -4,6 +4,7 @@
     let btnFilterSolutions = document.querySelectorAll('.filter-solutions');
     let btnFilterSolution = document.querySelectorAll('.filter-solution');
     let btnViewAccount = document.querySelector('.btn-view-account');
+    let btnFavorite = document.querySelector('.bx-star');
 
     btnFilterSolutions.forEach( function(e) {
         e.addEventListener('click', function(event) {
@@ -23,5 +24,11 @@
             btnViewAccount.setAttribute('href', newHref);
         });
     });
+
+    if (btnFavorite !== null) {
+        btnFavorite.addEventListener('click', function(event) {
+            return;
+        });
+    }
 })();
   
