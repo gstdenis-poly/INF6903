@@ -1059,6 +1059,15 @@ section {
   margin-bottom: 30px;
 }
 
+.portfolio .portfolio-item .flag-favorite {
+  color: yellow;
+  font-size: 30px;
+  position: absolute;
+  right: 15px;
+  top: 0px;
+  z-index: 1;
+}
+
 .portfolio #portfolio-flters {
   padding: 0;
   margin: 0 auto 35px auto;

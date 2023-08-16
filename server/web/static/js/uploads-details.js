@@ -4,7 +4,7 @@
     let btnFilterSolutions = document.querySelectorAll('.filter-solutions');
     let btnFilterSolution = document.querySelectorAll('.filter-solution');
     let btnViewAccount = document.querySelector('.btn-view-account');
-    let btnFavorite = document.querySelector('.bx-star');
+    let btnFavorite = document.querySelector('.btn-favorite');
 
     btnFilterSolutions.forEach( function(e) {
         e.addEventListener('click', function(event) {
