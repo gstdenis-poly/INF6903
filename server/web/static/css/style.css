@@ -1070,7 +1070,7 @@ section {
 
 .portfolio .portfolio-item .btn-remove-favorite[enabled=true],
 .portfolio .portfolio-item .btn-add-favorite[enabled=true] {
-  display: block;
+  display: inline;
 }
 
 .portfolio .portfolio-item .btn-remove-favorite[enabled=false],
