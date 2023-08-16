@@ -161,11 +161,11 @@
                                                             <a href="{% static solution.id %}.mp4" data-gallery="portfolioGallery"><i class="bx bx-play"></i></a>
                                                         </div>
                                                     </div>
-                                                    {% if recording.account.type == 'requester' %}
-                                                        <script>function getCsrfToken() { return '{{ csrf_token }}' };</script>
-                                                        <a style="position: absolute;" href="#" data-gallery="portfolioGallery" title="Add to favorites"><i class="bx bx-star"></i></a>
-                                                    {% endif %}
                                                 </div>
+                                                {% if recording.account.type == 'requester' %}
+                                                    <script>function getCsrfToken() { return '{{ csrf_token }}' };</script>
+                                                    <a style="position: absolute; left: 0px;" href="#" data-gallery="portfolioGallery" title="Add to favorites"><i class="bx bx-star"></i></a>
+                                                {% endif %}
                                             </div>
                                         {% endfor %}
                                     </div>
