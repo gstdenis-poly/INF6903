@@ -187,15 +187,11 @@ def view_recording(request, recording_id):
         cmp_key = functools.cmp_to_key(Recording.cmp_solutions_score)
         solutions.sort(key = cmp_key)
 
-        favorites = []
-        for favorite in recording.favorites.all():
-            favorites += [favorite.solutions]
-
         return render(request, 'logged_in/view_recording.html', {
             'user': request.user,
             'recording': recording,
             'solutions': solutions,
-            'favorites': favorites
+            'favorites': [f.solution for f in recording.favorites.all()]
             })
     else:
         return redirect('index')
@@ -249,7 +245,7 @@ def view_request(request, request_id):
         favorites = []
         for recording in recordings:
             for favorite in recording.favorites.all():
-                favorites += [favorite.solutions]
+                favorites += [favorite.solution]
 
         return render(request, 'logged_in/view_request.html', {
             'req': req,
