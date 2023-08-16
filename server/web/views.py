@@ -188,7 +188,7 @@ def view_recording(request, recording_id):
         solutions.sort(key = cmp_key)
 
         favorites = []
-        for favorite in recording.favorites:
+        for favorite in recording.favorites.all():
             favorites += [favorite.solutions]
 
         return render(request, 'logged_in/view_recording.html', {
@@ -248,7 +248,7 @@ def view_request(request, request_id):
 
         favorites = []
         for recording in recordings:
-            for favorite in recording.favorites:
+            for favorite in recording.favorites.all():
                 favorites += [favorite.solutions]
 
         return render(request, 'logged_in/view_request.html', {
