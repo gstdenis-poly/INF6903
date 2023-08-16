@@ -1059,13 +1059,23 @@ section {
   margin-bottom: 30px;
 }
 
-.portfolio .portfolio-item .flag-favorite {
-  color: yellow;
+.portfolio .portfolio-item .btn-remove-favorite {
+  color: rgb(255, 200, 0);
   font-size: 30px;
   position: absolute;
   right: 15px;
-  top: 0px;
-  z-index: 1;
+  top: 3px;
+  z-index: 2;
+}
+
+.portfolio .portfolio-item .btn-remove-favorite[enabled=true],
+.portfolio .portfolio-item .btn-add-favorite[enabled=true] {
+  display: block;
+}
+
+.portfolio .portfolio-item .btn-remove-favorite[enabled=false],
+.portfolio .portfolio-item .btn-add-favorite[enabled=false] {
+  display: none;
 }
 
 .portfolio #portfolio-flters {

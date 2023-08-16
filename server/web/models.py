@@ -152,5 +152,10 @@ class Request(models.Model):
         return -1 if s1_score > s2_score else 0 if s1_score == s2_score else 1
 
 class Favorite(models.Model):
-    account = models.ForeignKey(Account, related_name = 'favorites', on_delete = models.CASCADE)
+    solution = models.ForeignKey(Recording, on_delete = models.CASCADE)
+
+class RecordingFavorite(Favorite):
     recording = models.ForeignKey(Recording, related_name = 'favorites', on_delete = models.CASCADE)
+
+class RequestFavorite(Favorite):
+    request = models.ForeignKey(Request, related_name = 'favorites', on_delete = models.CASCADE)

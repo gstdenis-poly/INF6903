@@ -1,4 +1,4 @@
-from web.models import Account, Recording, Request
+from web.models import Account, Recording, Request, RecordingFavorite, RequestFavorite
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import User
@@ -248,14 +248,81 @@ def view_request(request, request_id):
     else:
         return redirect('index')
 
-def delete_request(request, request_id):
+def add_recording_favorite(request, recording_id):
     if request.user.is_authenticated:
         account = Account.objects.get(username = request.user.username)
         if account.type == 'provider':
             return redirect('index')
         else:
-            req = Request.objects.get(id = request_id)
-            req.delete()
+            if not request.body:
+                return redirect('index')
+            
+            request_body_unicode = request.body.decode('utf-8')
+            request_body_json = json.loads(request_body_unicode)
+
+            solution = Recording.objects.get(id = request_body_json['solution'])
+            recording = Recording.objects.get(id = recording_id)
+            RecordingFavorite(solution = solution, recording = recording).save()
+            
+            return HttpResponse('OK')
+    else:
+        return redirect('index')
+    
+def remove_recording_favorite(request, recording_id):
+    if request.user.is_authenticated:
+        account = Account.objects.get(username = request.user.username)
+        if account.type == 'provider':
+            return redirect('index')
+        else:
+            if not request.body:
+                return redirect('index')
+            
+            request_body_unicode = request.body.decode('utf-8')
+            request_body_json = json.loads(request_body_unicode)
+
+            solution = Recording.objects.get(id = request_body_json['solution'])
+            recording = Recording.objects.get(id = recording_id)
+            RecordingFavorite.objects.get(solution = solution, recording = recording).delete()
+            
+            return HttpResponse('OK')
+    else:
+        return redirect('index')
+
+def add_request_favorite(request, request_id):
+    if request.user.is_authenticated:
+        account = Account.objects.get(username = request.user.username)
+        if account.type == 'provider':
+            return redirect('index')
+        else:
+            if not request.body:
+                return redirect('index')
+            
+            request_body_unicode = request.body.decode('utf-8')
+            request_body_json = json.loads(request_body_unicode)
+
+            solution = Recording.objects.get(id = request_body_json['solution'])
+            request = Request.objects.get(id = request_id)
+            RequestFavorite(solution = solution, request = request).save()
+
+            return HttpResponse('OK')
+    else:
+        return redirect('index')
+    
+def remove_request_favorite(request, request_id):
+    if request.user.is_authenticated:
+        account = Account.objects.get(username = request.user.username)
+        if account.type == 'provider':
+            return redirect('index')
+        else:
+            if not request.body:
+                return redirect('index')
+            
+            request_body_unicode = request.body.decode('utf-8')
+            request_body_json = json.loads(request_body_unicode)
+
+            solution = Recording.objects.get(id = request_body_json['solution'])
+            request = Request.objects.get(id = request_id)
+            RequestFavorite.objects.get(solution = solution, request = request).delete()
             
             return HttpResponse('OK')
     else:

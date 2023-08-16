@@ -59,31 +59,37 @@
         });
     });
 
-    btnCreateRequest.addEventListener( 'click', function(event) {
-        event.preventDefault();
+    if (btnCreateRequest !== null) {
+        btnCreateRequest.addEventListener('click', function(event) {
+            event.preventDefault();
+    
+            let data = { 'recordings': [] }
+            for (const cell of recordingsCell) {
+                if (cell.getAttribute('selected') === 'true')
+                    data['recordings'].push(cell.getAttribute('recording'));
+            }
+    
+            send_request_action('/create_request/', data);
+        });
+    }
 
-        let data = { 'recordings': [] }
-        for (const cell of recordingsCell) {
-            if (cell.getAttribute('selected') === 'true')
-                data['recordings'].push(cell.getAttribute('recording'));
-        }
+    if (btnViewRequest !== null) {
+        btnViewRequest.addEventListener('click', function(event) {
+            event.preventDefault();
+            let request = event.target.getAttribute('request');
+            
+            location.href = '/view_request/' + request + '/'
+        });
+    }
 
-        send_request_action('/create_request/', data);
-    });
-
-    btnViewRequest.addEventListener( 'click', function(event) {
-        event.preventDefault();
-        let request_id = event.target.getAttribute('request');
-        
-        location.href = '/view_request/' + request_id + '/'
-    });
-
-    btnDeleteRequest.addEventListener( 'click', function(event) {
-        event.preventDefault();
-        let request_id = event.target.getAttribute('request');
-
-        send_request_action('/delete_request/' + request_id + '/', {});
-    });
+    if (btnDeleteRequest !== null) {
+        btnDeleteRequest.addEventListener('click', function(event) {
+            event.preventDefault();
+            let request = event.target.getAttribute('request');
+    
+            send_request_action('/delete_request/' + request + '/', {});
+        });
+    }
 
     function send_request_action(action, data) {
         manageRequestLoading.classList.add('d-block');

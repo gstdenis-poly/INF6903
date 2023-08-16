@@ -125,7 +125,9 @@
                                         {% for candidate, solution in solutions %}
                                             {% for rec in solution %}
                                                 <div class="col-lg-6 col-md-12 portfolio-item filter-solution{{ forloop.parentloop.counter }}" recording="{{ rec.id }}">
-                                                    <i class="bx bx-star flag-favorite"></i>
+                                                    <a href="#" data-gallery="portfolioGallery" title="Remove from favorites" class="btn-remove-favorite" request="{{ req.id }}" solution="{{ rec.id }}" enabled="{% if rec in req.favorites %}true{% else %}false{% endif %}">
+                                                        <i class="bx bx-star"></i>
+                                                    </a>
                                                     <div class="portfolio-wrap">
                                                         <video preload="auto" width="100%" src="{% static rec.id %}.mp4" type="video/mp4"></video>
                                                         <div class="portfolio-info">
@@ -134,10 +136,12 @@
                                                             <div class="portfolio-links">
                                                                 <a href="/view_account/{{ candidate }}" title="Provider Details"><i class="bx bx-face"></i></a>
                                                                 <a href="{% static rec.id %}.mp4" data-gallery="portfolioGallery"><i class="bx bx-play"></i></a>
+                                                                <script>function getCsrfToken() { return '{{ csrf_token }}' };</script>
+                                                                <a href="#" data-gallery="portfolioGallery" title="Add to favorites" class="btn-add-favorite" request="{{ req.id }}" solution="{{ rec.id }}" enabled="{% if rec in req.favorites %}false{% else %}true{% endif %}">
+                                                                    <i class="bx bx-star"></i>
+                                                                </a>
                                                             </div>
                                                         </div>
-                                                        <script>function getCsrfToken() { return '{{ csrf_token }}' };</script>
-                                                        <a href="#" data-gallery="portfolioGallery" title="Add to favorites"><i class="bx bx-star btn-favorite"></i></a>
                                                     </div>
                                                 </div>
                                             {% endfor %}
