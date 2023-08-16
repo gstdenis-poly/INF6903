@@ -30,8 +30,9 @@
         e.addEventListener('click', function(event) {
             event.preventDefault();
 
-            send_favorite_action('/add_favorite/', event.target.parentElement, function() {
-                btnRemoveFavorite.setAttribute('enabled', 'true');
+            let target = event.target.parentElement
+            send_favorite_action('/add_favorite/', target, function() {
+                target.closest('.btn-remove-favorite').setAttribute('enabled', 'true');
             });
         });
     });
@@ -40,8 +41,9 @@
         e.addEventListener('click', function(event) {
             event.preventDefault();
 
-            send_favorite_action('/remove_favorite/', event.target.parentElement, function() {
-                btnAddFavorite.setAttribute('enabled', 'true');
+            let target = event.target.parentElement
+            send_favorite_action('/remove_favorite/', target, function() {
+                target.closest('.btn-add-favorite').setAttribute('enabled', 'true');
             });
         });
     });
