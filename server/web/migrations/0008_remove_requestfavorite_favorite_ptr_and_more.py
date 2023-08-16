@@ -19,16 +19,16 @@ class Migration(migrations.Migration):
             model_name='requestfavorite',
             name='request',
         ),
-        migrations.AddField(
-            model_name='favorite',
-            name='recording',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='favorites', to='web.recording'),
-            preserve_default=False,
-        ),
         migrations.DeleteModel(
             name='RecordingFavorite',
         ),
         migrations.DeleteModel(
             name='RequestFavorite',
+        ),
+        migrations.AddField(
+            model_name='favorite',
+            name='recording',
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='favorites', to='web.recording'),
+            preserve_default=False,
         ),
     ]
