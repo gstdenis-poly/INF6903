@@ -30,13 +30,14 @@
         btnAddFavorite.addEventListener('click', function(event) {
             event.preventDefault();
 
-            let recording = event.target.getAttribute('recording');
+            let target = event.target.parentElement;
+            let recording = target.getAttribute('recording');
             let url = recording !== null ?
                         '/add_recording_favorite/' + recording + '/' :
-                        '/add_request_favorite/' + event.target.getAttribute('request') + '/'
-            let data = { solution: event.target.getAttribute('solution') }
+                        '/add_request_favorite/' + target.getAttribute('request') + '/'
+            let data = { solution: target.getAttribute('solution') }
 
-            send_favorite_action(url, data, event.target, function() {
+            send_favorite_action(url, data, target, function() {
                 btnRemoveFavorite.setAttribute('enabled', 'true');
             });
         });
