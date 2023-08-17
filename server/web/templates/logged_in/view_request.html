@@ -135,7 +135,7 @@
                                                             <p>Solution #{{ forloop.parentloop.counter }} - Recording #{{ forloop.counter }}</p>
                                                             <div class="portfolio-links">
                                                                 <a href="/view_account/{{ candidate }}" title="Provider Details"><i class="bx bx-face"></i></a>
-                                                                <a href="{% static rec.id %}.mp4" data-gallery="portfolioGallery"><i class="bx bx-play"></i></a>
+                                                                <a href="{% static rec.id %}.mp4" data-gallery="portfolioGallery" class="portfolio-lightbox"><i class="bx bx-play"></i></a>
                                                                 <script>function getCsrfToken() { return '{{ csrf_token }}' };</script>
                                                                 <a href="#" data-gallery="portfolioGallery" title="Add to favorites" class="btn-add-favorite" request="{{ req.id }}" solution="{{ rec.id }}" enabled="{% if rec in favorites %}false{% else %}true{% endif %}">
                                                                     <i class="bx bx-star"></i>

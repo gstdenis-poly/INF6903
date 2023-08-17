@@ -159,3 +159,7 @@ class RecordingFavorite(Favorite):
 
 class RequestFavorite(Favorite):
     request = models.ForeignKey(Request, related_name = 'favorites', on_delete = models.CASCADE)
+
+class Statistic(models.Model):
+    id = models.CharField(max_length = 40, primary_key = True, unique = True)
+    value = models.FloatField()
