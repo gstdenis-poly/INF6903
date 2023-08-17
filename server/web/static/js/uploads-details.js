@@ -30,7 +30,14 @@
         e.addEventListener('click', function(event) {
             event.preventDefault();
 
-            send_favorite_action('/add_favorite/', event.target.parentElement, function() {
+            let target = event.target.parentElement;
+            let recording = target.getAttribute('recording');
+            let url = recording !== null ?
+                        '/add_recording_favorite/' + recording + '/' :
+                        '/add_request_favorite/' + target.getAttribute('request') + '/';
+            let data = { solution: target.getAttribute('solution') };
+
+            send_favorite_action(url, data, target, function() {
                 btnRemoveFavorite[i].setAttribute('enabled', 'true');
             });
         });
@@ -40,22 +47,26 @@
         e.addEventListener('click', function(event) {
             event.preventDefault();
 
-            send_favorite_action('/remove_favorite/', event.target.parentElement, function() {
+            let target = event.target.parentElement
+            let recording = target.getAttribute('recording');
+            let url = recording !== null ?
+                        '/remove_recording_favorite/' + recording + '/' :
+                        '/remove_request_favorite/' + target.getAttribute('request') + '/'
+            let data = { solution: target.getAttribute('solution') }
+
+            send_favorite_action(url, data, target, function() {
                 btnAddFavorite[i].setAttribute('enabled', 'true');
             });
         });
     });
 
-    function send_favorite_action(action, target, successCallback) {
+    function send_favorite_action(action, data, target, successCallback) {
         target.setAttribute('enabled', 'false');
 
+        data['csrfmiddlewaretoken'] = getCsrfToken()
         fetch(action, {
             method: 'POST',
-            body: JSON.stringify({
-                csrfmiddlewaretoken: getCsrfToken(),
-                recording: target.getAttribute('recording'), 
-                solution: target.getAttribute('solution') 
-            }),
+            body: JSON.stringify(data),
             headers: { 
                 'X-Requested-With': 'XMLHttpRequest', 
                 'X-CSRFToken': getCsrfToken()

@@ -153,4 +153,9 @@ class Request(models.Model):
 
 class Favorite(models.Model):
     solution = models.ForeignKey(Recording, on_delete = models.CASCADE)
+
+class RecordingFavorite(Favorite):
     recording = models.ForeignKey(Recording, related_name = 'favorites', on_delete = models.CASCADE)
+
+class RequestFavorite(Favorite):
+    request = models.ForeignKey(Request, related_name = 'favorites', on_delete = models.CASCADE)
