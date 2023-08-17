@@ -337,7 +337,7 @@ def remove_request_favorite(request, request_id):
 
             solution = Recording.objects.get(id = request_body_json['solution'])
             req = Request.objects.get(id = request_id)
-            RecordingFavorite.objects.get(solution = solution, request = req).delete()
+            RequestFavorite.objects.get(solution = solution, request = req).delete()
             
             return HttpResponse('OK')
     else:
