@@ -316,7 +316,7 @@ def add_request_favorite(request, request_id):
             request_body_json = json.loads(request_body_unicode)
 
             solution = Recording.objects.get(id = request_body_json['solution'])
-            req = Recording.objects.get(id = request_id)
+            req = Request.objects.get(id = request_id)
             RequestFavorite(solution = solution, request = req).save()
             
             return HttpResponse('OK')
@@ -336,7 +336,7 @@ def remove_request_favorite(request, request_id):
             request_body_json = json.loads(request_body_unicode)
 
             solution = Recording.objects.get(id = request_body_json['solution'])
-            req = Recording.objects.get(id = request_id)
+            req = Request.objects.get(id = request_id)
             RecordingFavorite.objects.get(solution = solution, request = req).delete()
             
             return HttpResponse('OK')
