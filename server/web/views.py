@@ -241,11 +241,16 @@ def view_request(request, request_id):
         cmp_key = functools.cmp_to_key(Request.cmp_solutions_score)
         solutions = sorted(solutions.items(), key = cmp_key)
 
+        recordings = req.recordings.all()
+        favorites = [f.solution for f in req.favorites.all()]
+        for recording in recordings:
+            favorites += [f.solution for f in recording.favorites.all()]
+
         return render(request, 'logged_in/view_request.html', {
             'req': req,
-            'recordings': req.recordings.all(),
+            'recordings': recordings,
             'solutions' : solutions,
-            'favorites': [f.solution for f in req.favorites.all()]
+            'favorites': list(set(favorites))
             })
     else:
         return redirect('index')
@@ -337,7 +342,18 @@ def remove_request_favorite(request, request_id):
 
             solution = Recording.objects.get(id = request_body_json['solution'])
             req = Request.objects.get(id = request_id)
-            RequestFavorite.objects.get(solution = solution, request = req).delete()
+
+            # Remove request's favorite or favorite of one of its recording if it corresponds
+            # to a recording's favorite.
+            try:
+                RequestFavorite.objects.get(solution = solution, request = req).delete()
+            except RequestFavorite.DoesNotExist:
+                for rec in req.recordings:
+                    try:
+                        RecordingFavorite.objects.get(solution = solution, recording = rec).delete()
+                        break
+                    except RecordingFavorite.DoesNotExist:
+                        continue
             
             return HttpResponse('OK')
     else:
