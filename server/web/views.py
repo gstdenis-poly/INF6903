@@ -348,7 +348,7 @@ def remove_request_favorite(request, request_id):
             try:
                 RequestFavorite.objects.get(solution = solution, request = req).delete()
             except RequestFavorite.DoesNotExist:
-                for rec in req.recordings:
+                for rec in req.recordings.all():
                     try:
                         RecordingFavorite.objects.get(solution = solution, recording = rec).delete()
                         break
