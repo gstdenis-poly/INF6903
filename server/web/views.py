@@ -225,7 +225,13 @@ def create_request(request):
             req = Request(account = account)
             req.save()
             for recording_id in request_body_json['recordings']:
-                req.recordings.add(Recording.objects.get(id = recording_id))
+                recording = Recording.objects.get(id = recording_id)
+                req.recordings.add(recording)
+                
+                # Create a request favorite for each favorite of recording
+                for favorite in recording.favorites.all():
+                    RequestFavorite(solution = favorite.solution, request = req).save()
+
             req.save() 
             
             return HttpResponse('OK')
@@ -241,16 +247,11 @@ def view_request(request, request_id):
         cmp_key = functools.cmp_to_key(Request.cmp_solutions_score)
         solutions = sorted(solutions.items(), key = cmp_key)
 
-        recordings = req.recordings.all()
-        favorites = [f.solution for f in req.favorites.all()]
-        for recording in recordings:
-            favorites += [f.solution for f in recording.favorites.all()]
-
         return render(request, 'logged_in/view_request.html', {
             'req': req,
-            'recordings': recordings,
+            'recordings': req.recordings.all(),
             'solutions' : solutions,
-            'favorites': list(set(favorites))
+            'favorites': [f.solution for f in req.favorites.all()]
             })
     else:
         return redirect('index')
@@ -283,6 +284,15 @@ def add_recording_favorite(request, recording_id):
             solution = Recording.objects.get(id = request_body_json['solution'])
             recording = Recording.objects.get(id = recording_id)
             RecordingFavorite(solution = solution, recording = recording).save()
+
+            # Create all favorites for requests containing this recording
+            for req in account.requests.all():
+                for rec in req.recordings.all():
+                    if recording == rec:
+                        favorite, created = RequestFavorite.objects.get_or_create(solution = solution, request = req)
+                        if created:
+                            favorite.save()
+                        break
             
             return HttpResponse('OK')
     else:
@@ -303,6 +313,16 @@ def remove_recording_favorite(request, recording_id):
             solution = Recording.objects.get(id = request_body_json['solution'])
             recording = Recording.objects.get(id = recording_id)
             RecordingFavorite.objects.get(solution = solution, recording = recording).delete()
+
+            # Delete all request favorites that were created by this recording favorite
+            for req in account.requests.all():
+                for rec in req.recordings.all():
+                    if recording == rec:
+                        try:
+                            RequestFavorite.objects.get(solution = solution, request = req).delete()
+                        except RequestFavorite.DoesNotExist:
+                            break
+                        break
             
             return HttpResponse('OK')
     else:
@@ -342,18 +362,7 @@ def remove_request_favorite(request, request_id):
 
             solution = Recording.objects.get(id = request_body_json['solution'])
             req = Request.objects.get(id = request_id)
-
-            # Remove request's favorite or favorite of one of its recording if it corresponds
-            # to a recording's favorite.
-            try:
-                RequestFavorite.objects.get(solution = solution, request = req).delete()
-            except RequestFavorite.DoesNotExist:
-                for rec in req.recordings.all():
-                    try:
-                        RecordingFavorite.objects.get(solution = solution, recording = rec).delete()
-                        break
-                    except RecordingFavorite.DoesNotExist:
-                        continue
+            RequestFavorite.objects.get(solution = solution, request = req).delete()
             
             return HttpResponse('OK')
     else:
