@@ -135,7 +135,6 @@ class StatCalculator:
         best_fav_dev = 0.0 # Fav deviation with best precision
         curr_fav_dev = 0.0 # Current validated fav deviation
 
-        print(train_dataset)
         while best_precision < min_precision and elapsed_time < timeout:
             # Build comparison dataset
             cmp_dataset = {}
@@ -154,7 +153,7 @@ class StatCalculator:
                             break
                         cmp_dataset[key] += [line_parts[0]]
             # Calc precision of comparison dataset with train dataset
-            #print(cmp_dataset)
+            print(cmp_dataset)
             true_positives, false_positives = 0, 0
             for key in cmp_dataset:
                 for positive in cmp_dataset[key]:
