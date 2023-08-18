@@ -40,7 +40,7 @@ class StatCalculator:
     def calculate_req_fav_avg_diff_from_avg_score(self):
         req_fav_diffs = []
         for request in Request.objects.all():
-            req_favorites_max_diff = 0.0
+            req_favorites_min_diff = 0.0
             for favorite in request.favorites.all():
                 for recording in request.recordings.all():
                     rec_cluster_val_file = open(val_clusters_folder + recording.id + '.txt', 'r')
@@ -53,14 +53,14 @@ class StatCalculator:
                         line_parts = line.split('|')
                         if line_parts[0] == favorite.solution.id:
                             favorite_diff = (float(line_parts[1]) - rec_avg_score)
-                            if favorite_diff > req_favorites_max_diff:
-                                req_favorites_max_diff = favorite_diff
+                            if favorite_diff < req_favorites_min_diff:
+                                req_favorites_min_diff = favorite_diff
                             break
             
-            if req_favorites_max_diff == 0.0:
+            if req_favorites_min_diff == 0.0:
                 continue
 
-            req_fav_diffs += [req_favorites_max_diff]
+            req_fav_diffs += [req_favorites_min_diff]
 
         return req_fav_diffs
 
@@ -68,12 +68,12 @@ class StatCalculator:
     # average score of their recording's cluster validation
     def calculate_fav_avg_diff_from_avg_score(self):
         fav_diffs = []
-        if self.curr_clusters_validation_count > self.clusters_validation_count:
+        if self.curr_clusters_validation_count != self.clusters_validation_count:
             fav_diffs += self.calculate_rec_fav_avg_diff_from_avg_score()
             fav_diffs += self.calculate_req_fav_avg_diff_from_avg_score()
-        elif self.curr_rec_favorites_count > self.rec_favorites_count:
+        elif self.curr_rec_favorites_count != self.rec_favorites_count:
             fav_diffs += self.calculate_rec_fav_avg_diff_from_avg_score()
-        elif self.curr_req_favorites_count > self.req_favorites_count:
+        elif self.curr_req_favorites_count != self.req_favorites_count:
             fav_diffs += self.calculate_req_fav_avg_diff_from_avg_score()
 
         if fav_diffs:
