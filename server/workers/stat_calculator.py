@@ -63,11 +63,11 @@ class StatCalculator:
 
                     scores = [float(l.split('|')[1]) for l in rec_cluster_val_lines]
                     scores_mean = mean(scores)
-                    scores_stdev = (stdev(scores) if len(scores) > 1 else 0.0)
+                    #scores_stdev = (stdev(scores) if len(scores) > 1 else 0.0)
 
                     for line in rec_cluster_val_lines:
                         line_parts = line.split('|')
-                        if float(line_parts[1]) < (scores_mean + scores_stdev + curr_fav_dev):
+                        if float(line_parts[1]) < (scores_mean + curr_fav_dev):
                             break
                         cmp_dataset[key] += [line_parts[0]]
             # Calc precision of comparison dataset with train dataset
@@ -94,7 +94,7 @@ class StatCalculator:
         if self.curr_clusters_validation_count == self.clusters_validation_count:
             return
 
-        recs_stdev = []
+        recs_scores = []
         for recording in Recording.objects.all():
             if recording.account.type == 'provider':
                 continue
@@ -103,12 +103,10 @@ class StatCalculator:
             rec_cluster_val_lines = rec_cluster_val_file.read().splitlines()
             rec_cluster_val_file.close()
 
-            rec_cluster_val_scores = [float(l.split('|')[1]) for l in rec_cluster_val_lines]
-            if len(rec_cluster_val_scores) > 1:
-                recs_stdev += [stdev(rec_cluster_val_scores)]
+            recs_scores += [float(l.split('|')[1]) for l in rec_cluster_val_lines]
 
-        if recs_stdev:
-            Statistic(id = 'avg_stdev', value = mean(recs_stdev)).save()    
+        if len(recs_scores):
+            Statistic(id = 'avg_stdev', value = stdev(recs_scores)).save()    
 
     # Program main function
     def calculate_stat(self):
