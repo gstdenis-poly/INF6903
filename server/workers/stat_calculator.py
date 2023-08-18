@@ -60,12 +60,14 @@ class StatCalculator:
                     rec_cluster_val_file = open(val_clusters_folder + recording + '.txt', 'r')
                     rec_cluster_val_lines = rec_cluster_val_file.read().splitlines()
                     rec_cluster_val_file.close()
-                    rec_cluster_val_scores = [float(l.split('|')[1]) for l in rec_cluster_val_lines]
-                    rec_cluster_val_scores_mean = mean(rec_cluster_val_scores)
+
+                    scores = [float(l.split('|')[1]) for l in rec_cluster_val_lines]
+                    scores_mean = mean(scores)
+                    scores_stdev = (stdev(scores) if len(scores) > 1 else 0.0)
 
                     for line in rec_cluster_val_lines:
                         line_parts = line.split('|')
-                        if float(line_parts[1]) < (rec_cluster_val_scores_mean + curr_fav_dev):
+                        if float(line_parts[1]) < (scores_mean + scores_stdev + curr_fav_dev):
                             break
                         cmp_dataset[key] += [line_parts[0]]
             # Calc precision of comparison dataset with train dataset
