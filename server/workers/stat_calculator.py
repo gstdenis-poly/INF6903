@@ -79,12 +79,14 @@ class StatCalculator:
             fav_diffs += self.calculate_rec_fav_avg_diff_from_avg_score()
         elif curr_req_favorites_count > self.req_favorites_count:
             fav_diffs += self.calculate_req_fav_avg_diff_from_avg_score()
+        else:
+            return
 
         self.clusters_validation_count = curr_clusters_validation_count
         self.rec_favorites_count = curr_rec_favorites_count
         self.req_favorites_count = curr_req_favorites_count
 
-        Statistic(id = 'fav_avg_diff_from_avg_score', value = mean(fav_diffs))
+        Statistic(id = 'fav_avg_diff_from_avg_score', value = mean(fav_diffs)).save()
 
     def calculate_avg_stdev(self):
         curr_clusters_validation_count = len(os.listdir(val_clusters_folder))
