@@ -138,7 +138,7 @@ class StatCalculator:
             cmp_dataset = {}
             for key in train_dataset:
                 cmp_dataset[key] = []
-                for recording in key:
+                for recording in train_dataset[key]:
                     rec_cluster_val_file = open(val_clusters_folder + recording + '.txt', 'r')
                     rec_cluster_val_lines = rec_cluster_val_file.read().splitlines()
                     rec_cluster_val_file.close()
@@ -154,7 +154,7 @@ class StatCalculator:
             true_positives, false_positives = 0, 0
             for key in cmp_dataset:
                 for positive in cmp_dataset[key]:
-                    if positive in self.fav_dev_train_dataset[recording]:
+                    if positive in train_dataset[key]:
                         true_positives += 1
                     else:
                         false_positives += 1
@@ -164,7 +164,7 @@ class StatCalculator:
             if curr_precision > best_precision:
                 best_precision = curr_precision
                 best_fav_dev = curr_fav_dev
-            # Increment fav stdev and elapsed time for next iteration
+            # Increment fav dev and elapsed time for next iteration
             curr_fav_dev += 0.01
             elapsed_time = time.time_ns() - start_time
 
