@@ -5,12 +5,30 @@
 from configurator import *
 import os
 from statistics import mean, stdev
+import time
 from web.models import Recording, Request, RecordingFavorite, RequestFavorite, Statistic
 
 class StatCalculator:
     rec_favorites_count, curr_rec_favorites_count = 0, 0
     req_favorites_count, curr_req_favorites_count = 0, 0
     clusters_validation_count, curr_clusters_validation_count = 0, 0
+    smart_stdev_train_dataset = {
+        'richbank-1690216267308128170': ['office365-1690215618610561557',
+                                         'libreoffice-1690213562387230010',
+                                         'optibus-1690471293632541631'],
+        'uinsurances-1690217158458021147': ['optibus-1690471293632541631',
+                                            'office365-1690215618610561557',
+                                            'libreoffice-1690213562387230010'],
+        'canadapost-1690469973482655850': [],
+        'office365-1690215722576562207': ['uinsurances-1690217281299334200',
+                                          'richbank-1690216393879738319'],
+        'libreoffice-1690213864828106713': ['richbank-1690216343948675325',
+                                            'uinsurances-1690217222160671516'],
+        'ivu-1690312720116058813': ['uinsurances-1690314483725517698'],
+        'optibus-1690471293632541631': ['uinsurances-1690217158458021147',
+                                        'richbank-1690216267308128170'],
+        'transit-1690472193137807594': []
+    }
 
     def calculate_rec_fav_avg_diff_from_avg_score(self):
         rec_fav_diffs = []
@@ -82,22 +100,52 @@ class StatCalculator:
         if fav_diffs:
             Statistic(id = 'fav_avg_diff_from_avg_score', value = mean(fav_diffs)).save()
 
-    def calculate_avg_stdev(self):
+    def calculate_smart_stdev(self):
         if self.curr_clusters_validation_count == self.clusters_validation_count:
             return
 
-        recs_stdev = []
-        for recording in Recording.objects.all():
-            rec_cluster_val_file = open(val_clusters_folder + recording.id + '.txt', 'r')
-            rec_cluster_val_lines = rec_cluster_val_file.read().splitlines()
-            rec_cluster_val_file.close()
+        timeout = 10 * 1000000000 # 10 seconds in nanoseconds
+        min_precision = 1.0 # Minimum precision wanted
+        start_time = time.time_ns() # Start time in nanoseconds
+        elapsed_time = 0 # Elapsed time from start time in nanoseconds
+        best_precision = 0.0 # Best precision obtained
+        best_smart_stdev = 0.0 # Smart stdev with best precision
+        curr_smart_stdev = 0.0 # Current validated smart stdev
 
-            rec_cluster_val_scores = [float(l.split('|')[1]) for l in rec_cluster_val_lines]
-            if len(rec_cluster_val_scores) > 1:
-                recs_stdev += [stdev(rec_cluster_val_scores)]
+        while best_precision < min_precision and elapsed_time < timeout:
+            # Build comparison dataset
+            cmp_dataset = {}
+            for recording in self.smart_stdev_train_dataset:
+                rec_cluster_val_file = open(val_clusters_folder + recording + '.txt', 'r')
+                rec_cluster_val_lines = rec_cluster_val_file.read().splitlines()
+                rec_cluster_val_file.close()
+                rec_cluster_val_scores = [float(l.split('|')[1]) for l in rec_cluster_val_lines]
+                rec_cluster_val_scores_mean = mean(rec_cluster_val_scores)
+                
+                cmp_dataset[recording] = []
+                for line in rec_cluster_val_lines:
+                    line_parts = line.split('|')
+                    if float(line_parts[1]) >= (rec_cluster_val_scores_mean + curr_smart_stdev):
+                        break
+                    cmp_dataset[recording] += [line_parts[0]]
+            # Calc precision of comparison dataset with train dataset
+            true_positives, false_positives = 0, 0
+            for recording in cmp_dataset:
+                for positive in cmp_dataset[recording]:
+                    if positive in self.smart_stdev_train_dataset[recording]:
+                        true_positives += 1
+                    else:
+                        false_positives += 1
+            curr_precision = true_positives / (true_positives + false_positives)
+            # Update best precision and best smart stdev
+            if curr_precision > best_precision:
+                best_precision = curr_precision
+                best_smart_stdev = curr_smart_stdev
+            # Increment smart stdev and elapsed time for next iteration
+            curr_smart_stdev += 0.1
+            elapsed_time = time.time_ns() - start_time
 
-        if recs_stdev:
-            Statistic(id = 'avg_stdev', value = mean(recs_stdev)).save()
+        Statistic(id = 'smart_stdev', value = best_smart_stdev).save()
 
     # Program main function
     def calculate_stat(self):
@@ -105,7 +153,7 @@ class StatCalculator:
         self.curr_req_favorites_count = len(RequestFavorite.objects.all())
         self.curr_clusters_validation_count = len(os.listdir(val_clusters_folder))
 
-        self.calculate_avg_stdev()
+        self.calculate_smart_stdev()
         self.calculate_fav_avg_diff_from_avg_score()
 
         self.rec_favorites_count = self.curr_rec_favorites_count
