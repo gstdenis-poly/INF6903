@@ -76,15 +76,18 @@ class StatCalculator:
 
         fav_diffs = []
         if curr_clusters_validation_count > self.clusters_validation_count:
+            print(1)
             fav_diffs += self.calculate_rec_fav_avg_diff_from_avg_score()
             print(fav_diffs)
             fav_diffs += self.calculate_req_fav_avg_diff_from_avg_score()
             print(fav_diffs)
         elif curr_rec_favorites_count > self.rec_favorites_count:
             fav_diffs += self.calculate_rec_fav_avg_diff_from_avg_score()
+            print(2)
             print(fav_diffs)
         elif curr_req_favorites_count > self.req_favorites_count:
             fav_diffs += self.calculate_req_fav_avg_diff_from_avg_score()
+            print(3)
             print(fav_diffs)
 
         if fav_diffs:
