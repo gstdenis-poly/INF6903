@@ -25,16 +25,19 @@ class StatCalculator:
                     line_parts = line.split('|')
                     if line_parts[0] == favorite.solution.id:
                         favorite_score = float(line_parts[1])
+                        print(favorite_score)
                         if favorite_score > rec_favorites_max_score:
                             rec_favorites_max_score = favorite_score
                         break
 
+            print(rec_favorites_max_score)
             if rec_favorites_max_score == 0.0:
                 break
 
             rec_avg_score = mean([float(l.split('|')[1]) for l in rec_cluster_val_lines])
             rec_fav_diffs += [rec_favorites_max_score - rec_avg_score]
 
+        print(rec_fav_diffs)
         return rec_fav_diffs
 
     def calculate_req_fav_avg_diff_from_avg_score(self):
@@ -53,15 +56,18 @@ class StatCalculator:
                         line_parts = line.split('|')
                         if line_parts[0] == favorite.solution.id:
                             favorite_diff = (float(line_parts[1]) - rec_avg_score)
+                            print(favorite_diff)
                             if favorite_diff > req_favorites_max_diff:
                                 req_favorites_max_diff = favorite_diff
                             break
-                            
+            
+            print(req_favorites_max_diff)  
             if req_favorites_max_diff == 0.0:
                 break
 
             req_fav_diffs += [req_favorites_max_diff]
 
+        print(req_fav_diffs)
         return req_fav_diffs
 
     # Calculate statistic of average favorites difference with
