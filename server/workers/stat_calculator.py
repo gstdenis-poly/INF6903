@@ -136,6 +136,7 @@ class StatCalculator:
         while best_precision < min_precision and elapsed_time < timeout:
             # Build comparison dataset
             cmp_dataset = {}
+            print(train_dataset)
             for key in train_dataset:
                 cmp_dataset[key] = []
                 for recording in train_dataset[key]:
@@ -151,6 +152,7 @@ class StatCalculator:
                             break
                         cmp_dataset[key] += [line_parts[0]]
             # Calc precision of comparison dataset with train dataset
+            print(cmp_dataset)
             true_positives, false_positives = 0, 0
             for key in cmp_dataset:
                 for positive in cmp_dataset[key]:
