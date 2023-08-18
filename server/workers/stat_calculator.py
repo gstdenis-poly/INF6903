@@ -102,7 +102,8 @@ class StatCalculator:
             if len(rec_cluster_val_scores) > 1:
                 recs_stdev += [stdev(rec_cluster_val_scores)]
 
-        Statistic(id = 'avg_stdev', value = mean(recs_stdev)).save()
+        if recs_stdev:
+            Statistic(id = 'avg_stdev', value = mean(recs_stdev)).save()
 
         self.clusters_validation_count = curr_clusters_validation_count
 
