@@ -29,6 +29,7 @@ class Recording(models.Model):
 
     def get_min_score_threshold(self, scores):
         min_score_threshold = mean(scores)
+        min_score_threshold += (stdev(scores) if len(scores) > 1 else 0.0)
 
         #scores_dev = stdev(scores) if len(scores) > 1 else 0.0
         #try:
