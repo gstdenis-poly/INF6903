@@ -30,10 +30,10 @@ class StatCalculator:
                         break
 
             if rec_favorites_min_score == 99.9:
-                continue
-
-            rec_avg_score = mean([float(l.split('|')[1]) for l in rec_cluster_val_lines])
-            rec_fav_diffs += [rec_favorites_min_score - rec_avg_score]
+                rec_fav_diffs += [0.0]
+            else:
+                rec_avg_score = mean([float(l.split('|')[1]) for l in rec_cluster_val_lines])
+                rec_fav_diffs += [rec_favorites_min_score - rec_avg_score]
 
         return rec_fav_diffs
 
@@ -58,9 +58,9 @@ class StatCalculator:
                             break
             
             if req_favorites_min_diff == 99.9:
-                continue
-
-            req_fav_diffs += [req_favorites_min_diff]
+                req_fav_diffs += [0.0]
+            else:
+                req_fav_diffs += [req_favorites_min_diff]
 
         return req_fav_diffs
 
