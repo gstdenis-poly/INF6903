@@ -144,12 +144,9 @@ class StatCalculator:
                 best_precision = curr_precision
                 best_smart_dev = curr_smart_dev
             # Increment smart stdev and elapsed time for next iteration
-            print(curr_smart_dev)
-            print(curr_precision)
-            curr_smart_dev += 0.1
+            curr_smart_dev += 0.01
             elapsed_time = time.time_ns() - start_time
 
-        print(best_precision)
         Statistic(id = 'smart_dev', value = best_smart_dev).save()
 
     # Program main function
