@@ -79,12 +79,30 @@ class StatCalculator:
         if fav_diffs:
             Statistic(id = 'fav_avg_diff_from_avg_score', value = mean(fav_diffs)).save()
 
+    def calculate_avg_stdev(self):
+        if self.curr_clusters_validation_count == self.clusters_validation_count:
+            return
+
+        recs_stdev = []
+        for recording in Recording.objects.all():
+            rec_cluster_val_file = open(val_clusters_folder + recording.id + '.txt', 'r')
+            rec_cluster_val_lines = rec_cluster_val_file.read().splitlines()
+            rec_cluster_val_file.close()
+
+            rec_cluster_val_scores = [float(l.split('|')[1]) for l in rec_cluster_val_lines]
+            if len(rec_cluster_val_scores) > 1:
+                recs_stdev += [stdev(rec_cluster_val_scores)]
+
+        if recs_stdev:
+            Statistic(id = 'avg_stdev', value = mean(recs_stdev)).save()
+
     # Program main function
     def calculate_stat(self):
         self.curr_rec_favorites_count = len(RecordingFavorite.objects.all())
         self.curr_req_favorites_count = len(RequestFavorite.objects.all())
         self.curr_clusters_validation_count = len(os.listdir(val_clusters_folder))
 
+        self.calculate_avg_stdev()
         self.calculate_fav_avg_diff_from_avg_score()
 
         self.rec_favorites_count = self.curr_rec_favorites_count
