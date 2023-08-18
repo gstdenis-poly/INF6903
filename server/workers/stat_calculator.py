@@ -147,6 +147,7 @@ class StatCalculator:
             curr_smart_stdev += 0.1
             elapsed_time = time.time_ns() - start_time
 
+        print(best_precision)
         Statistic(id = 'smart_stdev', value = best_smart_stdev).save()
 
     # Program main function
