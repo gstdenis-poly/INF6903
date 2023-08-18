@@ -12,7 +12,7 @@ class StatCalculator:
     rec_favorites_count, curr_rec_favorites_count = 0, 0
     req_favorites_count, curr_req_favorites_count = 0, 0
     clusters_validation_count, curr_clusters_validation_count = 0, 0
-    smart_dev_train_dataset = {
+    fav_dev_train_dataset = {
         'richbank-1690216267308128170': ['office365-1690215618610561557',
                                          'libreoffice-1690213562387230010',
                                          'optibus-1690471293632541631'],
@@ -100,54 +100,75 @@ class StatCalculator:
         if fav_diffs:
             Statistic(id = 'fav_avg_diff_from_avg_score', value = mean(fav_diffs)).save()
 
-    def calculate_smart_dev(self):
-        if self.curr_clusters_validation_count == self.clusters_validation_count:
-            return
+    def build_fav_train_dataset(self):
+        dataset = {}
 
+        for recording in Recording.objects.all():
+            dataset[(recording.id)] = []
+            for favorite in recording.favorites.all():
+                dataset[(recording.id)] += [favorite.solution.id]
+
+        for request in Request.objects.all():
+            recordings = tuple(sorted([r.id for r in request.recordings.all()]))
+
+            dataset[recordings] = []
+            for favorite in request.favorites.all():
+                dataset[recordings] += [favorite.solution.id]
+
+        return dataset
+
+    def calculate_fav_dev(self):
+        if self.curr_clusters_validation_count == self.clusters_validation_count and \
+           self.curr_rec_favorites_count == self.rec_favorites_count and \
+           self.curr_req_favorites_count == self.req_favorites_count:
+            return
+        
+        train_dataset = self.build_fav_train_dataset() # Training dataset
         timeout = 10 * 1000000000 # 10 seconds in nanoseconds
         min_precision = 1.0 # Minimum precision wanted
         start_time = time.time_ns() # Start time in nanoseconds
         elapsed_time = 0 # Elapsed time from start time in nanoseconds
         best_precision = 0.0 # Best precision obtained
         curr_precision = 0.0 # Current evaluated precision
-        best_smart_dev = 0.0 # Smart deviation with best precision
-        curr_smart_dev = 0.0 # Current validated smart deviation
+        best_fav_dev = 0.0 # Fav deviation with best precision
+        curr_fav_dev = 0.0 # Current validated fav deviation
 
         while best_precision < min_precision and elapsed_time < timeout:
             # Build comparison dataset
             cmp_dataset = {}
-            for recording in self.smart_dev_train_dataset:
-                rec_cluster_val_file = open(val_clusters_folder + recording + '.txt', 'r')
-                rec_cluster_val_lines = rec_cluster_val_file.read().splitlines()
-                rec_cluster_val_file.close()
-                rec_cluster_val_scores = [float(l.split('|')[1]) for l in rec_cluster_val_lines]
-                rec_cluster_val_scores_mean = mean(rec_cluster_val_scores)
+            for key in train_dataset:
+                cmp_dataset[key] = []
+                for recording in key:
+                    rec_cluster_val_file = open(val_clusters_folder + recording + '.txt', 'r')
+                    rec_cluster_val_lines = rec_cluster_val_file.read().splitlines()
+                    rec_cluster_val_file.close()
+                    rec_cluster_val_scores = [float(l.split('|')[1]) for l in rec_cluster_val_lines]
+                    rec_cluster_val_scores_mean = mean(rec_cluster_val_scores)
 
-                cmp_dataset[recording] = []
-                for line in rec_cluster_val_lines:
-                    line_parts = line.split('|')
-                    if float(line_parts[1]) < (rec_cluster_val_scores_mean + curr_smart_dev):
-                        break
-                    cmp_dataset[recording] += [line_parts[0]]
+                    for line in rec_cluster_val_lines:
+                        line_parts = line.split('|')
+                        if float(line_parts[1]) < (rec_cluster_val_scores_mean + curr_fav_dev):
+                            break
+                        cmp_dataset[key] += [line_parts[0]]
             # Calc precision of comparison dataset with train dataset
             true_positives, false_positives = 0, 0
-            for recording in cmp_dataset:
-                for positive in cmp_dataset[recording]:
-                    if positive in self.smart_dev_train_dataset[recording]:
+            for key in cmp_dataset:
+                for positive in cmp_dataset[key]:
+                    if positive in self.fav_dev_train_dataset[recording]:
                         true_positives += 1
                     else:
                         false_positives += 1
             if true_positives > 0:
                 curr_precision = true_positives / (true_positives + false_positives)
-            # Update best precision and best smart deviation
+            # Update best precision and best fav deviation
             if curr_precision > best_precision:
                 best_precision = curr_precision
-                best_smart_dev = curr_smart_dev
-            # Increment smart stdev and elapsed time for next iteration
-            curr_smart_dev += 0.01
+                best_fav_dev = curr_fav_dev
+            # Increment fav stdev and elapsed time for next iteration
+            curr_fav_dev += 0.01
             elapsed_time = time.time_ns() - start_time
 
-        Statistic(id = 'smart_dev', value = best_smart_dev).save()
+        Statistic(id = 'fav_dev', value = best_fav_dev).save()
 
     def calculate_avg_stdev(self):
         if self.curr_clusters_validation_count == self.clusters_validation_count:
@@ -172,9 +193,9 @@ class StatCalculator:
         self.curr_req_favorites_count = len(RequestFavorite.objects.all())
         self.curr_clusters_validation_count = len(os.listdir(val_clusters_folder))
 
-        self.calculate_smart_dev()
-        self.calculate_avg_stdev()
-        self.calculate_fav_avg_diff_from_avg_score()
+        self.calculate_fav_dev()
+        #self.calculate_avg_stdev()
+        #self.calculate_fav_avg_diff_from_avg_score()
 
         self.rec_favorites_count = self.curr_rec_favorites_count
         self.req_favorites_count = self.curr_req_favorites_count
