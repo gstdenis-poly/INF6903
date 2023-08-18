@@ -86,7 +86,7 @@ class StatCalculator:
         return req_fav_diffs
 
     # Calculate statistic of average favorites difference with
-    # average score of their recording's cluster validation
+    # average score of their recording's cluster validation.
     def calculate_fav_avg_diff_from_avg_score(self):
         fav_diffs = []
         if self.curr_clusters_validation_count != self.clusters_validation_count:

@@ -30,17 +30,17 @@ class Recording(models.Model):
     def get_min_score_threshold(self, scores):
         min_score_threshold = mean(scores)
 
-        scores_dev = stdev(scores) if len(scores) > 1 else 0.0
-        try:
-            scores_dev = mean([scores_dev, Statistic.objects.get(id = 'smart_dev').value])
-        except Statistic.DoesNotExist:
-            scores_dev = scores_dev
-        try:
-            scores_dev = mean([scores_dev, Statistic.objects.get(id = 'avg_stdev').value])
-        except Statistic.DoesNotExist:
-            scores_dev += scores_dev
-        min_score_threshold += scores_dev
-        
+        #scores_dev = stdev(scores) if len(scores) > 1 else 0.0
+        #try:
+        #    scores_dev = mean([scores_dev, Statistic.objects.get(id = 'smart_dev').value])
+        #except Statistic.DoesNotExist:
+        #    scores_dev = scores_dev
+        #try:
+        #    scores_dev = mean([scores_dev, Statistic.objects.get(id = 'avg_stdev').value])
+        #except Statistic.DoesNotExist:
+        #    scores_dev += scores_dev
+        #min_score_threshold += scores_dev
+
         try:
             min_score_threshold += Statistic.objects.get(id = 'fav_avg_diff_from_avg_score').value
         except Statistic.DoesNotExist:
