@@ -104,16 +104,18 @@ class StatCalculator:
         dataset = {}
 
         for recording in Recording.objects.all():
-            dataset[(recording.id)] = []
+            recording_id = tuple([recording.id])
+
+            dataset[recording_id] = []
             for favorite in recording.favorites.all():
-                dataset[(recording.id)] += [favorite.solution.id]
+                dataset[recording_id] += [favorite.solution.id]
 
         for request in Request.objects.all():
-            recordings = tuple(sorted([r.id for r in request.recordings.all()]))
+            recordings_id = tuple(sorted([r.id for r in request.recordings.all()]))
 
-            dataset[recordings] = []
+            dataset[recordings_id] = []
             for favorite in request.favorites.all():
-                dataset[recordings] += [favorite.solution.id]
+                dataset[recordings_id] += [favorite.solution.id]
 
         return dataset
 
