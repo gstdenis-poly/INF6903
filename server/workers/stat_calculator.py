@@ -8,9 +8,9 @@ from statistics import mean, stdev
 from web.models import Recording, Request, RecordingFavorite, RequestFavorite, Statistic
 
 class StatCalculator:
-    rec_favorites_count = 0
-    req_favorites_count = 0
-    clusters_validation_count = 0
+    rec_favorites_count, curr_rec_favorites_count = 0, 0
+    req_favorites_count, curr_req_favorites_count = 0, 0
+    clusters_validation_count, curr_clusters_validation_count = 0, 0
 
     def calculate_rec_fav_avg_diff_from_avg_score(self):
         rec_fav_diffs = []
@@ -53,57 +53,34 @@ class StatCalculator:
                         line_parts = line.split('|')
                         if line_parts[0] == favorite.solution.id:
                             favorite_diff = (float(line_parts[1]) - rec_avg_score)
-                            print(favorite_diff)
                             if favorite_diff > req_favorites_max_diff:
                                 req_favorites_max_diff = favorite_diff
                             break
             
-            print(req_favorites_max_diff)
             if req_favorites_max_diff == 0.0:
                 continue
 
             req_fav_diffs += [req_favorites_max_diff]
 
-        print(req_fav_diffs)
         return req_fav_diffs
 
     # Calculate statistic of average favorites difference with
     # average score of their recording's cluster validation
     def calculate_fav_avg_diff_from_avg_score(self):
-        curr_rec_favorites_count = len(RecordingFavorite.objects.all())
-        curr_req_favorites_count = len(RequestFavorite.objects.all())
-        curr_clusters_validation_count = len(os.listdir(val_clusters_folder))
-
-        print(curr_rec_favorites_count)
-        print(curr_req_favorites_count)
-        print(curr_clusters_validation_count)
-
         fav_diffs = []
-        if curr_clusters_validation_count > self.clusters_validation_count:
-            print(1)
+        if self.curr_clusters_validation_count > self.clusters_validation_count:
             fav_diffs += self.calculate_rec_fav_avg_diff_from_avg_score()
-            print(fav_diffs)
             fav_diffs += self.calculate_req_fav_avg_diff_from_avg_score()
-            print(fav_diffs)
-        elif curr_rec_favorites_count > self.rec_favorites_count:
+        elif self.curr_rec_favorites_count > self.rec_favorites_count:
             fav_diffs += self.calculate_rec_fav_avg_diff_from_avg_score()
-            print(2)
-            print(fav_diffs)
-        elif curr_req_favorites_count > self.req_favorites_count:
+        elif self.curr_req_favorites_count > self.req_favorites_count:
             fav_diffs += self.calculate_req_fav_avg_diff_from_avg_score()
-            print(3)
-            print(fav_diffs)
 
         if fav_diffs:
             Statistic(id = 'fav_avg_diff_from_avg_score', value = mean(fav_diffs)).save()
 
-        self.clusters_validation_count = curr_clusters_validation_count
-        self.rec_favorites_count = curr_rec_favorites_count
-        self.req_favorites_count = curr_req_favorites_count
-
     def calculate_avg_stdev(self):
-        curr_clusters_validation_count = len(os.listdir(val_clusters_folder))
-        if curr_clusters_validation_count == self.clusters_validation_count:
+        if self.curr_clusters_validation_count == self.clusters_validation_count:
             return
 
         recs_stdev = []
@@ -119,12 +96,18 @@ class StatCalculator:
         if recs_stdev:
             Statistic(id = 'avg_stdev', value = mean(recs_stdev)).save()
 
-        self.clusters_validation_count = curr_clusters_validation_count
-
     # Program main function
     def calculate_stat(self):
+        self.curr_rec_favorites_count = len(RecordingFavorite.objects.all())
+        self.curr_req_favorites_count = len(RequestFavorite.objects.all())
+        self.curr_clusters_validation_count = len(os.listdir(val_clusters_folder))
+
         self.calculate_avg_stdev()
         self.calculate_fav_avg_diff_from_avg_score()
+
+        self.rec_favorites_count = self.curr_rec_favorites_count
+        self.req_favorites_count = self.curr_req_favorites_count
+        self.clusters_validation_count = self.curr_clusters_validation_count
 
 # Program's main
 if __name__ == '__main__':
