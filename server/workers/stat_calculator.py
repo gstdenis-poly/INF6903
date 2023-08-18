@@ -19,21 +19,21 @@ class StatCalculator:
             rec_cluster_val_lines = rec_cluster_val_file.read().splitlines()
             rec_cluster_val_file.close()
 
-            rec_favorites_max_score = 0.0
+            rec_favorites_min_score = 0.0
             for favorite in recording.favorites.all():
                 for line in rec_cluster_val_lines:
                     line_parts = line.split('|')
                     if line_parts[0] == favorite.solution.id:
                         favorite_score = float(line_parts[1])
-                        if favorite_score > rec_favorites_max_score:
-                            rec_favorites_max_score = favorite_score
+                        if favorite_score < rec_favorites_min_score:
+                            rec_favorites_min_score = favorite_score
                         break
 
-            if rec_favorites_max_score == 0.0:
+            if rec_favorites_min_score == 0.0:
                 continue
 
             rec_avg_score = mean([float(l.split('|')[1]) for l in rec_cluster_val_lines])
-            rec_fav_diffs += [rec_favorites_max_score - rec_avg_score]
+            rec_fav_diffs += [rec_favorites_min_score - rec_avg_score]
 
         return rec_fav_diffs
 
