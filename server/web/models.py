@@ -32,7 +32,9 @@ class Recording(models.Model):
     #   - Its rank in results file is better than the count of accounts of different
     #     type than the account of given recording.
     #   - Its score is higher than 0.0.
-    #   - Its score is higher or equal to the average score + 1x the standard deviation.
+    #   - Its score is higher or equal to the average score 
+    #       + the average between 1x the standard deviation the statistic 
+    #         rec_fav_avg_diff_from_avg_score.
     def get_relevant_solutions(self):
         results_file_path = VAL_CLUSTERS_DIR + self.id + '.txt'
         if not os.path.isfile(results_file_path):
