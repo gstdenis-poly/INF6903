@@ -12,93 +12,6 @@ class StatCalculator:
     rec_favorites_count, curr_rec_favorites_count = 0, 0
     req_favorites_count, curr_req_favorites_count = 0, 0
     clusters_validation_count, curr_clusters_validation_count = 0, 0
-    fav_dev_train_dataset = {
-        'richbank-1690216267308128170': ['office365-1690215618610561557',
-                                         'libreoffice-1690213562387230010',
-                                         'optibus-1690471293632541631'],
-        'uinsurances-1690217158458021147': ['optibus-1690471293632541631',
-                                            'office365-1690215618610561557',
-                                            'libreoffice-1690213562387230010'],
-        'canadapost-1690469973482655850': [],
-        'office365-1690215722576562207': ['uinsurances-1690217281299334200',
-                                          'richbank-1690216393879738319'],
-        'libreoffice-1690213864828106713': ['richbank-1690216343948675325',
-                                            'uinsurances-1690217222160671516'],
-        'ivu-1690312720116058813': ['uinsurances-1690314483725517698'],
-        'optibus-1690471293632541631': ['uinsurances-1690217158458021147',
-                                        'richbank-1690216267308128170'],
-        'transit-1690472193137807594': []
-    }
-
-    def calculate_rec_fav_avg_diff_from_avg_score(self):
-        rec_fav_diffs = []
-        for recording in Recording.objects.all():
-            if recording.account.type == 'provider':
-                continue
-
-            rec_cluster_val_file = open(val_clusters_folder + recording.id + '.txt', 'r')
-            rec_cluster_val_lines = rec_cluster_val_file.read().splitlines()
-            rec_cluster_val_file.close()
-
-            rec_favorites_min_score = 99.9
-            for favorite in recording.favorites.all():
-                for line in rec_cluster_val_lines:
-                    line_parts = line.split('|')
-                    if line_parts[0] == favorite.solution.id:
-                        favorite_score = float(line_parts[1])
-                        if favorite_score < rec_favorites_min_score:
-                            rec_favorites_min_score = favorite_score
-                        break
-
-            if rec_favorites_min_score == 99.9:
-                rec_fav_diffs += [0.0]
-            else:
-                rec_avg_score = mean([float(l.split('|')[1]) for l in rec_cluster_val_lines])
-                rec_fav_diffs += [rec_favorites_min_score - rec_avg_score]
-
-        return rec_fav_diffs
-
-    def calculate_req_fav_avg_diff_from_avg_score(self):
-        req_fav_diffs = []
-        for request in Request.objects.all():
-            req_favorites_min_diff = 99.9
-            for favorite in request.favorites.all():
-                for recording in request.recordings.all():
-                    rec_cluster_val_file = open(val_clusters_folder + recording.id + '.txt', 'r')
-                    rec_cluster_val_lines = rec_cluster_val_file.read().splitlines()
-                    rec_cluster_val_file.close()
-
-                    rec_avg_score = mean([float(l.split('|')[1]) for l in rec_cluster_val_lines])
-
-                    for line in rec_cluster_val_lines:
-                        line_parts = line.split('|')
-                        if line_parts[0] == favorite.solution.id:
-                            favorite_diff = (float(line_parts[1]) - rec_avg_score)
-                            if favorite_diff < req_favorites_min_diff:
-                                req_favorites_min_diff = favorite_diff
-                            break
-            
-            if req_favorites_min_diff == 99.9:
-                req_fav_diffs += [0.0]
-            else:
-                req_fav_diffs += [req_favorites_min_diff]
-
-        return req_fav_diffs
-
-    # Calculate statistic of average favorites difference with
-    # average score of their recording's cluster validation.
-    def calculate_fav_avg_diff_from_avg_score(self):
-        fav_diffs = []
-        if self.curr_clusters_validation_count != self.clusters_validation_count:
-            fav_diffs += self.calculate_rec_fav_avg_diff_from_avg_score()
-            fav_diffs += self.calculate_req_fav_avg_diff_from_avg_score()
-        elif self.curr_rec_favorites_count != self.rec_favorites_count:
-            fav_diffs += self.calculate_rec_fav_avg_diff_from_avg_score()
-        elif self.curr_req_favorites_count != self.req_favorites_count:
-            fav_diffs += self.calculate_req_fav_avg_diff_from_avg_score()
-
-        if fav_diffs:
-            Statistic(id = 'fav_avg_diff_from_avg_score', value = mean(fav_diffs)).save()
 
     def build_fav_train_dataset(self):
         dataset = {}
@@ -200,8 +113,7 @@ class StatCalculator:
         self.curr_clusters_validation_count = len(os.listdir(val_clusters_folder))
 
         self.calculate_fav_dev()
-        #self.calculate_avg_stdev()
-        #self.calculate_fav_avg_diff_from_avg_score()
+        self.calculate_avg_stdev()
 
         self.rec_favorites_count = self.curr_rec_favorites_count
         self.req_favorites_count = self.curr_req_favorites_count
