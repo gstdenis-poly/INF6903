@@ -88,7 +88,7 @@ class StatCalculator:
 
     def calculate_avg_stdev(self):
         curr_clusters_validation_count = len(os.listdir(val_clusters_folder))
-        if curr_clusters_validation_count == clusters_validation_count:
+        if curr_clusters_validation_count == self.clusters_validation_count:
             return
 
         recs_stdev = []
@@ -101,9 +101,9 @@ class StatCalculator:
             if len(rec_cluster_val_scores) > 1:
                 recs_stdev += [stdev(rec_cluster_val_scores)]
 
-        Statistic(id = 'avg_stdev', value = mean(recs_stdev)) 
+        Statistic(id = 'avg_stdev', value = mean(recs_stdev))
 
-        clusters_validation_count = curr_clusters_validation_count
+        self.clusters_validation_count = curr_clusters_validation_count
 
     # Program main function
     def calculate_stat(self):

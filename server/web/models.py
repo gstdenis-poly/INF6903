@@ -33,8 +33,8 @@ class Recording(models.Model):
     #     type than the account of given recording.
     #   - Its score is higher than 0.0.
     #   - Its score is higher or equal to the average score 
-    #       + the average between 1x the standard deviation the statistic 
-    #         rec_fav_avg_diff_from_avg_score.
+    #       + the average between 1x the standard deviation, the average standard deviation  
+    #         and the statistic fav_avg_diff_from_avg_score.
     def get_relevant_solutions(self):
         results_file_path = VAL_CLUSTERS_DIR + self.id + '.txt'
         if not os.path.isfile(results_file_path):
