@@ -104,6 +104,9 @@ class StatCalculator:
         dataset = {}
 
         for recording in Recording.objects.all():
+            if recording.account.type == 'provider':
+                continue
+
             recording_id = tuple([recording.id])
 
             dataset[recording_id] = []
