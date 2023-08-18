@@ -96,6 +96,9 @@ class StatCalculator:
 
         recs_stdev = []
         for recording in Recording.objects.all():
+            if recording.account.type == 'provider':
+                continue
+
             rec_cluster_val_file = open(val_clusters_folder + recording.id + '.txt', 'r')
             rec_cluster_val_lines = rec_cluster_val_file.read().splitlines()
             rec_cluster_val_file.close()
