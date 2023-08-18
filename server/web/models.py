@@ -41,7 +41,7 @@ class Recording(models.Model):
         except Statistic.DoesNotExist:
             min_score_threshold += 0.0
 
-        print('Min score threshold: ' + min_score_threshold)
+        print('Min score threshold: ' + str(min_score_threshold))
         return min_score_threshold
 
 
