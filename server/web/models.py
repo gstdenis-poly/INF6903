@@ -27,14 +27,31 @@ class Recording(models.Model):
     text_sizes_count = models.IntegerField(default = None, null = True)
     text_sentiment_score = models.FloatField(default = None, null = True)
 
+    def get_min_score_threshold(self, scores):
+        min_score_threshold = mean(scores)
+
+        scores_sd = stdev(scores) if len(scores) > 1 else 0.0
+        try:
+            min_score_threshold += mean([scores_sd, Statistic.objects.get(id = 'avg_stdev').value])
+        except Statistic.DoesNotExist:
+            min_score_threshold += scores_sd
+
+        try:
+            min_score_threshold += Statistic.objects.get(id = 'fav_avg_diff_from_avg_score').value
+        except Statistic.DoesNotExist:
+            min_score_threshold += 0.0
+
+        print('Min score threshold: ' + min_score_threshold)
+        return min_score_threshold
+
+
     # Return relevant solutions for recording according to its related results file.
     # Solution is relevant if:
     #   - Its rank in results file is better than the count of accounts of different
     #     type than the account of given recording.
     #   - Its score is higher than 0.0.
     #   - Its score is higher or equal to the average score 
-    #       + the average between 1x the standard deviation, the average standard deviation  
-    #         and the statistic fav_avg_diff_from_avg_score.
+    #       + 1x the standard deviation + the statistic fav_avg_diff_from_avg_score.
     def get_relevant_solutions(self):
         results_file_path = VAL_CLUSTERS_DIR + self.id + '.txt'
         if not os.path.isfile(results_file_path):
@@ -43,13 +60,11 @@ class Recording(models.Model):
         results_file = open(results_file_path, 'r')
         results_file_lines = results_file.read().splitlines()
         results_file.close()
-
         results_score = [float(l.split('|')[1]) for l in results_file_lines]
-        results_scores_avg = mean(results_score)
-        results_scores_sd = stdev(results_score) if len(results_score) > 1 else 0.0
+
+        min_score_threshold = self.get_min_score_threshold(results_score)
         opposite_acc_type = 'provider' if self.account.type == 'requester' else 'requester'
         results_score_count_max = len(Account.objects.all().filter(type = opposite_acc_type))
-        print('Scores avg: ' + str(results_scores_avg) + ' | Scores stdev: ' + str(results_scores_sd))
 
         solutions = []
         for i, line in enumerate(results_file_lines):
@@ -59,7 +74,7 @@ class Recording(models.Model):
             print(line_infos[0] + ': ' + line_infos[1])
 
             if i == results_score_count_max or \
-               score == 0.0 or score < (results_scores_avg + results_scores_sd):
+               score == 0.0 or score < min_score_threshold:
                 break
 
             solutions += [Recording.objects.get(id = line_infos[0])]
