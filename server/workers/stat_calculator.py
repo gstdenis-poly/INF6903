@@ -109,6 +109,7 @@ class StatCalculator:
         start_time = time.time_ns() # Start time in nanoseconds
         elapsed_time = 0 # Elapsed time from start time in nanoseconds
         best_precision = 0.0 # Best precision obtained
+        curr_precision = 0.0 # Current evaluated precision
         best_smart_stdev = 0.0 # Smart stdev with best precision
         curr_smart_stdev = 0.0 # Current validated smart stdev
 
@@ -121,11 +122,11 @@ class StatCalculator:
                 rec_cluster_val_file.close()
                 rec_cluster_val_scores = [float(l.split('|')[1]) for l in rec_cluster_val_lines]
                 rec_cluster_val_scores_mean = mean(rec_cluster_val_scores)
-                
+
                 cmp_dataset[recording] = []
                 for line in rec_cluster_val_lines:
                     line_parts = line.split('|')
-                    if float(line_parts[1]) >= (rec_cluster_val_scores_mean + curr_smart_stdev):
+                    if float(line_parts[1]) < (rec_cluster_val_scores_mean + curr_smart_stdev):
                         break
                     cmp_dataset[recording] += [line_parts[0]]
             # Calc precision of comparison dataset with train dataset
@@ -136,7 +137,8 @@ class StatCalculator:
                         true_positives += 1
                     else:
                         false_positives += 1
-            curr_precision = true_positives / (true_positives + false_positives)
+            if true_positives > 0:
+                curr_precision = true_positives / (true_positives + false_positives)
             # Update best precision and best smart stdev
             if curr_precision > best_precision:
                 best_precision = curr_precision
