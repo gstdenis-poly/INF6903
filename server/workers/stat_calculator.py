@@ -74,6 +74,10 @@ class StatCalculator:
         curr_req_favorites_count = len(RequestFavorite.objects.all())
         curr_clusters_validation_count = len(os.listdir(val_clusters_folder))
 
+        print(curr_rec_favorites_count)
+        print(curr_req_favorites_count)
+        print(curr_clusters_validation_count)
+
         fav_diffs = []
         if curr_clusters_validation_count > self.clusters_validation_count:
             print(1)
