@@ -36,7 +36,7 @@ class Recording(models.Model):
         except Statistic.DoesNotExist:
             scores_dev = scores_dev
         try:
-            scores_dev += Statistic.objects.get(id = 'fav_dev').value
+            scores_dev = mean([scores_dev, Statistic.objects.get(id = 'fav_dev').value])
         except Statistic.DoesNotExist:
             scores_dev = scores_dev
         

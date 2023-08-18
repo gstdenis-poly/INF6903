@@ -63,11 +63,10 @@ class StatCalculator:
 
                     scores = [float(l.split('|')[1]) for l in rec_cluster_val_lines]
                     scores_mean = mean(scores)
-                    scores_stdev = (stdev(scores) if len(scores) > 1 else 0.0)
 
                     for line in rec_cluster_val_lines:
                         line_parts = line.split('|')
-                        if float(line_parts[1]) < (scores_mean + scores_stdev + curr_fav_dev):
+                        if float(line_parts[1]) < (scores_mean + curr_fav_dev):
                             break
                         cmp_dataset[key] += [line_parts[0]]
             # Calc precision of comparison dataset with train dataset
@@ -85,7 +84,7 @@ class StatCalculator:
                 best_precision = curr_precision
                 best_fav_dev = curr_fav_dev
             # Increment fav dev and elapsed time for next iteration
-            curr_fav_dev += 0.01
+            curr_fav_dev += 0.001
             elapsed_time = time.time_ns() - start_time
 
         Statistic(id = 'fav_dev', value = best_fav_dev).save()
@@ -94,7 +93,7 @@ class StatCalculator:
         if self.curr_clusters_validation_count == self.clusters_validation_count:
             return
 
-        recs_scores = []
+        recs_stdev = []
         for recording in Recording.objects.all():
             if recording.account.type == 'provider':
                 continue
@@ -103,10 +102,13 @@ class StatCalculator:
             rec_cluster_val_lines = rec_cluster_val_file.read().splitlines()
             rec_cluster_val_file.close()
 
-            recs_scores += [float(l.split('|')[1]) for l in rec_cluster_val_lines]
+            rec_cluster_val_scores = [float(l.split('|')[1]) for l in rec_cluster_val_lines]
 
-        if len(recs_scores) > 1:
-            Statistic(id = 'avg_stdev', value = stdev(recs_scores)).save()    
+            if len(rec_cluster_val_scores) > 1:
+                recs_stdev += [stdev(rec_cluster_val_scores)]
+
+        if recs_stdev:
+            Statistic(id = 'avg_stdev', value = mean(recs_stdev)).save()    
 
     # Program main function
     def calculate_stat(self):
