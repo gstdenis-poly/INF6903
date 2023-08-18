@@ -32,7 +32,7 @@ class StatCalculator:
 
             print(rec_favorites_max_score)
             if rec_favorites_max_score == 0.0:
-                break
+                continue
 
             rec_avg_score = mean([float(l.split('|')[1]) for l in rec_cluster_val_lines])
             rec_fav_diffs += [rec_favorites_max_score - rec_avg_score]
@@ -63,7 +63,7 @@ class StatCalculator:
             
             print(req_favorites_max_diff)  
             if req_favorites_max_diff == 0.0:
-                break
+                continue
 
             req_fav_diffs += [req_favorites_max_diff]
 
