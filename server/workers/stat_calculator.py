@@ -140,7 +140,7 @@ class StatCalculator:
             cmp_dataset = {}
             for key in train_dataset:
                 cmp_dataset[key] = []
-                for recording in train_dataset[key]:
+                for recording in key:
                     rec_cluster_val_file = open(val_clusters_folder + recording + '.txt', 'r')
                     rec_cluster_val_lines = rec_cluster_val_file.read().splitlines()
                     rec_cluster_val_file.close()
