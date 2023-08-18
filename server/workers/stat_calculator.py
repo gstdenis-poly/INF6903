@@ -77,6 +77,7 @@ class StatCalculator:
             fav_diffs += self.calculate_req_fav_avg_diff_from_avg_score()
 
         if fav_diffs:
+            print(mean(fav_diffs))
             Statistic(id = 'fav_avg_diff_from_avg_score', value = mean(fav_diffs)).save()
 
     def calculate_avg_stdev(self):
@@ -94,6 +95,7 @@ class StatCalculator:
                 recs_stdev += [stdev(rec_cluster_val_scores)]
 
         if recs_stdev:
+            print(mean(recs_stdev))
             Statistic(id = 'avg_stdev', value = mean(recs_stdev)).save()
 
     # Program main function
