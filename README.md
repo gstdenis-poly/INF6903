@@ -22,6 +22,7 @@
 - [PostgreSQL] - base de données relationnelle libre et gratuite
 - [Bootstrap] - cadriciel Web front-end libre
 - [pywebview] - GUI pour programme Python avec JS, HTML et CSS
+- [pyinstaller] - assembleur d'applications Python en package unique
 
 ## Installation
 L'application utilise des technologies multiplateforme mais n'a été testée que sur Unix. Les étapes d'installation de celle-ci pour un bon fonctionnement sur environnement Windows pourraient différer des étapes ci-dessous.
@@ -32,7 +33,7 @@ L'application utilise des technologies multiplateforme mais n'a été testée qu
 cd client
 bash ./installer.sh
 ```
-- Générer l'exécutable client avec la commande pyinstaller recorder.py --onefile -F --icon logo.ico.
+- Générer l'exécutable client avec la commande pyinstaller recorder.py --onefile -F --icon logo.ico --splash splashscreen.png.
 - Compresser dans un fichier recorder.zip les fichiers et répertoires générés par pyinstaller puis téléverser le .zip sur le serveur pour permettre son téléchargement via l'application Web.
 - Démarrer le tunnel SSH suivant: sshpass -p SSH_PASS ssh -L 8000:localhost:8000 SSH_ADDRESS.
 ### Serveur
@@ -72,4 +73,5 @@ INF6903 - Projet de maîtrise en ingénierie III
    [PostgreSQL]: <https://www.postgresql.org/>
    [Bootstrap]: <https://getbootstrap.com/>
    [pywebview]: <https://pywebview.flowrl.com/>
+   [pyinstaller]: <https://pyinstaller.org/>
 
