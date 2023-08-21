@@ -137,7 +137,7 @@ class RecorderGui:
         self.window.destroy()
 
     def read_me(self):
-        webbrowser.open('https://github.com/gstdenis-poly/INF6903/tree/main/client#readme')
+        webbrowser.open('./README.html')
 
     def open_website(self):
         webbrowser.open('http://localhost:8000')
