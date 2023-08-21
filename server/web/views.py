@@ -172,6 +172,12 @@ def upload_recordings(request):
         
             upload_folder_path = os.path.splitext(upload_file_path)[0]
             shutil.unpack_archive(upload_file_path, upload_folder_path, 'zip')
+
+            unpack_folder_files = os.listdir(upload_folder_path)
+            if not ('screen_recording.mp4' in unpack_folder_files or 
+                    'recording_infos.txt' in unpack_folder_files):
+                return HttpResponse('Mandatory files are missing from upload')
+
             os.remove(upload_file_path) # Remove .zip file after uncompressing it
             open(upload_folder_path + '.final', 'w').close() # .final file for worker notif
         
