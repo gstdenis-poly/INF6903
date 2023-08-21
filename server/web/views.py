@@ -159,8 +159,9 @@ def download_client(request):
 
 def upload_recordings(request):
     if request.user.is_authenticated or not request.FILES:
+        account = Account.objects.get(username = request.user.username)
         rec_files = request.FILES.getlist('rec_files')
-        if len(rec_files) < 2:
+        if len(account.recordings.all()) == 0 and len(rec_files) < 2:
             return HttpResponse('First upload must contain at least two recordings')
 
         for file in rec_files:
