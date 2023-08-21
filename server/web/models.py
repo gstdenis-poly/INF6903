@@ -12,6 +12,19 @@ class Account(User):
     summary = models.CharField(default = None, null = True, blank = True, max_length = 10000)
     logo = models.CharField(default = None, null = True, blank = True, max_length = 200)
 
+    # Return recordings who have been processed by the full pipeline of workers.
+    def get_processed_recordings(self):
+        recordings = self.recordings.all()
+
+        processed_recordings = []
+        for recording in recordings:
+            results_file_path = VAL_CLUSTERS_DIR + recording.id + '.txt'
+            if os.path.isfile(results_file_path):
+                processed_recordings += [recording]
+
+        return processed_recordings
+
+
 class Recording(models.Model):
     id = models.CharField(max_length = 200, primary_key = True, unique = True)
     account = models.ForeignKey(Account, related_name = 'recordings', on_delete = models.CASCADE)

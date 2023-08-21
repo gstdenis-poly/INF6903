@@ -16,7 +16,7 @@ def index(request):
         account = Account.objects.get(username = request.user.username)
         return render(request, 'logged_in/index.html', {
             'account': account,
-            'recordings': account.recordings.all(),
+            'recordings': account.get_processed_recordings(),
             'requests': account.requests.all()
             })
     else:
