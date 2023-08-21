@@ -27,6 +27,10 @@ class Recording(models.Model):
     text_sizes_count = models.IntegerField(default = None, null = True)
     text_sentiment_score = models.FloatField(default = None, null = True)
 
+    # Calculate de minimum score threshold from given scores, which correspond to:
+    #   - Average of given scores +
+    #        average of standard deviation of given scores with statistic avg_stdev +
+    #        average of standard deviation of given scores with statistic fav_dev.
     def get_min_score_threshold(self, scores):
         min_score_threshold = mean(scores)
 
@@ -51,8 +55,7 @@ class Recording(models.Model):
     #   - Its rank in results file is better than the count of accounts of different
     #     type than the account of given recording.
     #   - Its score is higher than 0.0.
-    #   - Its score is higher or equal to the average score 
-    #       + 1x the standard deviation + the statistic fav_avg_diff_from_avg_score.
+    #   - Its score is higher or equal to the average score + minimum score threshold.
     def get_relevant_solutions(self):
         results_file_path = VAL_CLUSTERS_DIR + self.id + '.txt'
         if not os.path.isfile(results_file_path):

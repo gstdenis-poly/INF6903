@@ -13,6 +13,11 @@ class StatCalculator:
     req_favorites_count, curr_req_favorites_count = 0, 0
     clusters_validation_count, curr_clusters_validation_count = 0, 0
 
+    # Build training dataset from requesters favorites. Dataset is formatted as
+    # a dict with key corresponding to a tuple of recording(s) id (single for a
+    # recording favorite and multiple for a request favorite) and a value
+    # corresponding to a list of solutions provided for the recording/request
+    # and marked as favorites by the requester.
     def build_fav_train_dataset(self):
         dataset = {}
 
@@ -35,6 +40,15 @@ class StatCalculator:
 
         return dataset
 
+    # Calculate an optimized deviation from requesters favorites. This deviation
+    # is the one that offers the best precision before the optimization reached
+    # its timeout. The values in train dataset are considered the ground truth
+    # and are compared with a comparison dataset to evaluate a precision. The
+    # comparison dataset is built on each iteration with the solutions provided
+    # for recordings in train dataset keys and having a score above the average
+    # score + the current deviation. The deviation to evaluate is incremented
+    # at each iteration, a current deviation is returned as the best deviation
+    # before timeout if the minimum wanted precision is reached.
     def calculate_fav_dev(self):
         if self.curr_clusters_validation_count == self.clusters_validation_count and \
            self.curr_rec_favorites_count == self.rec_favorites_count and \
@@ -43,7 +57,7 @@ class StatCalculator:
         
         train_dataset = self.build_fav_train_dataset() # Training dataset
         timeout = 10 * 1000000000 # 10 seconds in nanoseconds
-        min_precision = 1.0 # Minimum precision wanted
+        min_precision = 1.0 # Minimum wanted precision
         start_time = time.time_ns() # Start time in nanoseconds
         elapsed_time = 0 # Elapsed time from start time in nanoseconds
         best_precision = 0.0 # Best precision obtained
@@ -84,11 +98,13 @@ class StatCalculator:
                 best_precision = curr_precision
                 best_fav_dev = curr_fav_dev
             # Increment fav dev and elapsed time for next iteration
-            curr_fav_dev += 0.001
+            curr_fav_dev += 0.01
             elapsed_time = time.time_ns() - start_time
 
         Statistic(id = 'fav_dev', value = best_fav_dev).save()
 
+    # Calculate average standard deviation of solutions provided for all
+    # requesters recordings.
     def calculate_avg_stdev(self):
         if self.curr_clusters_validation_count == self.clusters_validation_count:
             return
