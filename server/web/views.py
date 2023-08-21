@@ -222,6 +222,13 @@ def create_request(request):
             request_body_unicode = request.body.decode('utf-8')
             request_body_json = json.loads(request_body_unicode)
 
+            # Check if another request with same recordings already exists
+            for req in account.requests.all():
+                req_recs_id = sorted([rec.id for rec in req.recordings.all()])
+                recs_id = sorted([rec.id for rec in request_body_json['recordings']])
+                if req_recs_id == recs_id:
+                    return HttpResponse('Another request with same recordings already exists')
+
             req = Request(account = account)
             req.save()
             for recording_id in request_body_json['recordings']:
