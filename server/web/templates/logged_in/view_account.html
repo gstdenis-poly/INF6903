@@ -89,7 +89,7 @@
                                 <ul>
                                     <li><strong>Username</strong>: {{ account.username }}</li>
                                     <li><strong>Email</strong>: {{ account.email }}</li>
-                                    <li><strong>Type</strong>: {{ account.type }}</li>
+                                    <li><strong>Type</strong>: {{ account.type.title }}</li>
                                     <li><strong>Company</strong>: {{ account.company }}</li>
                                     <li><strong>Recordings count</strong>: {{ account.recordings.all|length }}</li>
                                     {% if account.type == 'requester' %}
