@@ -106,7 +106,7 @@ class StatCalculator:
                         test_dataset[key] += [line_parts[0]]
             # Eval and update best precision+recall score and best fav deviation
             curr_pr_score = self.eval_pr_score(test_dataset, train_dataset)
-            if  curr_pr_score > best_pr_score:
+            if curr_pr_score >= best_pr_score:
                 best_pr_score = curr_pr_score
                 best_fav_dev = curr_fav_dev
             # Increment fav dev and elapsed time for next iteration
