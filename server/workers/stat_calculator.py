@@ -56,7 +56,7 @@ class StatCalculator:
             return
         
         train_dataset = self.build_fav_train_dataset() # Training dataset
-        timeout = 20 * 1000000000 # 10 seconds in nanoseconds
+        timeout = 15 * 1000000000 # 10 seconds in nanoseconds
         min_precision = 1.0 # Minimum wanted precision
         start_time = time.time_ns() # Start time in nanoseconds
         elapsed_time = 0 # Elapsed time from start time in nanoseconds
