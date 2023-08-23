@@ -39,6 +39,27 @@ class StatCalculator:
                 dataset[recordings_id] += [favorite.solution.id]
 
         return dataset
+    
+    # Calc precision+recall score of given comparison and train datasets
+    def eval_pr_score(self, cmp_dataset, train_dataset):
+        true_positives, false_positives, false_negatives = 0, 0, 0
+        for key in cmp_dataset:
+            for prediction in cmp_dataset[key]:
+                if prediction in train_dataset[key]:
+                    true_positives += 1
+                else:
+                    false_positives += 1
+            for truth in train_dataset[key]:
+                if truth not in cmp_dataset[key]:
+                    false_negatives += 1
+
+        pr_score = 0.0 # Evaluated precision+recall score
+        if true_positives > 0:
+            precision = true_positives / (true_positives + false_positives)
+            recall = true_positives / (true_positives + false_negatives)
+            pr_score = precision + recall
+
+        return pr_score
 
     # Calculate an optimized deviation from requesters favorites. This deviation
     # is the one that offers the best precision+recall score before the optimization 
@@ -83,24 +104,9 @@ class StatCalculator:
                         if float(line_parts[1]) < (scores_mean + curr_fav_dev):
                             break
                         cmp_dataset[key] += [line_parts[0]]
-            # Calc precision+recall score of comparison dataset with train dataset
-            true_positives, false_positives, false_negatives = 0, 0, 0
-            for key in cmp_dataset:
-                for prediction in cmp_dataset[key]:
-                    if prediction in train_dataset[key]:
-                        true_positives += 1
-                    else:
-                        false_positives += 1
-                for truth in train_dataset[key]:
-                    if truth not in cmp_dataset[key]:
-                        false_negatives += 1
-            curr_pr_score = 0.0 # Current evaluated precision+recall score
-            if true_positives > 0:
-                curr_precision = true_positives / (true_positives + false_positives)
-                curr_recall = true_positives / (true_positives + false_negatives)
-                curr_pr_score = curr_precision + curr_recall
-            # Update best precision+recall score and best fav deviation
-            if curr_pr_score > best_pr_score:
+            # Eval and update best precision+recall score and best fav deviation
+            curr_pr_score = self.eval_pr_score(cmp_dataset, train_dataset)
+            if  curr_pr_score > best_pr_score:
                 best_pr_score = curr_pr_score
                 best_fav_dev = curr_fav_dev
             # Increment fav dev and elapsed time for next iteration
