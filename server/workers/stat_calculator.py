@@ -41,14 +41,14 @@ class StatCalculator:
         return dataset
 
     # Calculate an optimized deviation from requesters favorites. This deviation
-    # is the one that offers the best ratio precision/recall before the optimization 
+    # is the one that offers the best precision+recall score before the optimization 
     # reached its timeout. The values in train dataset are considered the ground 
     # truth and are compared with a comparison dataset to evaluate the precision 
     # and recall. The comparison dataset is built on each iteration with the  
     # solutions provided for recordings in train dataset keys and having a score 
     # above the average score + the current deviation. The deviation to evaluate 
     # is incremented at each iteration, a current deviation is returned as the 
-    # best deviation before timeout if the minimum wanted ratio precision/recall 
+    # best deviation before timeout if the minimum wanted precision+recall score 
     # is reached.
     def calculate_fav_dev(self):
         if self.curr_clusters_validation_count == self.clusters_validation_count and \
@@ -58,14 +58,14 @@ class StatCalculator:
         
         train_dataset = self.build_fav_train_dataset() # Training dataset
         timeout = 15 * 1000000000 # 10 seconds in nanoseconds
-        min_ratio_pr = 1.0 # Minimum wanted ratio precision/recall
+        min_pr_score = 2.0 # Minimum wanted precision+recall score
         start_time = time.time_ns() # Start time in nanoseconds
         elapsed_time = 0 # Elapsed time from start time in nanoseconds
-        best_ratio_pr = 0.0 # Best ratio precision/recall
-        best_fav_dev = 0.0 # Fav deviation with best ratio precision/recall
+        best_pr_score = 0.0 # Best precision+recall score
+        best_fav_dev = 0.0 # Fav deviation with best precision+recall score
         curr_fav_dev = 0.0 # Current validated fav deviation
 
-        while best_ratio_pr < min_ratio_pr and elapsed_time < timeout:
+        while best_pr_score < min_pr_score and elapsed_time < timeout:
             # Build comparison dataset
             cmp_dataset = {}
             for key in train_dataset:
@@ -83,7 +83,7 @@ class StatCalculator:
                         if float(line_parts[1]) < (scores_mean + curr_fav_dev):
                             break
                         cmp_dataset[key] += [line_parts[0]]
-            # Calc ratio precision/recall of comparison dataset with train dataset
+            # Calc precision+recall score of comparison dataset with train dataset
             true_positives, false_positives, false_negatives = 0, 0, 0
             for key in cmp_dataset:
                 for prediction in cmp_dataset[key]:
@@ -94,18 +94,20 @@ class StatCalculator:
                 for truth in train_dataset[key]:
                     if truth not in cmp_dataset[key]:
                         false_negatives += 1
-            curr_ratio_pr = 0.0 # Current evaluated ratio precision/recall
+            curr_pr_score = 0.0 # Current evaluated precision+recall score
             if true_positives > 0:
                 curr_precision = true_positives / (true_positives + false_positives)
                 curr_recall = true_positives / (true_positives + false_negatives)
-                curr_ratio_pr = curr_precision / curr_recall
-            # Update best ratio precision/recall and best fav deviation
-            if curr_ratio_pr > best_ratio_pr:
-                best_ratio_pr = curr_ratio_pr
+                print(curr_precision)
+                print(curr_recall)
+                curr_pr_score = curr_precision + curr_recall
+            # Update best precision+recall score and best fav deviation
+            if curr_pr_score > best_pr_score:
+                best_pr_score = curr_pr_score
                 best_fav_dev = curr_fav_dev
             # Increment fav dev and elapsed time for next iteration
             print(cmp_dataset)
-            print(best_ratio_pr)
+            print(best_pr_score)
             print(best_fav_dev)
             curr_fav_dev += 0.01
             elapsed_time = time.time_ns() - start_time
