@@ -104,6 +104,9 @@ class StatCalculator:
                 best_ratio_pr = curr_ratio_pr
                 best_fav_dev = curr_fav_dev
             # Increment fav dev and elapsed time for next iteration
+            print(cmp_dataset)
+            print(best_ratio_pr)
+            print(best_fav_dev)
             curr_fav_dev += 0.01
             elapsed_time = time.time_ns() - start_time
 
