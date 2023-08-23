@@ -40,17 +40,17 @@ class StatCalculator:
 
         return dataset
     
-    # Calc precision+recall score of given comparison and train datasets
-    def eval_pr_score(self, cmp_dataset, train_dataset):
+    # Calc precision+recall score of given test and train datasets
+    def eval_pr_score(self, test_dataset, train_dataset):
         true_positives, false_positives, false_negatives = 0, 0, 0
-        for key in cmp_dataset:
-            for prediction in cmp_dataset[key]:
+        for key in test_dataset:
+            for prediction in test_dataset[key]:
                 if prediction in train_dataset[key]:
                     true_positives += 1
                 else:
                     false_positives += 1
             for truth in train_dataset[key]:
-                if truth not in cmp_dataset[key]:
+                if truth not in test_dataset[key]:
                     false_negatives += 1
 
         pr_score = 0.0 # Evaluated precision+recall score
@@ -64,11 +64,11 @@ class StatCalculator:
     # Calculate an optimized deviation from requesters favorites. This deviation
     # is the one that offers the best precision+recall score before the optimization 
     # reached its timeout. The values in train dataset are considered the ground 
-    # truth and are compared with a comparison dataset to evaluate the precision 
-    # and recall. The comparison dataset is built on each iteration with the  
-    # solutions provided for recordings in train dataset keys and having a score 
-    # above the average score + the current deviation. The deviation to evaluate 
-    # is incremented at each iteration, a current deviation is returned as the 
+    # truth and are compared with a test dataset to evaluate the precision and
+    # recall. The comparison dataset is built on each iteration with the solutions
+    # provided for recordings in train dataset keys and having a score above the
+    # average score + the current deviation. The deviation to evaluate is
+    # incremented at each iteration, a current deviation is returned as the 
     # best deviation before timeout if the minimum wanted precision+recall score 
     # is reached.
     def calculate_fav_dev(self):
@@ -87,10 +87,10 @@ class StatCalculator:
         curr_fav_dev = 0.0 # Current validated fav deviation
 
         while best_pr_score < min_pr_score and elapsed_time < timeout:
-            # Build comparison dataset
-            cmp_dataset = {}
+            # Build test dataset
+            test_dataset = {}
             for key in train_dataset:
-                cmp_dataset[key] = []
+                test_dataset[key] = []
                 for recording in key:
                     rec_cluster_val_file = open(val_clusters_folder + recording + '.txt', 'r')
                     rec_cluster_val_lines = rec_cluster_val_file.read().splitlines()
@@ -103,9 +103,9 @@ class StatCalculator:
                         line_parts = line.split('|')
                         if float(line_parts[1]) < (scores_mean + curr_fav_dev):
                             break
-                        cmp_dataset[key] += [line_parts[0]]
+                        test_dataset[key] += [line_parts[0]]
             # Eval and update best precision+recall score and best fav deviation
-            curr_pr_score = self.eval_pr_score(cmp_dataset, train_dataset)
+            curr_pr_score = self.eval_pr_score(test_dataset, train_dataset)
             if  curr_pr_score > best_pr_score:
                 best_pr_score = curr_pr_score
                 best_fav_dev = curr_fav_dev
