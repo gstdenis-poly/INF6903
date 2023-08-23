@@ -99,6 +99,9 @@ class StatCalculator:
                 best_fav_dev = curr_fav_dev
             # Increment fav dev and elapsed time for next iteration
             curr_fav_dev += 0.01
+            print(cmp_dataset)
+            print(best_fav_dev)
+            print(best_precision)
             elapsed_time = time.time_ns() - start_time
 
         Statistic(id = 'fav_dev', value = best_fav_dev).save()
