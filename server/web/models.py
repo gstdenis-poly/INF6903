@@ -42,22 +42,25 @@ class Recording(models.Model):
 
     # Calculate de minimum score threshold from given scores, which correspond to:
     #   - Average of given scores +
-    #        average of standard deviation of given scores with statistic avg_stdev +
-    #        average of standard deviation of given scores with statistic fav_dev.
+    #        average of [standard deviation of given scores +
+    #                    statistic fav_dev + statistic avg_stdev].
     def get_min_score_threshold(self, scores):
         min_score_threshold = mean(scores)
+        scores_stdev = stdev(scores) if len(scores) > 1 else 0.0
 
-        scores_dev = stdev(scores) if len(scores) > 1 else 0.0
+        fav_dev = 0.0
         try:
-            scores_dev = mean([scores_dev, Statistic.objects.get(id = 'avg_stdev').value])
+            fav_dev = Statistic.objects.get(id = 'fav_dev').value
         except Statistic.DoesNotExist:
-            scores_dev = scores_dev
+            fav_dev = scores_stdev
+
+        avg_stdev = 0.0
         try:
-            scores_dev = mean([scores_dev, Statistic.objects.get(id = 'fav_dev').value])
+            avg_stdev = Statistic.objects.get(id = 'avg_stdev').value
         except Statistic.DoesNotExist:
-            scores_dev = scores_dev
+            avg_stdev = scores_stdev
         
-        min_score_threshold += scores_dev
+        min_score_threshold += mean([scores_stdev, fav_dev, avg_stdev])
 
         print('Min score threshold: ' + str(min_score_threshold))
         return min_score_threshold
