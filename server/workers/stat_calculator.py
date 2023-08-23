@@ -103,11 +103,8 @@ class StatCalculator:
             if curr_pr_score > best_pr_score:
                 best_pr_score = curr_pr_score
                 best_fav_dev = curr_fav_dev
-                print(cmp_dataset)
-                print(best_pr_score)
-                print(best_fav_dev)
             # Increment fav dev and elapsed time for next iteration
-            curr_fav_dev += 0.1
+            curr_fav_dev += 0.01
             elapsed_time = time.time_ns() - start_time
 
         Statistic(id = 'fav_dev', value = best_fav_dev).save()
