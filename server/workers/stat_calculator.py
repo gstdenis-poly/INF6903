@@ -98,17 +98,15 @@ class StatCalculator:
             if true_positives > 0:
                 curr_precision = true_positives / (true_positives + false_positives)
                 curr_recall = true_positives / (true_positives + false_negatives)
-                print(curr_precision)
-                print(curr_recall)
                 curr_pr_score = curr_precision + curr_recall
             # Update best precision+recall score and best fav deviation
             if curr_pr_score > best_pr_score:
                 best_pr_score = curr_pr_score
                 best_fav_dev = curr_fav_dev
+                print(cmp_dataset)
+                print(best_pr_score)
+                print(best_fav_dev)
             # Increment fav dev and elapsed time for next iteration
-            print(cmp_dataset)
-            print(best_pr_score)
-            print(best_fav_dev)
             curr_fav_dev += 0.01
             elapsed_time = time.time_ns() - start_time
 
